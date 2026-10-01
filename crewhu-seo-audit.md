@@ -149,8 +149,8 @@ Every blog post should link to at least one product, integration or comparison p
 
 1. **Noindex or canonicalize the duplicate trial and demo pages** (`/free-trial-3`, `/free-trial-g2`, and any other variants) and remove them from the sitemap. About 30 minutes.
 2. **Rewrite the generic titles and meta descriptions.** Copy-paste versions:
-   - `/products` → **Title:** `Crewhu Products: CSAT Surveys, Recognition & Gamification for MSPs` · **Meta:** `One platform for MSP client feedback and team engagement: one-click CSAT and NPS surveys, peer recognition, badges, rewards and PSA-powered contests.`
-   - `/integrations` → **Title:** `Crewhu Integrations: ConnectWise, Autotask, HaloPSA & More` · **Meta:** `Connect Crewhu to ConnectWise, Autotask, HaloPSA, Syncro, Zendesk, Teams, Slack and BrightGauge. Surveys sync to tickets, and wins flow to your team automatically.`
+   - `/products` → **Title:** `Crewhu Products: CSAT, Recognition & Gamification for MSPs` · **Meta:** `One platform for MSP client feedback and team engagement: one-click CSAT and NPS surveys, peer recognition, badges, rewards and PSA-powered contests.`
+   - `/integrations` → **Title:** `Crewhu Integrations: ConnectWise, Autotask, HaloPSA & More` · **Meta:** `Connect Crewhu to ConnectWise, Autotask, HaloPSA, Syncro, Zendesk, Teams, Slack and BrightGauge. Surveys sync to tickets; wins reach your team.`
    - `/collect-customer-feedback` → **Title:** `CSAT & NPS Survey Software for MSPs | Crewhu` · **Meta:** `Send one-click CSAT surveys on every closed ticket and automated NPS surveys, then turn happy clients into Google reviews. Built for MSPs.`
    - `/gamify-your-metrics` → **Title:** `Help Desk Gamification & Technician Leaderboards | Crewhu` · **Meta:** `Run contests and leaderboards on real PSA KPIs (CSAT, closed tickets, time entries) to motivate MSP technicians.`
    - `/about-us` → **Title:** `About Crewhu: Built by an MSP Veteran for MSPs` · **Meta:** `Founded in 2013 by Stephen Spiegel, Crewhu helps MSPs delight clients and engage their teams with CSAT, recognition and gamification.`
