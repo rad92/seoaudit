@@ -3,9 +3,9 @@
 **Audit date:** 2026-10-01
 **Site:** https://salesroads.com/ (B2B sales outsourcing: appointment setting, outsourced SDRs, lead generation, cold calling)
 **Stack:** WordPress + Elementor Pro, Rank Math SEO, WP Engine hosting behind Cloudflare
-**Overall health:** 🟡 Needs Work. The content library is large and it's indexable, and the pricing is unusually transparent. But sitewide title templating, schema hygiene, cannibalization between blog posts and service pages, and indexed campaign/thank-you pages are holding the commercial pages back.
+**Overall health:** 🟡 Needs Work, trending down. Semrush puts organic traffic at **3.1K/month, roughly 40% below its 2025 peak (~5.5K)**. Only 85 of 4.1K ranking keywords are in the top 3. The content library is large and indexable, and the pricing is unusually transparent. But sitewide title templating, schema hygiene, cannibalization between blog posts and service pages, redirect chains, and indexed campaign/thank-you pages are holding the commercial pages back.
 
-> **How this audit was done.** I crawled all 390 HTML URLs in the XML sitemaps (41 pages, 1 landing page, 348 posts) plus the 39 internal-link targets outside the sitemap. For each URL I parsed the raw HTML: title, meta description, H1–H6, canonical, robots meta, Open Graph, JSON-LD, images and links. I also read robots.txt and all 5 sub-sitemaps, measured cached and uncached server response times, and checked the competitive results pages for the core money keywords. Where a finding rests on something I couldn't verify (rankings, traffic, Core Web Vitals field data), it's marked **Verify**.
+> **How this audit was done.** I crawled all 390 HTML URLs in the XML sitemaps (41 pages, 1 landing page, 348 posts) plus the 39 internal-link targets outside the sitemap. For each URL I parsed the raw HTML: title, meta description, H1–H6, canonical, robots meta, Open Graph, JSON-LD, images and links. I also read robots.txt and all 5 sub-sitemaps, measured cached and uncached server response times, and checked the competitive results pages for the core money keywords. **Update:** I've since folded in the Semrush exports you provided (Domain Overview, Organic Pages and Position Changes, all dated October 1, 2026). See the **Semrush Snapshot** section, sections 1.6–1.7, and the revised merge and prune advice in 1.4 and 4.4. Where a finding rests on something I still couldn't verify (Search Console data, Core Web Vitals field data), it's marked **Verify**.
 
 ---
 
@@ -20,6 +20,45 @@
 | Content | 🟡 | Strong volume (348 posts) but heavy keyword cannibalization. Stale years appear in 17 titles. Some content targets job seekers rather than buyers. |
 | Performance | 🟡 | Cached pages respond fast (~0.4s). Uncached pages take 2–3s TTFB (6–9s observed). HTML is 260–400 KB, there are 18 render-blocking scripts, and all images are PNG/JPG. |
 | E-E-A-T / trust | 🟡 | Real case studies (33), named authors, and public pricing. But "years of experience" claims contradict each other across the site. |
+| Visibility (Semrush) | 🔴 | 3.1K organic visits/month, down ~40% from the 2025 peak. 85 keywords in the top 3, 453 in positions 11–20, 1.6K in positions 51–100. 73% of ranking keywords are informational. 4 URLs drive 69% of traffic. |
+| Backlinks (Semrush) | 🟡 | 12K backlinks from 2K domains, but the top referrers are directory and list sites, and the anchors are mostly the brand or "visit website". Service pages have few links: `/lead-generation-services/` has 60 referring domains, the homepage 668. |
+
+---
+
+## Semrush Snapshot (October 1, 2026, US desktop)
+
+| Metric | Value | What it means |
+|---|---|---|
+| Organic traffic | **3.1K/month** (+6% month over month), roughly **40% below the 2025 peak of ~5.5K** (read from the trend chart) | The 2024–25 growth has partly reversed. Fixing the structural issues in §1 is the first step to recovering it. |
+| Ranking keywords | 4.1K | Positions: **1–3: 85**, 4–10: 285, **11–20: 453**, 21–30: 499, 31–50: 939, 51–100: 1.6K |
+| Keyword intent | 72.7% informational, 21.9% commercial, 3.5% transactional, 1.9% navigational | The blog drives volume. Commercial terms are under-represented. |
+| Branded share | 22.9% branded, 77.1% non-branded (45 brand keywords, 718 visits) | Healthy. Non-brand demand exists to capture. |
+| Paid search | 0 keywords | No Google Ads now. The `*-landing-page` URLs are presumably for other channels, so they still need `noindex` (1.3). |
+| Backlinks | 12.0K backlinks, 2K referring domains, 60% follow | See 1.6 and 4.5. |
+| Top organic competitors | belkins.io (27% keyword overlap), superhumanprospecting.com (20%), salesfocusinc.com (19%), callboxinc.com (18%), salesbread.com (15%) | These five should get the first comparison pages (4.3 #2). |
+
+**Where the traffic comes from (top URLs by share of traffic):**
+
+| URL | Traffic share | Keywords | Note |
+|---|---|---|---|
+| `/` | 25.6% | 386 | 668 referring domains, the site's link hub |
+| `/lead-generation-services/` | 21.3% | 165 | Strongest commercial page. Ranks for "lead generation services" (6.6K/month) and "lead generation companies" (4.4K). Protect it: see 1.7 and the `/outsourcing/lead-generation-services/` conflict in 1.4. |
+| `https://www.salesroads.com/` | **12.0%** | 34 | **The `www` homepage ranks as a separate URL** with 59 referring domains / 125 backlinks. See 1.6. |
+| `/appointment-setting-services/` | 10.0% | 152 | It does rank, mostly for long-tail variants rather than the head term (see 4.2). |
+| `/tactics/qualifying-leads-definition/` | 6.0% | 56 | #2 for "define qualify" (2.9K). Informational traffic that needs a CTA. |
+| `/leadership/sales-executive-meaning/` | 3.6% | 62 | Informational |
+| `/outsourcing/outsourced-appointment-setting/` | 2.7% | 27 | **Ranks on its own, so don't blindly merge it** (1.4 updated) |
+| `/tactics/generating-b2b-leads/` | 2.0% | 61 | The survivor of the lead-gen tips merge (1.4 updated) |
+| `/outsourced-sdr-services/` | 1.8% | 60 | Weak for a core service |
+| `/leadership/appointment-setting-job-description/` | 1.7% | 59 | Job-description content drives traffic (4.4 updated) |
+
+Four URLs (homepage ×2, lead generation, appointment setting) produce **69%** of organic traffic. Cold calling (`/outbound-calling-services/`) doesn't appear in the top 100 URLs at all, and `/pricing/` has 6 keywords and under 0.01% of traffic.
+
+**New rankings on Sept 30 (Position Changes export) confirm the cannibalization in 1.4:**
+- "top outsourced sdr providers for b2b sales": **two SalesRoads URLs** rank, the homepage at #23 and `/outsourced-sdr-services/` at #61.
+- "appointment setting solutions" ranks with the blog post `/tactics/appointment-setting-funnel/` (#36), not the service page.
+- "b2b telesales companies" ranks with the homepage (#49). No cold-calling service page ranks.
+- The biggest new term is "manager in business development" (3,600/month, #13) via `/leadership/business-development-and-sales-manager-job-description/`. That's another job-description win.
 
 ---
 
@@ -90,6 +129,18 @@ The site has **40 URLs** targeting "appointment setting", **55** targeting "lead
 | cold calling questions | one post | `/tactics/cold-call-questions/`, `/tactics/cold-calling-questions/` |
 | lead gen funnel | one post | `/tactics/lead-generation-funnel/`, `/tactics/lead-gen-funnel-template/` |
 
+**Which URL survives, according to Semrush:** don't merge blindly. Several "duplicates" earn traffic of their own.
+
+| Cluster | Keep (survivor) | Merge into it | Why |
+|---|---|---|---|
+| lead gen tips / strategies | `/tactics/generating-b2b-leads/` (2.0% of traffic, 61 kw) | `/tactics/lead-generation-tips/`, `/tactics/b2b-lead-generation-tips/`, `/tactics/lead-generation-strategies/` | Highest traffic in the cluster |
+| lead gen campaign | `/tactics/building-a-lead-generation-campaign/` (118 kw) | `/tactics/lead-generation-campaign/` (6 kw) | Opposite of my first draft |
+| lead gen vs appointment setting | `/outsourcing/lead-generation-vs-appointment-setting/` (11 kw) | `/tactics/lead-generation-vs-appointment-setting-whats-the-difference/`, `/outsourcing/salesroads-program-appointment-setting-or-lead-generation/` | Only one of the three ranks |
+| cold call questions | `/tactics/cold-call-questions/` | `/tactics/cold-calling-questions/` | Only one ranks |
+| outsourced appointment setting | **Keep both** `/appointment-setting-services/` and `/outsourcing/outsourced-appointment-setting/` (2.7%, 27 kw) | — | Re-angle the blog post to the informational "what is outsourced appointment setting / pros & cons" and link it to the service page. Merge only if GSC shows both URLs swapping on the same queries. |
+| SDR outsourcing | `/outsourced-sdr-services/` | `/outsourcing/sdr-outsourcing/` (1 kw) | Safe merge |
+| sales outsourcing cost | `/outsourcing/sales-outsourcing-pricing/` (31 kw) | `/outsourcing/appointment-setting-pricing-models/`, `/tactics/lead-generation-pricing/` | Make this the cost guide (4.3 #5) instead of a new URL |
+
 **Fix:**
 1. In Google Search Console → Performance, filter by each money query and see which URLs get impressions. Where two URLs alternate, that's cannibalization.
 2. **Merge and 301** the duplicates into the strongest URL. Combine the best sections and keep the URL with more backlinks.
@@ -105,6 +156,30 @@ Robots.txt also sets `Crawl-delay: 10`. Google ignores it, but Bing and others w
 - Turn on **Cloudflare APO** (or a "Cache Everything" rule with bypass on cookie) so HTML is served from the edge, and raise the HTML TTL to hours or days with purge-on-publish.
 - Profile the origin with Query Monitor or New Relic on WP Engine. Common culprits are Elementor dynamic widgets (post grids with related posts), the chat widget plugin, and Asset CleanUp.
 - Remove `Crawl-delay: 10` from robots.txt.
+
+### 1.6 Two homepages: `www.salesroads.com` ranks separately, and the backlink profile is weak where it counts
+Semrush attributes **12% of organic traffic, 34 keywords, 59 referring domains and 125 backlinks** to `https://www.salesroads.com/` as a separate URL from `https://salesroads.com/`. Google's `site:www.salesroads.com` returns only non-www URLs, so Google may already be consolidating. But Semrush still sees the `www` URL ranking, so either the redirect is missing or wrong, or it was fixed only recently. I couldn't test it: the audit network blocked `www`.
+
+**Fix:**
+- Run `curl -sI https://www.salesroads.com/` and `curl -sI http://www.salesroads.com/`. Both must return a **single `301`** to `https://salesroads.com/`, with the path preserved (`www.salesroads.com/pricing/` → `salesroads.com/pricing/`). Set it in WP Engine → Domains (redirect `www` to primary) or with a Cloudflare redirect rule.
+- In Search Console, make sure the **Domain property** covers both hosts. Inspect `https://www.salesroads.com/` and confirm "Google-selected canonical" is the non-www URL.
+
+**Backlinks:** The homepage holds 668 referring domains, but the money pages hold few (`/lead-generation-services/` has 60). The biggest referrers by link count are directory and list sites (alivelink.org 1,703 links, neudesk.com 615, gitnux.org 323, brownedgedirectory.com 322, worldmetrics.org 314), plus blogspot pages with "visit website" anchors. Google mostly ignores links like these. Don't disavow unless there's a manual action. But they won't move rankings either.
+
+The real link assets are content: `/leadership/ai-in-sales/` (146 domains) and `/leadership/sales-and-business-development-courses/` (110 domains). **Refresh those two in place and never change their URLs.** Add contextual links from them to the service pages (4.5).
+
+### 1.7 Short URLs to the top service pages use temporary redirect chains
+| URL | Chain | Ends at |
+|---|---|---|
+| `/leadgeneration` (indexed in Google) | **301 → 307 → 301** → 200 | `/lead-generation-services/` |
+| `/lead-generation` | **307 → 301** → 200 | `/lead-generation-services/` |
+| `/appointment-setting` | **307 → 301** → 200 | `/appointment-setting-services/` |
+| `/contact` | 301 → 301 → 200 | — |
+| `/about`, `/case-studies` | 404 | — |
+
+A `307` is a *temporary* redirect, so link equity and canonical signals aren't reliably passed to `/lead-generation-services/`, which is the page earning 21% of organic traffic. These short URLs are typically used in ads, email and print, and attract links.
+
+**Fix:** In WP Engine → Redirect rules (or Rank Math → Redirections), make each one a **single 301** straight to the final URL with its trailing slash. Add 301s for `/about` → `/about-us/` and `/case-studies` → `/client-success/` (or the new hub).
 
 ---
 
@@ -141,7 +216,8 @@ Robots.txt also sets `Crawl-delay: 10`. Google ignores it, but Bing and others w
 | 🟡 | Blog pagination (`/blog/?e-page-fdfa077=2`) canonicalises to `/blog/`, so older posts are reachable only via the sitemap and related-post widgets. Category archives (`/category/tactics/` etc.) are indexable but **not** in the sitemap, and their titles are the bare category slug. | Make the categories the real hubs: add them to the sitemap, write 150–300 words of intro, and set titles like "Sales Tactics: Cold Calling, Email & Prospecting Guides \| SalesRoads". Use real paginated URLs (`/blog/page/2/`). |
 | 🟡 | Tag archives are inconsistent: 9 tags are `noindex`, but `/tag/hiring/` is `index` | Noindex `/tag/hiring/` to match. |
 | 🟢 | **Video sitemap:** 17 of 114 videos use YouTube's boilerplate description ("Enjoy the videos and music you love…"), and 20 video titles carry the long site-name suffix | Write a one-sentence description per video. Fixing 1.1 cleans the titles. |
-| 🟢 | `www.salesroads.com` returned 403 from this audit environment, so I couldn't confirm how it redirects | **Verify:** `www` should 301 to `https://salesroads.com/` in one hop. |
+| 🔴 | Semrush shows `www.salesroads.com/` ranking separately (12% of traffic). I couldn't test it from the audit environment (see 1.6). | **Verify now:** `www` should 301 to `https://salesroads.com/` in one hop. |
+| 🟡 | Temporary 307 redirect chains on `/leadgeneration`, `/lead-generation`, `/appointment-setting` (see 1.7) | Single 301s |
 | 🟢 | No `/llms.txt`. The site has "Ask ChatGPT / Claude / Perplexity / Grok / Gemini" share buttons, so AI visibility clearly matters to the team. | Add an `llms.txt` that lists the service, pricing, industries and case-study hub URLs (Rank Math can generate it). |
 
 ---
@@ -167,6 +243,8 @@ Results-page checks on core terms (US, October 2026):
 | B2B appointment setting cost | Belkins, Leadium, LeadSpot, Only-B2B and others (all blog guides) | ❌ Even though SalesRoads publishes real prices |
 | SalesRoads reviews / alternatives | **G2, Cleverly, SalesBread, Salesforge, OutboundSalesPro, Alleyoop, RemoteAides**, all competitors' pages | ❌ No SalesRoads page answers this |
 
+**Semrush context:** `/appointment-setting-services/` does earn 10% of traffic from 152 keywords, mostly long-tail variants rather than the head term. `/lead-generation-services/` is the strongest commercial page (21%, ranking for "lead generation services" and "lead generation companies"). Cold calling and SDR are the weakest service pages.
+
 **Takeaway:** The service pages (appointment setting, SDR, cold calling) are being outranked by competitors with fewer case studies and less content. The reasons are the issues above: diluted titles, cannibalizing blog posts, PPC duplicates, and service pages that are thin compared with what competitors offer (~1,400–1,900 words including boilerplate). **Verify** exact positions in GSC or Semrush, because these results-page checks are a point-in-time sample.
 
 ### 4.3 Content to build, in priority order
@@ -174,23 +252,26 @@ Results-page checks on core terms (US, October 2026):
 | # | Page | Target keywords | Brief |
 |---|---|---|---|
 | 1 | **SalesRoads Reviews & Alternatives** (`/salesroads-reviews/`, or expand `/reviews/`) | salesroads reviews, salesroads alternatives, salesroads pricing | Competitors own the brand's reviews and alternatives results. Some quote outdated pricing ("$9,950 per four weeks"). Publish an honest page: Clutch/G2 ratings with links, current pricing, who SalesRoads is **not** a fit for, and how it compares on onshore reps, contract terms and reporting. Mark up as `WebPage` + `FAQPage`. |
-| 2 | **Comparison pages:** SalesRoads vs memoryBlue / SalesHive / Belkins / Callbox / Martal | "<competitor> vs salesroads", "<competitor> alternative" | G2 already hosts "SalesRoads vs memoryBlue". One page per competitor with a feature/pricing/contract table, onshore vs offshore, minimum term, and who each is best for. |
+| 2 | **Comparison pages:** start with Semrush's top organic competitors, Belkins, Superhuman Prospecting, Sales Focus, Callbox and SalesBread, then memoryBlue / SalesHive / Martal | "<competitor> vs salesroads", "<competitor> alternative" | G2 already hosts "SalesRoads vs memoryBlue". One page per competitor with a feature/pricing/contract table, onshore vs offshore, minimum term, and who each is best for. |
 | 3 | **Rebuild `/appointment-setting-services/` into the pillar** | b2b appointment setting services, outsourced appointment setting, appointment setting company | Merge the best of `/outsourcing/outsourced-appointment-setting/` and `/outsourcing/everything-to-know-about-b2b-appointment-setting/` (301 both). Add: process timeline (weeks 1–6, borrowed from `/outsourcing/outbound-sales-program-expectation/`), pricing summary with a link to `/pricing/`, 3 case-study results, an industries grid, FAQs. Target 2,000+ words of unique copy. |
 | 4 | **Same treatment for `/outsourced-sdr-services/` and `/outbound-calling-services/`** | outsourced sdr services, sdr as a service, b2b cold calling services | Merge `/outsourcing/sdr-outsourcing/` and `/outsourcing/sales-development-services/` into the SDR page. Add an "In-house vs outsourced SDR cost" calculator built from `/outsourcing/in-house-sdr-costs/` data. |
-| 5 | **"B2B Appointment Setting Cost (2026)" guide** | appointment setting cost, cost per appointment, appointment setting pricing | Competitors rank with guesses, and SalesRoads has real numbers. Merge `/outsourcing/appointment-setting-pricing-models/`, `/outsourcing/sales-outsourcing-pricing/` and `/tactics/lead-generation-pricing/` into one definitive guide covering pay-per-appointment vs retainer vs SDR-pod pricing, with SalesRoads' own price shown. |
+| 5 | **"B2B Appointment Setting Cost (2026)" guide** | appointment setting cost, cost per appointment, appointment setting pricing | Competitors rank with guesses, and SalesRoads has real numbers. Build it on the existing `/outsourcing/sales-outsourcing-pricing/` (31 keywords, keep the URL). Merge `/outsourcing/appointment-setting-pricing-models/` and `/tactics/lead-generation-pricing/` into it to make one definitive guide covering pay-per-appointment vs retainer vs SDR-pod pricing, with SalesRoads' own price shown. |
 | 6 | **Industry pages, second wave** | "<industry> appointment setting" / "<industry> lead generation" | Each existing industry page should get: an industry-specific H1 with the keyword, 2 case studies from that industry, typical buyer titles, compliance notes (HIPAA, FedRAMP), and a link to the matching "Best <industry> appointment setting companies" post. Add new pages where case studies exist: **IT/MSP** (Crewhu, Pantheon), **Professional services/AEC** (Factor), **Staffing/HR tech** (Paylocity, Beneflex). |
 | 7 | **Case-study hub with filters** (`/case-studies/`) | b2b appointment setting case study, outsourced sdr results | The 33 case studies have no indexable hub (`/client-success/` is a logo wall). Build a filterable hub (by industry or service) and add 300–500 more words to the thinnest studies (Copperweld, Factor, Agility, Safecor and Shell are around 550–620 words including boilerplate). Lead each one with metrics. |
 
 ### 4.4 Refresh and clean up the blog
 - **Remove stale years from 17 titles**, for example "2024: 9 Best B2B Lead Generation Courses", "Is Cold Calling Still Effective in **2024**?", "Lead Generation Specialist Salary: Updated **2024**", "Social Selling Strategies… in **2023**", and "Best Sales and Leadership Strategies for 2025" (whose URL says 2024). Update the content, then either use the current year or drop it.
 - **Consolidate the clusters in 1.4.** Expect to merge roughly 20–25 posts into 8–10 stronger ones.
-- **Reconsider job-seeker content.** Posts like `/leadership/sdr-resume-guide/`, `/leadership/sdr-cover-letter-sample/`, `/leadership/appointment-setting-jobs/`, `/leadership/lead-generation-interview-questions/` and `/leadership/appointment-setting-quotes/` attract job seekers, not buyers. Keep them only if they feed `/careers/` recruiting (link them there). Otherwise consolidate them, since they dilute topical focus.
+- **Keep the job-description posts, and monetize them** *(revised after Semrush)*. These are real traffic drivers: `/leadership/appointment-setting-job-description/` (1.7% of traffic), `/leadership/lead-generation-job-description/` (1.2%), `/leadership/business-development-and-sales-manager-job-description/` (0.7%, plus a new #13 for "manager in business development", 3,600/month), and `/leadership/sales-executive-meaning/` (3.6%). People who search for a job description are often **hiring managers about to hire an SDR**, which is exactly SalesRoads' buyer. Add an in-content box on each: "Hiring an appointment setter? Compare the cost of an outsourced SDR" → `/pricing/` and `/outsourcing/in-house-sdr-costs/`. Only pure job-seeker posts with no traffic (`/leadership/sdr-cover-letter-sample/`, `/leadership/appointment-setting-quotes/`) are candidates for pruning. Link the job-seeker posts to `/careers/`.
+- **Add CTAs to top informational pages.** `/tactics/qualifying-leads-definition/` (6% of traffic, #2 for "define qualify") and `/leadership/sales-executive-meaning/` (3.6%) get visits but have no path to a service. Add a relevant mid-article CTA, for example "Want qualified leads without the work? See our lead generation service."
+- **Refresh, don't move, the link magnets.** "9 Best Sales and Business Development Courses in **2024**" has 110 referring domains. Update the list and the year in the title, but keep the URL.
 - **Podcast pages:** 25 of 42 episodes have no meta description. Add a 300–600-word summary, key takeaways and a transcript to each. Transcripts are easy long-tail content and E-E-A-T (named experts like Aaron Ross, Mark Roberge, Jake Dunlap).
 - **Authors:** 162 posts are by "SalesRoads Content Team". Move the best-performing ones to named practitioners (for example David Kreiger), and give each author a bio page with credentials and LinkedIn `sameAs`.
 
 ### 4.5 Internal linking
 - Each blog cluster should link to its service page using the money anchor: "B2B appointment setting services" → `/appointment-setting-services/`, "outsourced SDR services" → `/outsourced-sdr-services/`. Today most blog CTAs go to `/pricing/` and `/request-a-quote/`.
 - Link the industry pages ↔ the "Best <industry> appointment setting companies" posts ↔ industry case studies, in both directions.
+- **Route link equity:** from `/leadership/ai-in-sales/` (146 referring domains), `/leadership/sales-and-business-development-courses/` (110) and `/tactics/qualifying-leads-definition/` (the top informational traffic page), add 1–2 contextual links each to `/outsourced-sdr-services/`, `/appointment-setting-services/` and `/outbound-calling-services/`, the weakest service pages.
 - Add a "Services" and "Industries" block to the blog sidebar or footer. The global footer already gets crawled on all 390 pages, so it's the cheapest place to signal priority.
 
 ### 4.6 Fix contradictory trust claims
@@ -248,6 +329,9 @@ The site claims different track records in different places: "+19 years" (37 tim
 | 8 | **Enable `datePublished`/`dateModified`** in BlogPosting schema and show "Updated" dates on posts | 30 min | 🟡 |
 | 9 | Rename or merge `/outsourcing/lead-generation-services/` so it stops competing with `/lead-generation-services/` | 30 min | 🟡 |
 | 10 | Turn on **Cloudflare APO / edge HTML caching** and remove `Crawl-delay` | 1 h | 🟡 |
+| 11 | **Confirm `www` → apex is a single 301** and check the Google-selected canonical in GSC (1.6) | 15 min | 🔴 High (12% of traffic) |
+| 12 | **Replace the 307 redirect chains** for `/leadgeneration`, `/lead-generation`, `/appointment-setting` and `/contact` with single 301s. Add 301s for `/about` and `/case-studies` (1.7). | 15 min | 🟡 Protects the top commercial page |
+| 13 | Add a **"Hiring an SDR? Compare costs" CTA** to the job-description posts and a service CTA to `/tactics/qualifying-leads-definition/` (4.4) | 1 h | 🟡 Converts existing traffic |
 
 ---
 
@@ -260,6 +344,8 @@ The site claims different track records in different places: "+19 years" (37 tim
 | 7–10 | SalesRoads Reviews & Alternatives page and the first 3 comparison pages (4.3 #1–2). Case-study hub. Category hub pages. |
 | 11–13 | Industry page second wave. Podcast transcripts. Front-end performance work (Elementor asset loading, WebP, scripts). Re-run this crawl and compare. |
 
+**Baseline (Semrush, Oct 1 2026):** 3.1K organic visits/month, 4.1K keywords, 85 in the top 3, 453 in positions 11–20. **Targets for 90 days:** recover to 4K+/month, double the top-3 count, move 100+ keywords from 11–20 into the top 10, and get `/outsourced-sdr-services/` and `/outbound-calling-services/` into the top-20 traffic pages.
+
 **KPIs to track:** GSC impressions and clicks for the non-brand queries "appointment setting services", "outsourced sdr", "cold calling services" and "lead generation services"; average position of the 6 core service URLs; number of URLs ranking per money query (should fall to 1); demo requests from organic.
 
 ---
@@ -271,14 +357,15 @@ The site claims different track records in different places: "+19 years" (37 tim
 | Core Web Vitals (LCP, INP, CLS), field data | Needs Chrome UX Report / real-user data | PageSpeed Insights, GSC → Core Web Vitals |
 | Index coverage, which URLs Google has excluded, cannibalization by query | Needs Search Console access | GSC → Pages, Performance (filter by query → Pages tab) |
 | Exact rankings and search volume | Results-page checks above are a point-in-time sample | Semrush / Ahrefs position tracking |
-| Backlink profile; which duplicate URLs have links (decides which URL survives a merge) | No backlink data | Ahrefs (there's already an `ahrefs-site-verification` tag) / GSC Links |
-| `www` → apex redirect | The audit proxy blocked `www.salesroads.com` | `curl -I https://www.salesroads.com/` |
+| Backlinks per URL for each merge candidate | Semrush export covers only the top 5 pages | Semrush Backlinks → Indexed Pages / Ahrefs Best by Links / GSC Links |
+| `www` → apex redirect (**high priority**, see 1.6) | The audit proxy blocked `www.salesroads.com` | `curl -sI https://www.salesroads.com/`; GSC URL Inspection |
 | What `consortiumventure24.com/js/812387.js` actually is | The audit proxy blocked the domain | Tag Assistant / ask marketing ops |
 | Rendered DOM, JavaScript-dependent content | Raw-HTML crawl only | Screaming Frog with JS rendering, GSC URL Inspection |
 
 ---
 
 ### Sources consulted
+- Semrush exports provided by the client, dated Oct 1, 2026: Domain Overview (Desktop, US), Organic Research: Pages (Desktop, US, 227 URLs), and Organic Position Changes (US, Sept 30, 2026)
 - Live crawl of https://salesroads.com/ (robots.txt, sitemap_index.xml and 5 sub-sitemaps, 390 sitemap URLs + 39 linked URLs), 2026-10-01
 - SERP checks: "B2B appointment setting services", "sales outsourcing company", "outsourced SDR services", "B2B cold calling services company", "how much does appointment setting cost per appointment B2B", "SalesRoads reviews alternatives", "SalesRoads vs memoryBlue vs SalesHive"
 - Third-party pages about SalesRoads: [G2 alternatives](https://www.g2.com/products/salesroads/competitors/alternatives), [G2 SalesRoads vs memoryBlue](https://www.g2.com/compare/salesroads-vs-memoryblue), [Cleverly review](https://www.cleverly.co/blog/salesroads-reviews), [SalesBread review](https://salesbread.com/salesroads/), [Salesforge review](https://www.salesforge.ai/blog/salesroads-review), [OutboundSalesPro review](https://outboundsalespro.com/salesroads-review/), [Alleyoop alternative](https://alleyoop.io/salesroads-alternative/), [RemoteAides](https://www.remoteaides.com/salesroads-reviews-and-best-cold-calling-agency-alternatives/)
