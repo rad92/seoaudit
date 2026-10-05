@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Comparison Page Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky top bar; left rail = section index with completion state; main = one form card per framework section; Preview and Checklist are alternate views of the same brief. */
+:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --sunk:#EBEEF3; --ink:#152030; --ink-2:#4A5668; --ink-3:#7A8496;
+  --line:#D8DEE7; --line-2:#C3CBD7;
+  --accent:#2350C8; --accent-ink:#FFFFFF; --accent-soft:#E4EBFB;
+  --comp:#6B5A3E; --comp-soft:#F3EEE5;
+  --ok:#1D7A4B; --ok-soft:#E1F2E8; --warn:#9A6200; --warn-soft:#FBF0DA; --miss:#B23A2E; --miss-soft:#FBE7E4;
+  --input:#FFFFFF; --focus:#2350C8;
+  --f-ui:"Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-read:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F141C; --panel:#161D28; --sunk:#1C2431; --ink:#E6EBF2; --ink-2:#AEB8C7; --ink-3:#7E8899;
+  --line:#2A3443; --line-2:#3A4556;
+  --accent:#7EA0F5; --accent-ink:#0F141C; --accent-soft:#1F2C4A;
+  --comp:#D2BB92; --comp-soft:#2A2519;
+  --ok:#5FC991; --ok-soft:#16302A; --warn:#E5B35A; --warn-soft:#33291A; --miss:#F08A7E; --miss-soft:#3A1F1C;
+  --input:#111821; --focus:#7EA0F5; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F141C; --panel:#161D28; --sunk:#1C2431; --ink:#E6EBF2; --ink-2:#AEB8C7; --ink-3:#7E8899;
+  --line:#2A3443; --line-2:#3A4556;
+  --accent:#7EA0F5; --accent-ink:#0F141C; --accent-soft:#1F2C4A;
+  --comp:#D2BB92; --comp-soft:#2A2519;
+  --ok:#5FC991; --ok-soft:#16302A; --warn:#E5B35A; --warn-soft:#33291A; --miss:#F08A7E; --miss-soft:#3A1F1C;
+  --input:#111821; --focus:#7EA0F5; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--f-ui);margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel);border-bottom:1px solid var(--line)}
+.top-in{max-width:1320px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand b{font-size:15px;letter-spacing:.01em}
+.brand span{font-size:12px;color:var(--ink-3)}
+.brief-pick{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.brief-pick label{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+select,input[type=text],input[type=url],input[type=date],input[type=number],textarea{background:var(--input);border:1px solid var(--line-2);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+select{width:auto}
+.tabs{display:flex;gap:2px;background:var(--sunk);padding:3px;border-radius:8px;margin-left:auto}
+.tabs button{border:0;background:transparent;padding:6px 14px;border-radius:6px;cursor:pointer;color:var(--ink-2);font-weight:500}
+.tabs button[aria-selected=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.btn{border:1px solid var(--line-2);background:var(--panel);border-radius:6px;padding:6px 12px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+.btn.ghost:hover{background:var(--sunk)}
+.btn.small{padding:3px 9px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.status{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--ink-3);display:inline-block}
+.status.saved i{background:var(--ok)} .status.saving i{background:var(--warn)} .status.local i{background:var(--warn)} .status.error i{background:var(--miss)}
+
+.banner{max-width:1320px;margin:12px auto 0;padding:0 16px}
+.banner div{background:var(--warn-soft);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-size:13px}
+
+/* shell */
+.shell{max-width:1320px;margin:0 auto;padding-inline:16px;padding-block:16px 64px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);align-self:start;max-height:calc(100vh - 100px);overflow:auto}
+.progress{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:12px}
+.progress .num{font-size:22px;font-weight:600}
+.bar{height:6px;background:var(--sunk);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar span{display:block;height:100%;background:var(--accent)}
+.toc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.toc a{display:grid;grid-template-columns:28px 1fr auto;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;color:var(--ink-2);text-decoration:none;font-size:13px}
+.toc a:hover{background:var(--panel);color:var(--ink)}
+.toc .n{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--line-2)}
+.dot.part{border-color:var(--warn);background:linear-gradient(90deg,var(--warn) 50%,transparent 50%)}
+.dot.done{border-color:var(--ok);background:var(--ok)}
+.toc .opt{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+
+/* section cards */
+.main{min-width:0;display:flex;flex-direction:column;gap:16px}
+.intro{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.intro h1{font-size:20px;margin:0 0 4px;text-wrap:balance}
+.intro p{margin:0;color:var(--ink-2);max-width:72ch}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);scroll-margin-top:90px}
+.card-h{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.card-h .no{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);padding-top:3px;min-width:34px}
+.card-h .ttl{flex:1;min-width:0}
+.card-h h2{font-size:16px;margin:0;text-wrap:balance}
+.card-h .h2as{font-family:var(--f-mono);font-size:12px;color:var(--accent);margin-top:2px;overflow-wrap:anywhere}
+.chip{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-3);white-space:nowrap}
+.chip.req{border-color:transparent;background:var(--accent-soft);color:var(--accent)}
+.chip.st-done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.st-part{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.card-b{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.purpose{margin:0;color:var(--ink-2);max-width:80ch}
+details.notes{background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13px;color:var(--ink-2)}
+details.notes summary{cursor:pointer;font-weight:600;color:var(--ink)}
+details.notes ul{margin:6px 0 0;padding-left:18px}
+details.notes li{margin:2px 0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+.field>label,.field .lbl{font-weight:600;font-size:13px;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.field .req-star{color:var(--miss)}
+.help{font-size:12px;color:var(--ink-3)}
+.meter{font-size:11.5px;font-family:var(--f-mono);color:var(--ink-3)}
+.meter.ok{color:var(--ok)} .meter.warn{color:var(--warn)} .meter.bad{color:var(--miss)}
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.side{border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.side h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.side.up h3{color:var(--accent)} .side.comp h3{color:var(--comp)}
+.list{display:flex;flex-direction:column;gap:6px}
+.li{display:flex;gap:6px;align-items:center}
+.li .bul{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);width:18px;text-align:right;flex:none}
+.x{border:0;background:transparent;color:var(--ink-3);cursor:pointer;border-radius:4px;padding:2px 6px;font-size:14px;line-height:1}
+.x:hover{background:var(--miss-soft);color:var(--miss)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table.grid{border-collapse:collapse;width:100%;min-width:640px}
+table.grid th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;text-align:left;color:var(--ink-3);background:var(--sunk);padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.grid th.up{color:var(--accent)} table.grid th.comp{color:var(--comp)}
+table.grid td{border-bottom:1px solid var(--line);padding:4px;vertical-align:top}
+table.grid tr:last-child td{border-bottom:0}
+table.grid td.lab{font-weight:600;font-size:13px;padding:9px 8px;white-space:nowrap}
+table.grid input,table.grid select,table.grid textarea{border-color:transparent;background:transparent;padding:5px 6px}
+table.grid input:hover,table.grid textarea:hover{border-color:var(--line)}
+table.grid input:focus,table.grid select:focus,table.grid textarea:focus{border-color:var(--focus);background:var(--input)}
+table.grid textarea{min-height:34px}
+.cat{border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.cat-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 12px;background:var(--sunk)}
+.cat-h b{flex:1;min-width:0}
+.cat-b{padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.pair{border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.pair-h{display:flex;gap:8px;align-items:center}
+.pair-h .n{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);flex:none}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap}
+.toggle{display:flex;gap:8px;align-items:center;font-weight:600}
+
+/* preview */
+.pv{display:flex;flex-direction:column;gap:16px;min-width:0}
+.serp{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.serp .lab{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
+.serp .crumb{font-size:12.5px;color:var(--ink-2)}
+.serp .t{font-size:19px;color:var(--accent);margin:2px 0;line-height:1.3;overflow-wrap:anywhere}
+.serp .d{font-size:13.5px;color:var(--ink-2);max-width:62ch}
+article.doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:28px clamp(16px,4vw,48px);font-family:var(--f-read);font-size:17px;line-height:1.65}
+article.doc>*{max-width:68ch}
+article.doc h1{font-size:30px;line-height:1.2;margin:0 0 8px;font-weight:600;text-wrap:balance}
+article.doc h2{font-size:23px;margin:32px 0 8px;font-weight:600;text-wrap:balance}
+article.doc h3{font-size:18.5px;margin:20px 0 6px;font-weight:600}
+article.doc p{margin:8px 0}
+article.doc .byline{font-family:var(--f-ui);font-size:13px;color:var(--ink-3)}
+article.doc .verified{font-family:var(--f-ui);font-size:13px;background:var(--sunk);padding:6px 10px;border-radius:6px;display:inline-block}
+article.doc .tw{max-width:none;overflow-x:auto;margin:12px 0}
+article.doc table{border-collapse:collapse;font-family:var(--f-ui);font-size:14px;min-width:520px;width:100%}
+article.doc th,article.doc td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+article.doc th{background:var(--sunk)}
+article.doc mark.miss{background:var(--miss-soft);color:var(--miss);font-family:var(--f-ui);font-size:13px;padding:1px 6px;border-radius:4px}
+article.doc .wcnt{font-family:var(--f-ui);font-size:12px;color:var(--ink-3)}
+
+/* checklist */
+.ck{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.ck h2{font-size:16px;margin:0;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ck ul{list-style:none;margin:0;padding:6px 0}
+.ck li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:8px 18px;align-items:start}
+.ck li .why{font-size:12px;color:var(--ink-3)}
+.ck .ico{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:1px}
+.ck .ico.ok{background:var(--ok-soft);color:var(--ok)} .ck .ico.no{background:var(--miss-soft);color:var(--miss)}
+.ck input[type=checkbox]{width:16px;height:16px;margin:2px 0 0;accent-color:var(--accent)}
+
+/* export sheet */
+.sheet{position:fixed;inset:0;background:rgba(10,14,20,.45);display:grid;place-items:center;padding:16px;z-index:50}
+.sheet>div{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:820px;width:100%;max-height:86vh;display:flex;flex-direction:column}
+.sheet header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.sheet header b{flex:1}
+.sheet textarea{border:0;border-radius:0;flex:1;min-height:50vh;font-family:var(--f-mono);font-size:12.5px;padding:14px 16px;background:var(--input)}
+.newb{display:flex;gap:6px;align-items:center}
+.newb input{width:160px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:13px;z-index:60}
+
+@media (max-width:960px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;max-height:none}
+  .toc{flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
+  .toc a{grid-template-columns:auto auto;white-space:nowrap;background:var(--panel);border:1px solid var(--line)}
+  .toc a .t,.toc .opt{display:none}
+  .tabs{margin-left:0}
+}
+@media (max-width:640px){
+  .fields,.split,.cat-b{grid-template-columns:minmax(0,1fr)}
+  .top{position:static}
+  .top-in{gap:8px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><b>Comparison Page Builder</b><span>UpKeep vs. competitor pages</span></div>
+    <div class="brief-pick">
+      <label for="briefSel">Brief</label>
+      <select id="briefSel" aria-label="Choose a comparison brief"></select>
+      <span class="newb" id="newWrap" hidden>
+        <input type="text" id="newName" placeholder="Competitor, e.g. Limble" aria-label="New competitor name">
+        <button class="btn small primary" id="newGo">Create</button>
+        <button class="btn small ghost" id="newCancel">Cancel</button>
+      </span>
+      <button class="btn small" id="newBtn">+ New brief</button>
+    </div>
+    <div class="status" id="status" role="status"><i></i><span>Loading…</span></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-edit" aria-selected="true" data-view="edit">Edit</button>
+      <button role="tab" id="tab-preview" aria-selected="false" data-view="preview">Preview</button>
+      <button role="tab" id="tab-check" aria-selected="false" data-view="check">Checklist</button>
+    </div>
+    <button class="btn" id="exportBtn">Export</button>
+  </div>
+</header>
+<div class="banner" id="banner" hidden><div id="bannerText"></div></div>
+
+<div class="shell">
+  <aside class="rail" aria-label="Sections">
+    <div class="progress">
+      <div class="help">Required sections complete</div>
+      <div><span class="num mono" id="pNum">0/0</span></div>
+      <div class="bar"><span id="pBar" style="width:0%"></span></div>
+    </div>
+    <ul class="toc" id="toc"></ul>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <header>
+      <b id="sheetTitle">Export</b>
+      <button class="btn small" id="fmtMd">Markdown</button>
+      <button class="btn small" id="fmtHtml">HTML</button>
+      <button class="btn small primary" id="copyBtn">Copy</button>
+      <button class="btn small" id="dlBtn" hidden>Download</button>
+      <button class="btn small ghost" id="closeSheet" aria-label="Close export">Close</button>
+    </header>
+    <textarea id="sheetText" readonly aria-label="Exported page draft"></textarea>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const words=s=>{s=String(s||"").trim();return s?s.split(/\s+/).length:0};
+const filled=v=>String(v==null?"":v).trim()!=="";
+const clone=o=>JSON.parse(JSON.stringify(o));
+const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"brief";
+function getP(o,p){return p.split(".").reduce((a,k)=>a==null?undefined:a[k],o)}
+function setP(o,p,v){const ks=p.split(".");let a=o;for(let i=0;i<ks.length-1;i++){if(a[ks[i]]==null)a[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};a=a[ks[i]]}a[ks[ks.length-1]]=v}
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2200)}
+
+/* ---------- the brief template ---------- */
+const YEAR=String(new Date().getFullYear());
+const GLANCE=[
+ ["Best for","multi-site teams that need PM depth, safety and fleet in one tool","small teams that want a free plan and simple mobile work orders"],
+ ["Starting price","$[X]/user/month, billed annually","$[X]/user/month, billed annually"],
+ ["Free plan / trial","No free plan; [X]-day free trial","Free plan for up to [X] users"],
+ ["G2 rating","[X.X] ([count] reviews)","[X.X] ([count] reviews)"],
+ ["Standout strengths","2–3 items","2–3 items"],
+ ["Main limitations","1–2 honest items, e.g. no free plan","1–2 items"],
+ ["Mobile apps","iOS, Android; offline on [plan]","iOS, Android; offline on [plan]"],
+ ["Gated to higher plans","e.g. offline mode: Professional","e.g. meter-based PM: Premium"]
+];
+const FEATURES=[
+ ["AI","AI assistant for work orders, assets and insights","Yes — Nova, included on every plan"],
+ ["AI","Autonomous AI agents for multi-step tasks","Yes — Supernova"],
+ ["AI","AI data audits and anomaly detection","Yes — Nova Intelligence"],
+ ["Work orders & PM","Dedicated preventive maintenance module","Yes — condition-based triggers, AI checklists"],
+ ["Work orders & PM","Meter- and sensor-based PM triggers",""],
+ ["Work orders & PM","Custom work order statuses","Yes"],
+ ["Work orders & PM","Bulk actions for work orders, assets and schedules","Yes"],
+ ["Assets","Asset hierarchy depth","4 levels"],
+ ["Assets","Asset lifecycle and depreciation",""],
+ ["Parts & inventory","Parts and inventory tracking",""],
+ ["Parts & inventory","Purchase orders",""],
+ ["Reporting","Custom reports and dashboards","Yes — Looker-powered"],
+ ["Reporting","Asset-level reporting (MTBF, MTTR, downtime)","Yes"],
+ ["Reporting","PDF / CSV export on every plan","Yes"],
+ ["Mobile","iOS and Android apps",""],
+ ["Mobile","Offline mode",""],
+ ["Multi-site","Location-based permissions per site","Yes"],
+ ["Multi-site","Custom user roles","Yes"],
+ ["Multi-site","Free view-only seats for leadership","Yes"],
+ ["Customization","No-code app builder","Yes — Nova Apps"],
+ ["Integrations","Open API",""],
+ ["Integrations","ERP integrations (e.g. SAP)",""],
+ ["Communication","In-app team messaging",""],
+ ["Safety / EHS","Safety module with OSHA recordkeeping","Yes — Safety"],
+ ["Fleet","Native fleet module (DVIRs, VIN lookup, telematics)","Yes — Fleet"],
+ ["Training","Learning and certification management","Yes — Learn"],
+ ["Sensors / IoT","Wireless condition-monitoring sensors","Yes — Edge"],
+ ["Support","24/7 live chat","Yes — every paid plan"],
+ ["Security","SSO",""]
+];
+const CATS=["Work order management","Preventive maintenance","Asset management","Parts and inventory","Reporting and analytics","Mobile app and offline use","AI features","Integrations","Safety, fleet and training","Sensors and condition monitoring"];
+const FAQ_Q=["Is {C} better than UpKeep?","Is {C} cheaper than UpKeep?","Does {C} have a free plan? Does UpKeep?","Which is easier to use, {C} or UpKeep?","Can I migrate my data from {C} to UpKeep?","Do {C} and UpKeep work offline?","Which has better reporting and analytics?","Which is better for manufacturing or multi-site teams?","What are the best {C} alternatives?"];
+function blank(comp){
+  const C=comp||"Competitor";const s=t=>t.replaceAll("{C}",C);
+  return {
+    competitor:C, year:YEAR,
+    settings:{title:`${C} vs UpKeep (${YEAR}): Features, Pricing & Verdict`,metaDesc:"",url:`/blog/${slug(C)}-vs-upkeep/`,h1:`${C} vs UpKeep: An Honest ${YEAR} Comparison`,author:"",authorRole:"",reviewer:"",reviewerRole:"",updated:"",verifiedDate:"",verifiedSources:"",heroAlt:`${C} vs UpKeep comparison scorecard`},
+    opening:{answer:"",firstHand:""},
+    glance:GLANCE.map(r=>({label:r[0],up:"",comp:""})),
+    verdict:{chooseUp:["","","",""],chooseComp:["",""]},
+    quiz:{on:false,questions:"1. How many sites do you maintain? (1 / 2–5 / 6+)\n2. What's your biggest challenge? (adoption / PM and asset depth / safety and compliance)\n3. Do you also manage fleet, training or sensors? (yes / no)",mapping:""},
+    about:{comp:{what:"",strengths:["","",""],limits:["",""],quotes:[""]},up:{what:"",strengths:["","",""],limits:["",""],quotes:[""]}},
+    features:FEATURES.map(r=>({group:r[0],cap:r[1],up:r[2],comp:"",win:""})),
+    breakdown:CATS.map(n=>({name:n,comp:"",up:"",diff:"",win:"",shot:""})),
+    pricing:{up:["Essential","Premium","Professional","Enterprise"].map(p=>({plan:p,annual:"",monthly:"",unlocks:"",gated:""})),comp:[0,1,2,3].map(()=>({plan:"",annual:"",monthly:"",unlocks:"",gated:""})),freeUp:"",freeComp:"",example:"",extra:"",sources:""},
+    ease:{golive:"",onboarding:"",quote:""},
+    support:{up:"",comp:""},
+    ratings:{rows:["G2","Capterra","App Store","Google Play"].map(s=>({src:s,up:"",upN:"",comp:"",compN:"",checked:""})),report:"",cats:["Customer satisfaction","Ease of use","Ease of setup","Quality of support","Preventive maintenance","Reporting & dashboards"].map(c=>({cat:c,up:"",comp:""}))},
+    switching:{steps:["Export assets, PMs and work order history from "+C,"Import into UpKeep and check every record","Rebuild PM schedules and checklists","Train technicians and go live"],timeline:"",help:"",customer:"",customerUrl:""},
+    final:{summary:"",compWins:"",upWins:["",""],cta:""},
+    faq:FAQ_Q.map(q=>({q:s(q),a:""})),
+    author:{bio:"",url:"",linkedin:""},
+    checklist:{}
+  };
+}
+/* merge stored brief over a fresh template so new fields always exist */
+function normalize(b){
+  const base=blank(b&&b.competitor);
+  (function deep(t,s){for(const k in s){if(s[k]&&typeof s[k]==="object"&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==="object"&&!Array.isArray(t[k]))deep(t[k],s[k]);else t[k]=s[k]}})(base,b||{});
+  return base;
+}
+
+/* ---------- framework schema ---------- */
+const SECTIONS=[
+ {id:"opening",no:"0",name:"Opening: the short answer",h2:null,req:true,
+  purpose:"Answer the question in the first 60 words. Google's AI summary and featured snippets take their text from here.",
+  notes:["Say what each tool is best for in one sentence each, give both starting prices, and say who the page is for.","Don't open with background about CMMS in general.","The first-hand line must be true. Give a number if you have one."],
+  fields:[
+   {k:"opening.answer",label:"Short answer",type:"textarea",req:1,wide:1,w:[50,80],ph:"{C} is a strong pick for small teams that want a free plan and simple mobile work orders. UpKeep is built for teams that need deeper PM, asset reporting, and safety, fleet and training in one platform. {C} starts at $[X]/user/month and UpKeep at $[X]. Below, we compare features, pricing, G2 ratings and support."},
+   {k:"opening.firstHand",label:"First-hand line",type:"textarea",wide:1,w:[15,40],ph:"Our team has migrated [X] customers from {C}, so this comparison draws on what we see in those rollouts."}
+  ]},
+ {id:"glance",no:"1",name:"At a glance",h2:"{C} vs UpKeep at a glance",req:true,
+  purpose:"The summary card. Most readers skim this and the verdict, then jump to pricing.",
+  notes:["Fill every cell.","Fill UpKeep's 'Main limitations' honestly, e.g. 'no free plan'. Competitor pages say it anyway.","Name the plan whenever a feature is gated."],
+  fields:[{k:"glance",type:"fixedtable",req:1,wide:1,lab:"label",cols:[{k:"up",label:"UpKeep",cls:"up",phIdx:1},{k:"comp",label:"{C}",cls:"comp",phIdx:2}],phs:GLANCE}]},
+ {id:"verdict",no:"2",name:"Quick verdict",h2:"Quick verdict: which should you choose?",req:true,
+  purpose:"The decision in 30 seconds, in the format Google's AI summary repeats.",
+  notes:["Each bullet is a concrete situation, e.g. 'you run PMs on meter readings or sensor alerts'.","Give the competitor real reasons. Don't write 'choose {C} if you don't need advanced features'.","100–150 words in total."],
+  fields:[
+   {k:"verdict.chooseUp",label:"Choose UpKeep if…",type:"list",req:1,min:4,max:5,ph:"you need OSHA recordkeeping in the same tool"},
+   {k:"verdict.chooseComp",label:"Choose {C} if…",type:"list",req:1,min:2,max:3,ph:"you're a team of 1–3 that needs a free plan"}
+  ]},
+ {id:"quiz",no:"2b",name:"Find-your-fit quiz",h2:null,req:false,
+  purpose:"Optional. A 3-question recommender keeps readers on the page and sends them to the right answer.",
+  notes:["This is a developer task. Keep a plain-text version of the logic on the page so search engines can read it.","Map each combination to 'UpKeep is likely the better fit' or '{C} may suit you', with one sentence of reasoning and a CTA."],
+  fields:[
+   {k:"quiz.on",label:"Include the quiz on this page",type:"check",wide:1},
+   {k:"quiz.questions",label:"Questions and answer options",type:"textarea",wide:1,pre:1},
+   {k:"quiz.mapping",label:"Answers → recommendation",type:"textarea",wide:1,ph:"1 site + adoption → {C} may suit you: …\n2–5 sites + PM depth → UpKeep: …"}
+  ]},
+ {id:"about",no:"3",name:"What each tool is",h2:"What are {C} and UpKeep?",req:true,
+  purpose:"A neutral profile of each tool, the same length and format for both. Save the pitch for later sections.",
+  notes:["About 80 words each: founded, headquarters, customer count, what it's known for.","Use the competitor's own public numbers and link them.","Use one approved UpKeep customer count and ROI figure, the same ones used across the site."],
+  fields:[{k:"about",type:"split",req:1,wide:1}]},
+ {id:"features",no:"4",name:"Feature comparison table",h2:"Feature comparison: {C} vs UpKeep",req:true,
+  purpose:"The full table. It's the most-linked and most-copied part of these pages.",
+  notes:["Every cell is text, not just an icon: 'Yes — meter and sensor triggers (Professional plan)'.","Name the plan whenever a feature is gated.","Aim for 25–40 rows, with the competitor winning or tying at least 3. A table UpKeep wins on every row reads as an ad.","UpKeep values are pre-filled from the current product compare page. Check each one."],
+  fields:[{k:"features",type:"table",req:1,wide:1,min:25,reqCols:["cap","up","comp"],cols:[{k:"group",label:"Group",w:130},{k:"cap",label:"Capability",w:240},{k:"up",label:"UpKeep",cls:"up",w:220},{k:"comp",label:"{C}",cls:"comp",w:220},{k:"win",label:"Edge",type:"select",opts:[["","—"],["up","UpKeep"],["comp","{C}"],["tie","Tie"]],w:110}],newRow:{group:"",cap:"",up:"",comp:"",win:""}}]},
+ {id:"breakdown",no:"5",name:"Feature-by-feature breakdown",h2:"{C} vs UpKeep: feature-by-feature breakdown",req:true,
+  purpose:"The depth that turns the table into a ranking page. One H3 per category.",
+  notes:["Inside every category: what {C} does (40–60 words, with a source), what UpKeep does (40–60 words, with one specific detail), then 1–2 sentences on the difference.","Pick a winner honestly: UpKeep, {C} or a tie.","Add one UpKeep screenshot per category with descriptive alt text.","The current blog's 12 features can be reused, but each now needs the competitor's side."],
+  fields:[{k:"breakdown",type:"cats",req:1,wide:1}]},
+ {id:"pricing",no:"6",name:"Pricing",h2:"{C} vs UpKeep pricing ({Y})",req:true,
+  purpose:"The most-searched fact. UpKeep's own numbers here replace the conflicting ones on competitor pages.",
+  notes:["Never quote a competitor price older than 90 days.","If UpKeep's prices aren't public, write 'contact sales' and still give the plan structure.","Show the math in the worked example."],
+  fields:[
+   {k:"pricing.up",label:"UpKeep plans",type:"table",req:1,wide:1,min:1,reqCols:["plan","annual"],cols:[{k:"plan",label:"Plan",w:130},{k:"annual",label:"$/user/mo (annual)",w:130},{k:"monthly",label:"$/user/mo (monthly)",w:130},{k:"unlocks",label:"What it unlocks",w:240},{k:"gated",label:"Gated to higher plans",w:200}],newRow:{plan:"",annual:"",monthly:"",unlocks:"",gated:""}},
+   {k:"pricing.comp",label:"{C} plans",type:"table",req:1,wide:1,min:1,reqCols:["plan","annual"],cols:[{k:"plan",label:"Plan",w:130},{k:"annual",label:"$/user/mo (annual)",w:130},{k:"monthly",label:"$/user/mo (monthly)",w:130},{k:"unlocks",label:"What it unlocks",w:240},{k:"gated",label:"Gated to higher plans",w:200}],newRow:{plan:"",annual:"",monthly:"",unlocks:"",gated:""}},
+   {k:"pricing.freeUp",label:"UpKeep free plan / trial",type:"text",req:1,ph:"No free plan; [X]-day free trial"},
+   {k:"pricing.freeComp",label:"{C} free plan / trial",type:"text",req:1,ph:"Free plan for up to [X] users"},
+   {k:"pricing.example",label:"Worked example",type:"textarea",req:1,wide:1,ph:"A team of 10 technicians and 2 managers on the plan with PM + inventory pays about $[X]/year on UpKeep vs $[X] on {C}. Math: …"},
+   {k:"pricing.extra",label:"Costs beyond the subscription",type:"textarea",wide:1,ph:"Free requester seats, view-only seats, onboarding fees, sensor hardware"},
+   {k:"pricing.sources",label:"Pricing page links",type:"text",req:1,wide:1,ph:"upkeep.com/pricing · {c}.com/pricing"}
+  ]},
+ {id:"ease",no:"7",name:"Ease of use and implementation",h2:"Ease of use and implementation",req:false,
+  purpose:"Answers the 'UpKeep has a learning curve' claim that competitor pages repeat.",
+  notes:["Give typical go-live time in weeks and what onboarding includes.","G2 'Ease of use' and 'Ease of setup' scores go in the Ratings section.","Add one customer quote about technician adoption. 150–250 words in total."],
+  fields:[
+   {k:"ease.golive",label:"Typical go-live time",type:"text",ph:"[X] weeks for a [N]-site team"},
+   {k:"ease.onboarding",label:"What onboarding includes",type:"textarea",wide:1,w:[80,180]},
+   {k:"ease.quote",label:"Customer quote on adoption",type:"textarea",wide:1,ph:"\"…\" — Name, Role, Company"}
+  ]},
+ {id:"support",no:"8",name:"Customer support and onboarding",h2:"Customer support and onboarding",req:false,
+  purpose:"Channels and hours per plan for both vendors.",
+  notes:["Include channels and hours per plan, the plan that adds dedicated CS, and migration help.","G2 'Quality of support' goes in the Ratings section. 120–200 words in total."],
+  fields:[
+   {k:"support.up",label:"UpKeep support",type:"textarea",w:[50,100],ph:"24/7 live chat on every paid plan; dedicated CS from [plan]; white-glove migration"},
+   {k:"support.comp",label:"{C} support",type:"textarea",w:[50,100]}
+  ]},
+ {id:"ratings",no:"9",name:"Ratings and reviews",h2:"Ratings and reviews",req:true,
+  purpose:"Review scores with counts and dates, plus G2 category scores. The {C} page leads with G2 scores, so show the same categories.",
+  notes:["If {C} rates higher, say so and explain what reviewers praise in each.","Name the G2 report with its season and year.","Add 2 short real review quotes per vendor in section 3."],
+  fields:[
+   {k:"ratings.rows",label:"Review sites",type:"fixedtable",req:1,wide:1,lab:"src",reqCols:["up","upN","comp","compN","checked"],reqRows:1,cols:[{k:"up",label:"UpKeep rating",cls:"up",w:90},{k:"upN",label:"Reviews",cls:"up",w:80},{k:"comp",label:"{C} rating",cls:"comp",w:90},{k:"compN",label:"Reviews",cls:"comp",w:80},{k:"checked",label:"Checked on",type:"date",w:150}]},
+   {k:"ratings.report",label:"G2 report",type:"text",req:1,ph:"G2 Fall "+YEAR},
+   {k:"ratings.cats",label:"G2 category scores",type:"fixedtable",req:1,wide:1,lab:"cat",cols:[{k:"up",label:"UpKeep",cls:"up",w:120},{k:"comp",label:"{C}",cls:"comp",w:120}]}
+  ]},
+ {id:"switching",no:"10",name:"Switching to UpKeep",h2:"Switching from {C} to UpKeep",req:false,
+  purpose:"The step from comparing to acting. Links to the switch page.",
+  notes:["3–4 numbered steps, the typical timeline, and what UpKeep's team does for you.","Name one customer who switched from {C} and link their story.","End with a link: 'See how switching from {C} works →'."],
+  fields:[
+   {k:"switching.steps",label:"Steps",type:"list",min:3,max:4,ordered:1,wide:1,pre:1},
+   {k:"switching.timeline",label:"Typical timeline",type:"text",ph:"[X] weeks from export to go-live"},
+   {k:"switching.customer",label:"Customer who switched",type:"text",ph:"Company name"},
+   {k:"switching.help",label:"What UpKeep's team does",type:"textarea",wide:1,ph:"Migrates assets, PMs and work order history, and checks every record before go-live"},
+   {k:"switching.customerUrl",label:"Customer story link",type:"url",wide:1,ph:"https://upkeep.com/customers/…"}
+  ]},
+ {id:"final",no:"11",name:"Final verdict",h2:"Final verdict: {C} or UpKeep?",req:true,
+  purpose:"A 3-sentence summary, the one situation where {C} wins, the situations where UpKeep wins, and a soft CTA.",
+  notes:["Never write 'And the winner is… UpKeep!'.","Write 'For [buyer type], UpKeep is the better fit because…'.","120–180 words in total."],
+  fields:[
+   {k:"final.summary",label:"Summary",type:"textarea",req:1,wide:1,w:[40,80]},
+   {k:"final.compWins",label:"Where {C} wins",type:"textarea",req:1,wide:1,w:[15,40]},
+   {k:"final.upWins",label:"Where UpKeep wins",type:"list",req:1,min:2,max:3,wide:1},
+   {k:"final.cta",label:"Call to action",type:"text",req:1,ph:"Book a demo"}
+  ]},
+ {id:"faq",no:"12",name:"FAQs",h2:"{C} vs UpKeep: FAQs",req:true,
+  purpose:"Marked up as FAQPage schema. Answer each in 40–70 words, starting with a direct answer (Yes, No, or a number).",
+  notes:["Add 2–3 more questions from Google's 'People also ask' box for the competitor's query, checked on the day you write.","For 'best alternatives', link UpKeep's other comparison pages."],
+  fields:[{k:"faq",type:"pairs",req:1,wide:1,min:9}]},
+ {id:"author",no:"13",name:"About the author",h2:"About the author",req:true,
+  purpose:"Credibility. Every third-party page that ranks names its author, and the strongest one adds a bio.",
+  notes:["Name, photo, role, years in maintenance or CMMS work, and what they have done with both tools.","Add a reviewer line if a reliability engineer or CS lead checked the facts. 40–60 words."],
+  fields:[
+   {k:"settings.author",label:"Author name",type:"text",req:1,ph:"Full name"},
+   {k:"settings.authorRole",label:"Author role",type:"text",req:1,ph:"e.g. Reliability Engineer"},
+   {k:"author.bio",label:"Bio",type:"textarea",req:1,wide:1,w:[40,60]},
+   {k:"author.url",label:"Author page",type:"url",req:1,ph:"https://upkeep.com/blog/author/…"},
+   {k:"author.linkedin",label:"LinkedIn",type:"url",ph:"https://www.linkedin.com/in/…"}
+  ]}
+];
+const MANUAL=[
+ ["roi","One ROI figure and one customer count, matching the rest of the site"],
+ ["sources","Every claim about the competitor links to a source"],
+ ["schema","Schema: Article + FAQPage + BreadcrumbList, tested in Google's Rich Results Test"],
+ ["links","Links: verdict → switch page, switch page → this page, FAQ → other comparison pages"],
+ ["baseline","Baseline clicks, impressions and position logged in the SEO Change Tracker"],
+ ["legal","Legal or brand review of competitor claims"]
+];
+
+/* ---------- state ---------- */
+let brief=normalize(blank("MaintainX"));
+let briefId="maintainx";
+let saved=false;          // does briefId exist in the store?
+let list={};              // id -> {competitor, updatedAt}
+let view="edit";
+let dirty=false, saving=null, saveTimer=null;
+let store={kind:"pending",db:null,canWrite:true};
+let comments=null, downloads=null;
+let exportFmt="md";
+
+const C=()=>brief.competitor||"Competitor";
+const sub=t=>String(t||"").replaceAll("{C}",C()).replaceAll("{c}",slug(C())).replaceAll("{Y}",brief.year||YEAR);
+
+/* ---------- completion ---------- */
+function fieldDone(f){
+  const v=getP(brief,f.k);
+  switch(f.type){
+    case "list":{const n=(v||[]).filter(filled).length;return n>=(f.min||1)}
+    case "table":{const rc=f.reqCols||[];const n=(v||[]).filter(r=>rc.every(c=>filled(r[c]))).length;return n>=(f.min||1)}
+    case "fixedtable":{const rows=f.reqRows?(v||[]).slice(0,f.reqRows):(v||[]);const rc=f.reqCols||f.cols.map(c=>c.k);return rows.length>0&&rows.every(r=>rc.every(c=>filled(r[c])))}
+    case "pairs":return (v||[]).filter(p=>filled(p.q)&&filled(p.a)).length>=(f.min||1);
+    case "cats":return (v||[]).every(c=>filled(c.comp)&&filled(c.up)&&filled(c.diff));
+    case "split":return ["comp","up"].every(s=>filled(v[s].what)&&v[s].strengths.filter(filled).length>=3&&v[s].limits.filter(filled).length>=2);
+    case "check":return true;
+    default:
+      if(f.w)return words(v)>=f.w[0];
+      if(f.chars)return String(v||"").length>=f.chars[0];
+      return filled(v);
+  }
+}
+function fieldStarted(f){
+  const v=getP(brief,f.k);
+  if(Array.isArray(v))return v.some(x=>typeof x==="object"?Object.entries(x).some(([k,y])=>!["label","src","cat","name","group","cap","q","plan"].includes(k)&&filled(y)):filled(x));
+  if(v&&typeof v==="object")return JSON.stringify(v).replace(/"[^"]*":/g,"").replace(/[\[\]{}",]/g,"").trim()!=="";
+  return filled(v);
+}
+function secState(s){
+  const req=s.fields.filter(f=>f.req);
+  if(!req.length){const fs=s.fields.filter(f=>f.type!=="check"&&!f.pre);const n=fs.filter(fieldStarted).length;return n===0?"empty":n===fs.length?"done":"part"}
+  const done=req.filter(fieldDone).length;
+  if(done===req.length)return "done";
+  return (done>0||s.fields.some(fieldStarted))?"part":"empty";
+}
+
+/* ---------- edit view ---------- */
+function ph(t){return esc(sub(t||""))}
+function meterFor(f,v){
+  if(f.max){const n=String(v||"").length;return{cls:n===0?"":n<=f.max?"ok":"bad",t:`${n}/${f.max} characters`}}
+  if(f.chars){const n=String(v||"").length;const[a,b]=f.chars;return{cls:n===0?"":(n>=a&&n<=b)?"ok":n>b?"bad":"warn",t:`${n} characters · target ${a}–${b}`}}
+  if(f.w){const n=words(v);const[a,b]=f.w;return{cls:n===0?"":(n>=a&&n<=b)?"ok":n>b?"bad":"warn",t:`${n} words · target ${a}–${b}`}}
+  if(f.check==="fresh"&&v){const d=Math.floor((Date.now()-new Date(v+"T00:00:00").getTime())/864e5);return{cls:d<=90?"ok":"bad",t:d<0?"date is in the future":`${d} days ago · re-check after 90`}}
+  return null;
+}
+function titleNote(v){
+  const out=[];const t=String(v||"");
+  if(t&&!t.toLowerCase().includes(C().toLowerCase()))out.push("add the competitor name");
+  if(t&&!t.includes(brief.year))out.push("add the year");
+  if(t&&t.toLowerCase().indexOf("upkeep")>-1&&t.toLowerCase().indexOf(C().toLowerCase())>t.toLowerCase().indexOf("upkeep"))out.push("put the competitor first");
+  return out.join(" · ");
+}
+function renderField(f){
+  const v=getP(brief,f.k);
+  const id="f_"+f.k.replace(/\./g,"_");
+  const star=f.req?'<span class="req-star" title="Required">*</span>':"";
+  const lbl=f.label?`<label for="${id}">${esc(sub(f.label))}${star}</label>`:"";
+  const help=f.help?`<div class="help">${esc(sub(f.help))}</div>`:"";
+  const m=meterFor(f,v);
+  const meter=(m||f.check==="title")?`<div class="meter ${m?m.cls:""}" data-meter="${f.k}">${m?esc(m.t):""}${f.check==="title"&&titleNote(v)?" · "+esc(titleNote(v)):""}</div>`:"";
+  const wide=f.wide?" wide":"";
+  const ctg=`data-comment-target`;
+  switch(f.type){
+   case "text":case "url":case "date":
+    return `<div class="field${wide}" ${ctg}>${lbl}<input type="${f.type}" id="${id}" data-path="${f.k}" value="${esc(v)}" placeholder="${ph(f.ph)}">${meter}${help}</div>`;
+   case "textarea":
+    return `<div class="field${wide}" ${ctg}>${lbl}<textarea id="${id}" data-path="${f.k}" placeholder="${ph(f.ph)}" rows="${f.w&&f.w[1]>90?5:3}">${esc(v)}</textarea>${meter}${help}</div>`;
+   case "check":
+    return `<div class="field${wide}"><label class="toggle"><input type="checkbox" id="${id}" data-path="${f.k}" ${v?"checked":""}> ${esc(sub(f.label))}</label></div>`;
+   case "list":{
+    const arr=v||[];const n=arr.filter(filled).length;
+    const rng=f.min?`<span class="meter ${n>=f.min&&n<=(f.max||99)?"ok":n>(f.max||99)?"bad":"warn"}">${n} filled · target ${f.min}${f.max?"–"+f.max:"+"}</span>`:"";
+    return `<div class="field${wide}" ${ctg}><div class="lbl">${esc(sub(f.label))}${star} ${rng}</div><div class="list">${arr.map((x,i)=>`<div class="li"><span class="bul">${f.ordered?(i+1)+".":"•"}</span><input type="text" id="${id}_${i}" data-path="${f.k}.${i}" value="${esc(x)}" placeholder="${ph(f.ph)}" aria-label="${esc(sub(f.label))} ${i+1}"><button class="x" data-act="del" data-arr="${f.k}" data-i="${i}" aria-label="Remove item">×</button></div>`).join("")}</div><div class="row-actions"><button class="btn small" data-act="add" data-arr="${f.k}">+ Add item</button></div></div>`;
+   }
+   case "table":case "fixedtable":{
+    const rows=v||[];const fixed=f.type==="fixedtable";
+    let cnt="";
+    if(f.min&&!fixed){const rc=f.reqCols||[];const n=rows.filter(r=>rc.every(c=>filled(r[c]))).length;cnt=`<span class="meter ${n>=f.min?"ok":"warn"}">${n} complete rows · target ${f.min}+</span>`}
+    if(f.k==="features"){const w=rows.filter(r=>r.win==="comp"||r.win==="tie").length;cnt+=` <span class="meter ${w>=3?"ok":"warn"}">${w} rows where ${esc(C())} wins or ties · need 3+</span>`}
+    const head=(fixed?`<th></th>`:"")+f.cols.map(c=>`<th class="${c.cls||""}" style="min-width:${c.w||120}px">${esc(sub(c.label))}</th>`).join("")+(fixed?"":"<th></th>");
+    const body=rows.map((r,i)=>"<tr>"+(fixed?`<td class="lab">${esc(r[f.lab])}</td>`:"")+f.cols.map(c=>{
+      const p=`${f.k}.${i}.${c.k}`;const cid=`${id}_${i}_${c.k}`;const al=`${esc(sub(c.label))}, row ${i+1}`;
+      if(c.type==="select")return `<td><select id="${cid}" data-path="${p}" aria-label="${al}">${c.opts.map(o=>`<option value="${o[0]}" ${r[c.k]===o[0]?"selected":""}>${esc(sub(o[1]))}</option>`).join("")}</select></td>`;
+      if(c.type==="date")return `<td><input type="date" id="${cid}" data-path="${p}" value="${esc(r[c.k])}" aria-label="${al}"></td>`;
+      const phx=f.phs&&c.phIdx?f.phs[i][c.phIdx]:"";
+      return `<td><input type="text" id="${cid}" data-path="${p}" value="${esc(r[c.k])}" placeholder="${ph(phx)}" aria-label="${al}"></td>`;
+    }).join("")+(fixed?"":`<td><button class="x" data-act="del" data-arr="${f.k}" data-i="${i}" aria-label="Remove row">×</button></td>`)+"</tr>").join("");
+    return `<div class="field${wide}" ${ctg}>${f.label?`<div class="lbl">${esc(sub(f.label))}${star}</div>`:""}${cnt?`<div>${cnt}</div>`:""}<div class="tbl-wrap"><table class="grid"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${fixed?"":`<div class="row-actions"><button class="btn small" data-act="add" data-arr="${f.k}">+ Add row</button></div>`}</div>`;
+   }
+   case "cats":
+    return `<div class="field wide">${(v||[]).map((c,i)=>{
+      const p=`${f.k}.${i}`;const cid=`${id}_${i}`;
+      const mf=(k,lab,phx,w)=>{const val=c[k];const mm=w?meterFor({w},val):null;return `<div class="field"><label for="${cid}_${k}">${esc(sub(lab))}</label><textarea id="${cid}_${k}" data-path="${p}.${k}" rows="3" placeholder="${ph(phx)}">${esc(val)}</textarea>${mm?`<div class="meter ${mm.cls}" data-meter="${p}.${k}">${esc(mm.t)}</div>`:""}</div>`};
+      return `<div class="cat" data-comment-target><div class="cat-h"><b>H3: ${esc(c.name)}</b><label class="help" for="${cid}_win">Winner</label><select id="${cid}_win" data-path="${p}.win"><option value="">—</option><option value="up" ${c.win==="up"?"selected":""}>UpKeep</option><option value="comp" ${c.win==="comp"?"selected":""}>${esc(C())}</option><option value="tie" ${c.win==="tie"?"selected":""}>Tie</option></select></div><div class="cat-b">${mf("comp","{C}: what it does","Fairly stated, with a source link",[40,60])}${mf("up","UpKeep: what it does","One specific detail: a number, a trigger type, a plan",[40,60])}${mf("diff","The difference","Who should care, in 1–2 sentences",[10,45])}<div class="field"><label for="${cid}_shot">Screenshot alt text</label><input type="text" id="${cid}_shot" data-path="${p}.shot" value="${esc(c.shot)}" placeholder="e.g. UpKeep PM schedule triggered by meter reading"></div></div></div>`}).join("")}</div>`;
+   case "pairs":{
+    const arr=v||[];const n=arr.filter(p=>filled(p.q)&&filled(p.a)).length;
+    return `<div class="field wide"><div class="lbl"><span class="meter ${n>=f.min?"ok":"warn"}">${n} answered · target ${f.min}+</span></div>${arr.map((p,i)=>{const mm=meterFor({w:[40,70]},p.a);return `<div class="pair" data-comment-target><div class="pair-h"><span class="n">Q${i+1}</span><input type="text" id="${id}_${i}_q" data-path="${f.k}.${i}.q" value="${esc(p.q)}" placeholder="Question" aria-label="Question ${i+1}"><button class="x" data-act="del" data-arr="${f.k}" data-i="${i}" aria-label="Remove question">×</button></div><textarea id="${id}_${i}_a" data-path="${f.k}.${i}.a" rows="3" placeholder="Start with Yes, No, or a number." aria-label="Answer ${i+1}">${esc(p.a)}</textarea><div class="meter ${mm?mm.cls:""}" data-meter="${f.k}.${i}.a">${mm?esc(mm.t):""}</div></div>`}).join("")}<div class="row-actions"><button class="btn small" data-act="add" data-arr="${f.k}">+ Add question</button></div></div>`;
+   }
+   case "split":{
+    const side=(s,title)=>{const b=v[s];const p=`${f.k}.${s}`;
+      return `<div class="side ${s}" data-comment-target><h3>${esc(title)}</h3>`+
+      renderField({k:p+".what",label:`What is ${title}?`,type:"textarea",req:1,w:[60,100],ph:"Founded, headquarters, customer count, what it's known for"})+
+      renderField({k:p+".strengths",label:"Strengths",type:"list",req:1,min:3,max:3})+
+      renderField({k:p+".limits",label:"Limitations",type:"list",req:1,min:2,max:3})+
+      renderField({k:p+".quotes",label:"What customers say (optional)",type:"list",ph:"\"…\" — Role, source"})+`</div>`};
+    return `<div class="field wide"><div class="split">${side("comp",C())}${side("up","UpKeep")}</div></div>`;
+   }
+  }
+  return "";
+}
+function renderSection(s){
+  const st=secState(s);
+  const stChip=st==="done"?`<span class="chip st-done">Complete</span>`:st==="part"?`<span class="chip st-part">In progress</span>`:"";
+  const h2=s.h2?`<div class="h2as">H2: ${esc(sub(s.h2))}</div>`:(s.id==="opening"?`<div class="h2as">No heading. Goes directly under the H1.</div>`:"");
+  return `<section class="card" id="sec-${s.id}" data-sec="${s.id}">
+    <div class="card-h"><span class="no">${esc(s.no)}</span><div class="ttl"><h2>${esc(sub(s.name))}</h2>${h2}</div>
+    ${s.req?'<span class="chip req">Required</span>':'<span class="chip">Optional</span>'}${stChip}
+    <button class="btn small ghost cmt" data-cmt="${s.id}" hidden>Comment</button></div>
+    <div class="card-b"><p class="purpose">${esc(sub(s.purpose))}</p>
+    <details class="notes"><summary>Writer notes</summary><ul>${s.notes.map(n=>`<li>${esc(sub(n))}</li>`).join("")}</ul></details>
+    <div class="fields">${s.fields.map(renderField).join("")}</div></div></section>`;
+}
+function renderEdit(){
+  const ro=store.canWrite?"":" (read-only)";
+  $("#main").innerHTML=`<div class="intro"><h1>${esc(C())} vs UpKeep${esc(ro)}</h1><p>Fill each card in order. The headings in blue are exactly what goes on the page. Open <b>Preview</b> to read the assembled draft, and <b>Checklist</b> before you publish.</p>
+    <div class="legend"><span><span class="req-star">*</span> required field</span><span><span class="dot done"></span> section complete</span><span><span class="dot part"></span> in progress</span><span><span class="dot"></span> not started</span></div></div>`+SECTIONS.map(renderSection).join("");
+  if(!store.canWrite)$("#main").querySelectorAll("input,textarea,select,button[data-act]").forEach(el=>el.disabled=true);
+  if(comments)$("#main").querySelectorAll(".cmt").forEach(b=>b.hidden=false);
+}
+function renderToc(){
+  let req=0,done=0;
+  $("#toc").innerHTML=SECTIONS.map(s=>{const st=secState(s);if(s.req){req++;if(st==="done")done++}
+    return `<li><a href="#sec-${s.id}" data-goto="${s.id}"><span class="n">${esc(s.no)}</span><span class="t">${esc(s.name)}${s.req?"":' <span class="opt">optional</span>'}</span><span class="dot ${st==="done"?"done":st==="part"?"part":""}" aria-label="${st}"></span></a></li>`}).join("");
+  $("#pNum").textContent=`${done}/${req}`;$("#pBar").style.width=(req?Math.round(done/req*100):0)+"%";
+}
+function refreshCard(secId){
+  const s=SECTIONS.find(x=>x.id===secId);const el=document.getElementById("sec-"+secId);if(!s||!el)return;
+  const y=window.scrollY;el.outerHTML=renderSection(s);window.scrollTo(0,y);
+  if(!store.canWrite)document.getElementById("sec-"+secId).querySelectorAll("input,textarea,select,button[data-act]").forEach(e=>e.disabled=true);
+  if(comments)document.getElementById("sec-"+secId).querySelectorAll(".cmt").forEach(b=>b.hidden=false);
+}
+function updateChips(card){
+  const s=SECTIONS.find(x=>x.id===card.dataset.sec);if(!s)return;
+  const st=secState(s);const h=card.querySelector(".card-h");
+  h.querySelectorAll(".st-done,.st-part").forEach(c=>c.remove());
+  const cm=h.querySelector(".cmt");
+  if(st!=="empty"){const c=document.createElement("span");c.className="chip "+(st==="done"?"st-done":"st-part");c.textContent=st==="done"?"Complete":"In progress";h.insertBefore(c,cm)}
+}
+
+/* ---------- preview / export model ---------- */
+const MISS="\u0001";
+const need=(v,label)=>filled(v)?String(v):MISS+label+MISS;
+function blocks(){
+  const b=[],s=brief.settings;const P=(t)=>b.push({t:"p",x:t});
+  b.push({t:"h1",x:need(s.h1,"H1")});
+  b.push({t:"byline",x:`By ${need(s.author,"author")}${filled(s.authorRole)?", "+s.authorRole:""}`});
+  P(need(brief.opening.answer,"short answer (50–80 words)"));
+  if(filled(brief.opening.firstHand))P(brief.opening.firstHand);
+  b.push({t:"h2",x:sub("{C} vs UpKeep at a glance")});
+  b.push({t:"table",h:["","UpKeep",C()],r:brief.glance.map(r=>[r.label,need(r.up,"UpKeep"),need(r.comp,C())])});
+  b.push({t:"h2",x:"Quick verdict: which should you choose?"});
+  P("**Choose UpKeep if:**");b.push({t:"ul",i:listOr(brief.verdict.chooseUp,"4–5 reasons")});
+  P(`**Choose ${C()} if:**`);b.push({t:"ul",i:listOr(brief.verdict.chooseComp,"2–3 reasons")});
+  if(brief.quiz.on){b.push({t:"h3",x:"Find your fit"});P(need(brief.quiz.questions,"quiz questions"));if(filled(brief.quiz.mapping))P(brief.quiz.mapping)}
+  b.push({t:"h2",x:sub("What are {C} and UpKeep?")});
+  [["comp",C()],["up","UpKeep"]].forEach(([k,n])=>{const a=brief.about[k];b.push({t:"h3",x:`What is ${n}?`});P(need(a.what,"about 80 words"));P("**Strengths**");b.push({t:"ul",i:listOr(a.strengths,"3 strengths")});P("**Limitations**");b.push({t:"ul",i:listOr(a.limits,"2–3 limitations")});const q=a.quotes.filter(filled);if(q.length){P("**What customers say**");b.push({t:"ul",i:q})}});
+  b.push({t:"h2",x:sub("Feature comparison: {C} vs UpKeep")});
+  b.push({t:"table",h:["Capability","UpKeep",C()],r:brief.features.filter(r=>filled(r.cap)).map(r=>[r.cap,need(r.up,"UpKeep"),need(r.comp,C())])});
+  b.push({t:"h2",x:sub("{C} vs UpKeep: feature-by-feature breakdown")});
+  brief.breakdown.forEach(c=>{b.push({t:"h3",x:c.name});P(`**${C()}:** ${need(c.comp,"40–60 words")}`);P(`**UpKeep:** ${need(c.up,"40–60 words")}`);const w=c.win==="up"?"UpKeep":c.win==="comp"?C():c.win==="tie"?"Tie":MISS+"pick a winner"+MISS;P(`**The difference:** ${need(c.diff,"1–2 sentences")} Winner: ${w}.`);if(filled(c.shot))b.push({t:"img",x:c.shot})});
+  b.push({t:"h2",x:sub("{C} vs UpKeep pricing ({Y})")});
+  const pt=(rows,n)=>({t:"table",h:["Plan","$/user/mo (annual)","$/user/mo (monthly)","What it unlocks","Gated to higher plans"],r:rows.filter(r=>filled(r.plan)).map(r=>[r.plan,need(r.annual,"price"),r.monthly||"",r.unlocks||"",r.gated||""]),cap:n});
+  b.push({t:"h3",x:"UpKeep plans"});b.push(pt(brief.pricing.up));
+  b.push({t:"h3",x:`${C()} plans`});b.push(pt(brief.pricing.comp));
+  P(`**Free plan and trial.** UpKeep: ${need(brief.pricing.freeUp,"terms")}. ${C()}: ${need(brief.pricing.freeComp,"terms")}.`);
+  P(`**Example.** ${need(brief.pricing.example,"worked example")}`);
+  if(filled(brief.pricing.extra))P(`**Costs beyond the subscription.** ${brief.pricing.extra}`);
+  P(`Sources: ${need(brief.pricing.sources,"pricing page links")}`);
+  if([brief.ease.golive,brief.ease.onboarding,brief.ease.quote].some(filled)){b.push({t:"h2",x:"Ease of use and implementation"});if(filled(brief.ease.golive))P(`Typical go-live: ${brief.ease.golive}.`);if(filled(brief.ease.onboarding))P(brief.ease.onboarding);if(filled(brief.ease.quote))b.push({t:"quote",x:brief.ease.quote})}
+  if(filled(brief.support.up)||filled(brief.support.comp)){b.push({t:"h2",x:"Customer support and onboarding"});P(`**UpKeep:** ${need(brief.support.up,"support details")}`);P(`**${C()}:** ${need(brief.support.comp,"support details")}`)}
+  b.push({t:"h2",x:"Ratings and reviews"});
+  b.push({t:"table",h:["Source","UpKeep",C(),"Checked on"],r:brief.ratings.rows.map(r=>[r.src,filled(r.up)?`${r.up}${filled(r.upN)?` (${r.upN})`:""}`:MISS+"rating"+MISS,filled(r.comp)?`${r.comp}${filled(r.compN)?` (${r.compN})`:""}`:MISS+"rating"+MISS,need(r.checked,"date")])});
+  P(`${need(brief.ratings.report,"G2 report name")} category scores:`);
+  b.push({t:"table",h:["Category","UpKeep",C()],r:brief.ratings.cats.map(r=>[r.cat,need(r.up,"score"),need(r.comp,"score")])});
+  const sw=brief.switching;
+  if(sw.steps.some(filled)||filled(sw.timeline)){b.push({t:"h2",x:sub("Switching from {C} to UpKeep")});b.push({t:"ol",i:sw.steps.filter(filled)});if(filled(sw.timeline))P(`Typical timeline: ${sw.timeline}.`);if(filled(sw.help))P(sw.help);if(filled(sw.customer))P(`${sw.customer} switched from ${C()}.${filled(sw.customerUrl)?" Read their story: "+sw.customerUrl:""}`);P(sub("See how switching from {C} works →"))}
+  b.push({t:"h2",x:sub("Final verdict: {C} or UpKeep?")});
+  P(need(brief.final.summary,"3-sentence summary"));P(`**Where ${C()} wins:** ${need(brief.final.compWins,"one situation")}`);P("**Where UpKeep wins:**");b.push({t:"ul",i:listOr(brief.final.upWins,"2–3 situations")});P(`**${need(brief.final.cta,"CTA")}**`);
+  b.push({t:"h2",x:sub("{C} vs UpKeep: FAQs")});
+  brief.faq.filter(p=>filled(p.q)).forEach(p=>{b.push({t:"h3",x:p.q});P(need(p.a,"40–70 word answer"))});
+  b.push({t:"h2",x:"About the author"});
+  P(`**${need(s.author,"author")}**${filled(s.authorRole)?", "+s.authorRole:""}. ${need(brief.author.bio,"40–60 word bio")}`);
+  if(filled(brief.author.url)||filled(brief.author.linkedin))P([brief.author.url,brief.author.linkedin].filter(filled).join(" · "));
+  return b;
+}
+function listOr(arr,label){const f=(arr||[]).filter(filled);return f.length?f:[MISS+label+MISS]}
+function inlineHTML(t,preview){
+  let h=esc(t).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  h=h.replace(new RegExp(MISS+"([^"+MISS+"]*)"+MISS,"g"),(m,l)=>preview?`<mark class="miss">Add: ${l}</mark>`:`[ADD: ${l}]`);
+  return h;
+}
+function inlineMD(t){return String(t).replace(new RegExp(MISS+"([^"+MISS+"]*)"+MISS,"g"),"[ADD: $1]")}
+function toHTML(bs,preview){
+  return bs.map(b=>{const I=x=>inlineHTML(x,preview);
+    switch(b.t){
+      case "h1":return `<h1>${I(b.x)}</h1>`;case "h2":return `<h2>${I(b.x)}</h2>`;case "h3":return `<h3>${I(b.x)}</h3>`;
+      case "byline":return `<p class="byline">${I(b.x)}</p>`;case "verified":return `<p class="verified">${I(b.x)}</p>`;
+      case "p":return `<p>${I(b.x).replace(/\n/g,"<br>")}</p>`;case "quote":return `<blockquote><p>${I(b.x)}</p></blockquote>`;
+      case "img":return `<p>${preview?`<mark class="miss">Screenshot</mark> `:""}<em>[Image: ${esc(b.x)}]</em></p>`;
+      case "ul":return `<ul>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ul>`;case "ol":return `<ol>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ol>`;
+      case "table":return `<div class="tw"><table><thead><tr>${b.h.map(x=>`<th>${I(x)}</th>`).join("")}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(x=>`<td>${I(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    }return ""}).join("\n");
+}
+function toMD(bs){
+  const cell=x=>inlineMD(x).replace(/\|/g,"\\|").replace(/\n/g," ");
+  return bs.map(b=>{const I=inlineMD;
+    switch(b.t){
+      case "h1":return "# "+I(b.x);case "h2":return "## "+I(b.x);case "h3":return "### "+I(b.x);
+      case "byline":case "verified":return "_"+I(b.x)+"_";case "p":return I(b.x);case "quote":return "> "+I(b.x);
+      case "img":return `![${b.x}](screenshot.png)`;
+      case "ul":return b.i.map(x=>"- "+I(x)).join("\n");case "ol":return b.i.map((x,i)=>`${i+1}. ${I(x)}`).join("\n");
+      case "table":return `| ${b.h.map(cell).join(" | ")} |\n| ${b.h.map(()=>"---").join(" | ")} |\n`+b.r.map(r=>`| ${r.map(cell).join(" | ")} |`).join("\n");
+    }return ""}).join("\n\n");
+}
+function renderPreview(){
+  const s=brief.settings;const bs=blocks();
+  const md=toMD(bs).replace(/\[ADD:[^\]]*\]/g,"");
+  $("#main").innerHTML=`<div class="pv"><article class="doc" aria-label="Page draft"><p class="wcnt">About ${words(md).toLocaleString()} words drafted · target 2,500–3,500. Red tags mark what's still missing.</p>${toHTML(bs,true)}</article></div>`;
+}
+
+/* ---------- checklist ---------- */
+function autoChecks(){
+  const s=brief.settings,out=[];
+  out.push(["Named author and author role",filled(s.author)&&filled(s.authorRole),""]);
+  const ow=words(brief.opening.answer);out.push(["Opening short answer is 50–80 words",ow>=50&&ow<=80,`${ow} words`]);
+  out.push(["At-a-glance table is complete",fieldDone(SECTIONS.find(x=>x.id==="glance").fields[0]),""]);
+  const fr=brief.features.filter(r=>filled(r.cap)&&filled(r.up)&&filled(r.comp)).length;out.push(["Feature table has 25+ complete rows",fr>=25,`${fr} complete rows`]);
+  const cw=brief.features.filter(r=>r.win==="comp"||r.win==="tie").length;out.push([`${C()} wins or ties at least 3 feature rows`,cw>=3,`${cw} rows`]);
+  out.push(["Both pricing tables have prices",brief.pricing.up.some(r=>filled(r.annual))&&brief.pricing.comp.some(r=>filled(r.annual)),""]);
+  const g=brief.ratings.rows[0];out.push(["Ratings have review counts and a checked-on date (at least G2)",[g.up,g.upN,g.comp,g.compN,g.checked].every(filled),""]);
+  const fa=brief.faq.filter(p=>filled(p.q)&&filled(p.a)).length;out.push(["9+ FAQs answered",fa>=9,`${fa} answered`]);
+  const rs=SECTIONS.filter(x=>x.req),rd=rs.filter(x=>secState(x)==="done").length;out.push(["Every required section is complete",rd===rs.length,`${rd}/${rs.length}`]);
+  return out;
+}
+function renderCheck(){
+  const a=autoChecks();
+  $("#main").innerHTML=`<section class="ck"><h2>Checked automatically</h2><ul>${a.map(([t,ok,why])=>`<li><span class="ico ${ok?"ok":"no"}" aria-label="${ok?"pass":"not yet"}">${ok?"✓":"!"}</span><div>${esc(t)}${why?`<div class="why">${esc(why)}</div>`:""}</div></li>`).join("")}</ul></section>
+  <section class="ck"><h2>Check by hand</h2><ul>${MANUAL.map(([k,t])=>`<li><input type="checkbox" id="ck_${k}" data-path="checklist.${k}" ${brief.checklist[k]?"checked":""} ${store.canWrite?"":"disabled"}><label for="ck_${k}">${esc(t)}</label></li>`).join("")}</ul></section>`;
+}
+
+/* ---------- views ---------- */
+function render(){
+  renderToc();
+  if(view==="edit")renderEdit();else if(view==="preview")renderPreview();else renderCheck();
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
+}
+function setView(v){view=v;ls.set("cpb:view",v);render();window.scrollTo(0,0)}
+
+/* ---------- persistence ---------- */
+function setStatus(kind,text){const el=$("#status");el.className="status "+kind;el.querySelector("span").textContent=text}
+function banner(t){$("#banner").hidden=!t;$("#bannerText").textContent=t||""}
+function scheduleSave(){dirty=true;setStatus("saving","Unsaved changes");clearTimeout(saveTimer);saveTimer=setTimeout(save,900)}
+async function save(){
+  if(saving){await saving;}
+  if(!dirty)return;
+  dirty=false;
+  const body=clone(brief);body.updatedAt=new Date().toISOString();
+  if(store.kind==="db"&&store.canWrite){
+    setStatus("saving","Saving…");
+    saving=store.db.collection("briefs").doc(briefId).set(body).then(()=>{saved=true;list[briefId]={competitor:brief.competitor,updatedAt:body.updatedAt};fillPicker();setStatus("saved","Saved · shared")})
+      .catch(e=>{dirty=true;if(e&&e.code==="invalid_argument"){store.canWrite=false;setStatus("error","Read-only");banner("You can view this brief but not change it. Ask the owner for Contributor access to edit.");render()}else if(e&&e.code==="quota_exceeded"){setStatus("error","Storage full");banner("This builder's storage is full. Delete old briefs to save new ones.")}else{setStatus("error","Not saved, will retry");setTimeout(save,4000)}})
+      .finally(()=>{saving=null});
+    await saving;
+  }else{
+    const all=JSON.parse(ls.get("cpb:local")||"{}");all[briefId]=body;ls.set("cpb:local",JSON.stringify(all));
+    list[briefId]={competitor:brief.competitor,updatedAt:body.updatedAt};fillPicker();setStatus("local","Saved in this browser only");
+  }
+}
+function fillPicker(){
+  const ids=Object.keys(list);if(!ids.includes(briefId))ids.push(briefId);
+  ids.sort((a,b)=>String((list[a]||{}).competitor||a).localeCompare(String((list[b]||{}).competitor||b)));
+  $("#briefSel").innerHTML=ids.map(id=>`<option value="${esc(id)}" ${id===briefId?"selected":""}>${esc((list[id]||{}).competitor||(id===briefId?brief.competitor:id))}${(list[id]||saved&&id===briefId)?"":" (not saved yet)"}</option>`).join("");
+}
+async function openBrief(id){
+  if(dirty)await save();
+  briefId=id;ls.set("cpb:last",id);
+  if(store.kind==="db"){const snap=await store.db.collection("briefs").doc(id).get();saved=snap.exists;brief=normalize(snap.exists?snap.data():blank(id))}
+  else{const all=JSON.parse(ls.get("cpb:local")||"{}");saved=!!all[id];brief=normalize(all[id]||blank(id))}
+  fillPicker();render();
+}
+async function createBrief(name){
+  name=String(name||"").trim();if(!name)return;
+  const id=slug(name);
+  if(list[id]){openBrief(id);return}
+  if(dirty)await save();
+  briefId=id;brief=normalize(blank(name));saved=false;ls.set("cpb:last",id);
+  dirty=true;await save();render();toast(`Created the ${name} brief`);
+}
+
+/* ---------- events ---------- */
+document.addEventListener("input",e=>{
+  const el=e.target;const p=el.dataset&&el.dataset.path;if(!p||!store.canWrite)return;
+  const val=el.type==="checkbox"?el.checked:el.value;setP(brief,p,val);
+  if(p==="competitor"||p==="year"){scheduleSave();return}
+  const m=document.querySelector(`[data-meter="${CSS.escape(p)}"]`);
+  if(m){const f=findField(p);const mm=f?meterFor(f,val):meterFor({w:[40,70]},val);const tn=f&&f.check==="title"?titleNote(val):"";m.className="meter "+(mm?mm.cls:"");m.textContent=(mm?mm.t:"")+(tn?" · "+tn:"")}
+  const card=el.closest(".card");if(card)updateChips(card);
+  renderToc();scheduleSave();
+});
+document.addEventListener("change",e=>{
+  const el=e.target;const p=el.dataset&&el.dataset.path;if(!p)return;
+  if(p==="competitor"||p==="year"){if(view==="edit"){const y=window.scrollY;renderEdit();window.scrollTo(0,y)}renderToc();fillPicker()}
+  /* list, table and pair counters depend on several cells: refresh the card once the value is committed */
+  if(view==="edit"&&/\.\d+(\.|$)/.test(p)){const card=el.closest(".card");if(card)refreshList(card)}
+  if(view==="check")renderCheck();
+});
+function refreshList(card){
+  const sec=card.dataset.sec;
+  setTimeout(()=>{const a=document.activeElement&&document.activeElement.id;refreshCard(sec);if(a){const n=document.getElementById(a);if(n)n.focus()}},0);
+}
+function findField(p){for(const s of SECTIONS)for(const f of s.fields){if(f.k===p)return f;if(f.type==="split"){const m=p.match(/^about\.(comp|up)\.what$/);if(m)return{w:[60,100]}}}
+  if(/^breakdown\.\d+\.(comp|up)$/.test(p))return{w:[40,60]};if(/^breakdown\.\d+\.diff$/.test(p))return{w:[10,45]};if(/^faq\.\d+\.a$/.test(p))return{w:[40,70]};return null}
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("button,a");if(!t)return;
+  if(t.dataset.view){setView(t.dataset.view);return}
+  if(t.dataset.goto){e.preventDefault();if(view!=="edit")setView("edit");const el=document.getElementById("sec-"+t.dataset.goto);if(el)el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});return}
+  if(t.dataset.act&&store.canWrite){
+    const arr=getP(brief,t.dataset.arr);const card=t.closest(".card");
+    if(t.dataset.act==="add"){const f=findArrField(t.dataset.arr);arr.push(f&&f.newRow?clone(f.newRow):t.dataset.arr==="faq"?{q:"",a:""}:"")}
+    else arr.splice(+t.dataset.i,1);
+    refreshCard(card.dataset.sec);renderToc();scheduleSave();
+    if(t.dataset.act==="add"){const c=document.getElementById("sec-"+card.dataset.sec);const ins=c.querySelectorAll(`[data-path^="${t.dataset.arr}."]`);if(ins.length)ins[ins.length-1].focus()}
+    return;
+  }
+  if(t.dataset.cmt&&comments){const card=document.getElementById("sec-"+t.dataset.cmt);try{await comments.openComposer({element:card})}catch(err){t.hidden=true;toast("Commenting isn't available here. Use the comment tool in the viewer instead.")}return}
+});
+function findArrField(k){for(const s of SECTIONS)for(const f of s.fields)if(f.k===k)return f;return null}
+$("#briefSel").addEventListener("change",e=>openBrief(e.target.value));
+$("#newBtn").addEventListener("click",()=>{$("#newWrap").hidden=false;$("#newBtn").hidden=true;$("#newName").focus()});
+$("#newCancel").addEventListener("click",()=>{$("#newWrap").hidden=true;$("#newBtn").hidden=false});
+$("#newGo").addEventListener("click",()=>{createBrief($("#newName").value);$("#newName").value="";$("#newWrap").hidden=true;$("#newBtn").hidden=false});
+$("#newName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#newGo").click();if(e.key==="Escape")$("#newCancel").click()});
+
+/* export */
+function exportText(){const bs=blocks();if(exportFmt==="md")return toMD(bs);
+  return toHTML(bs,false)}
+function openSheet(){$("#sheet").hidden=false;setFmt(exportFmt);$("#closeSheet").focus()}
+function setFmt(f){exportFmt=f;$("#fmtMd").classList.toggle("primary",f==="md");$("#fmtHtml").classList.toggle("primary",f==="html");$("#sheetText").value=exportText();$("#sheetTitle").textContent=`Export draft as ${f==="md"?"Markdown":"HTML"}`;$("#dlBtn").textContent=`Download .${f==="md"?"md":"html"}`}
+$("#exportBtn").addEventListener("click",openSheet);
+$("#fmtMd").addEventListener("click",()=>setFmt("md"));$("#fmtHtml").addEventListener("click",()=>setFmt("html"));
+$("#closeSheet").addEventListener("click",()=>{$("#sheet").hidden=true});
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)$("#sheet").hidden=true});
+$("#copyBtn").addEventListener("click",async()=>{const t=$("#sheetText");try{await navigator.clipboard.writeText(t.value);toast("Copied")}catch(err){t.focus();t.select();toast("Press Ctrl+C or Cmd+C to copy")}});
+$("#dlBtn").addEventListener("click",async()=>{if(!downloads)return;const ext=exportFmt==="md"?"md":"html";try{await downloads.save({filename:`${slug(C())}-vs-upkeep-draft.${ext}`,data:$("#sheetText").value});toast("Saved")}catch(err){if(err&&err.code==="declined")return;if(err&&err.code==="rate_limited"){toast("A save prompt is already open");return}$("#dlBtn").hidden=true;toast("Download isn't available here. Use Copy instead.")}});
+
+/* ---------- boot ---------- */
+function bootLocal(){
+  const all=JSON.parse(ls.get("cpb:local")||"{}");list={};for(const id in all)list[id]={competitor:all[id].competitor,updatedAt:all[id].updatedAt};
+  const last=ls.get("cpb:last");const id=last&&all[last]?last:Object.keys(all)[0];
+  if(id){briefId=id;brief=normalize(all[id]);saved=true}
+  fillPicker();render();
+}
+async function boot(){
+  const v=ls.get("cpb:view");if(v==="edit"||v==="preview"||v==="check")view=v;
+  fillPicker();render();setStatus("","Connecting…");
+  const cl=window.claude;
+  if(!cl||!cl.use){store.kind="local";bootLocal();setStatus("local","Saved in this browser only");return}
+  cl.use("comments").then(c=>{comments=c;if(c&&view==="edit")document.querySelectorAll(".cmt").forEach(b=>b.hidden=false)}).catch(()=>{});
+  cl.use("downloads").then(d=>{downloads=d;$("#dlBtn").hidden=!d}).catch(()=>{});
+  const [db,user]=await Promise.all([cl.use("db").catch(()=>null),cl.use("user").catch(()=>null)]);
+  if(!db){store.kind="local";bootLocal();setStatus("local","Saved in this browser only");banner("Sign in to claude.ai to save briefs where your team can see them. For now, edits stay in this browser.");return}
+  store.kind="db";store.db=db;
+  if(user&&user.can){try{const w=await user.can("data.write");if(w===false){store.canWrite=false;banner("You can view these briefs but not edit them. Ask the owner for Contributor access.")}}catch(e){}}
+  let first=true;
+  db.collection("briefs").onSnapshot(snap=>{
+    list={};snap.docs.forEach(d=>{const x=d.data();list[d.id]={competitor:x.competitor,updatedAt:x.updatedAt}});
+    if(first){first=false;
+      const last=ls.get("cpb:last");const id=list[last]?last:(list.maintainx?"maintainx":snap.docs[0]&&snap.docs[0].id);
+      if(id){const d=snap.docs.find(x=>x.id===id);briefId=id;brief=normalize(d.data());saved=true}
+      else{saved=false}
+      fillPicker();render();setStatus(store.canWrite?"saved":"",saved?(store.canWrite?"Saved · shared":"View only"):"Not saved yet · your first edit saves it");
+      return;
+    }
+    const d=snap.docs.find(x=>x.id===briefId);
+    if(d&&!dirty&&!saving&&!d.metadata.hasPendingWrites){
+      const incoming=normalize(d.data());
+      if(JSON.stringify(incoming)!==JSON.stringify(normalize(brief))){
+        const act=document.activeElement;const typing=act&&act.dataset&&act.dataset.path;
+        brief=incoming;
+        if(typing){document.querySelectorAll("[data-path]").forEach(el=>{if(el===act)return;const v=getP(brief,el.dataset.path);if(el.type==="checkbox")el.checked=!!v;else if(v!==undefined&&el.value!==String(v))el.value=v});renderToc()}
+        else{const y=window.scrollY;render();window.scrollTo(0,y)}
+        toast("Updated with a teammate's changes");
+      }
+    }
+    fillPicker();
+  },err=>{setStatus("error","Live sync stopped");banner("Live sync stopped. Reload the page to reconnect. Your last saved edits are safe.")});
+}
+boot();
+})();
+</script>
+
+</body>
+</html>
