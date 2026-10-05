@@ -190,6 +190,9 @@ article.doc .wcnt{font-family:var(--f-ui);font-size:12px;color:var(--ink-3)}
 .sheet header b{flex:1}
 .sheet textarea{border:0;border-radius:0;flex:1;min-height:50vh;font-family:var(--f-mono);font-size:12.5px;padding:14px 16px;background:var(--input)}
 .newb{display:flex;gap:6px;align-items:center}
+.sheet header{flex-wrap:wrap}
+.gaps{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-2)}
+.sheet .hint{font-size:12px;color:var(--ink-3);padding:8px 16px 0}
 .newb input{width:160px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:13px;z-index:60}
 
@@ -250,11 +253,14 @@ article.doc .wcnt{font-family:var(--f-ui);font-size:12px;color:var(--ink-3)}
     <header>
       <b id="sheetTitle">Export</b>
       <button class="btn small" id="fmtMd">Markdown</button>
-      <button class="btn small" id="fmtHtml">HTML</button>
+      <button class="btn small" id="fmtHtml">HTML snippet</button>
+      <button class="btn small" id="fmtDoc">HTML document</button>
+      <label class="gaps" id="gapsWrap" hidden><input type="checkbox" id="gapsChk"> Show missing items</label>
       <button class="btn small primary" id="copyBtn">Copy</button>
       <button class="btn small" id="dlBtn" hidden>Download</button>
       <button class="btn small ghost" id="closeSheet" aria-label="Close export">Close</button>
     </header>
+    <p class="hint" id="sheetHint"></p>
     <textarea id="sheetText" readonly aria-label="Exported page draft"></textarea>
   </div>
 </div>
@@ -630,7 +636,7 @@ function updateChips(card){
 const MISS="\u0001";
 const need=(v,label)=>filled(v)?String(v):MISS+label+MISS;
 function blocks(){
-  const b=[],s=brief.settings;const P=(t)=>b.push({t:"p",x:t});
+  const b=[],s=brief.settings;const P=(t)=>b.push({t:"p",x:t});const L=(t)=>b.push({t:"p",x:t,label:true});
   b.push({t:"h1",x:need(s.h1,"H1")});
   b.push({t:"byline",x:`By ${need(s.author,"author")}${filled(s.authorRole)?", "+s.authorRole:""}`});
   P(need(brief.opening.answer,"short answer (50–80 words)"));
@@ -638,15 +644,15 @@ function blocks(){
   b.push({t:"h2",x:sub("{C} vs UpKeep at a glance")});
   b.push({t:"table",h:["","UpKeep",C()],r:brief.glance.map(r=>[r.label,need(r.up,"UpKeep"),need(r.comp,C())])});
   b.push({t:"h2",x:"Quick verdict: which should you choose?"});
-  P("**Choose UpKeep if:**");b.push({t:"ul",i:listOr(brief.verdict.chooseUp,"4–5 reasons")});
-  P(`**Choose ${C()} if:**`);b.push({t:"ul",i:listOr(brief.verdict.chooseComp,"2–3 reasons")});
+  L("**Choose UpKeep if:**");b.push({t:"ul",i:listOr(brief.verdict.chooseUp,"4–5 reasons")});
+  L(`**Choose ${C()} if:**`);b.push({t:"ul",i:listOr(brief.verdict.chooseComp,"2–3 reasons")});
   if(brief.quiz.on){b.push({t:"h3",x:"Find your fit"});P(need(brief.quiz.questions,"quiz questions"));if(filled(brief.quiz.mapping))P(brief.quiz.mapping)}
   b.push({t:"h2",x:sub("What are {C} and UpKeep?")});
-  [["comp",C()],["up","UpKeep"]].forEach(([k,n])=>{const a=brief.about[k];b.push({t:"h3",x:`What is ${n}?`});P(need(a.what,"about 80 words"));P("**Strengths**");b.push({t:"ul",i:listOr(a.strengths,"3 strengths")});P("**Limitations**");b.push({t:"ul",i:listOr(a.limits,"2–3 limitations")});const q=a.quotes.filter(filled);if(q.length){P("**What customers say**");b.push({t:"ul",i:q})}});
+  [["comp",C()],["up","UpKeep"]].forEach(([k,n])=>{const a=brief.about[k];b.push({t:"h3",x:`What is ${n}?`});P(need(a.what,"about 80 words"));L("**Strengths**");b.push({t:"ul",i:listOr(a.strengths,"3 strengths")});L("**Limitations**");b.push({t:"ul",i:listOr(a.limits,"2–3 limitations")});const q=a.quotes.filter(filled);if(q.length){L("**What customers say**");b.push({t:"ul",i:q})}});
   b.push({t:"h2",x:sub("Feature comparison: {C} vs UpKeep")});
   b.push({t:"table",h:["Capability","UpKeep",C()],r:brief.features.filter(r=>filled(r.cap)).map(r=>[r.cap,need(r.up,"UpKeep"),need(r.comp,C())])});
   b.push({t:"h2",x:sub("{C} vs UpKeep: feature-by-feature breakdown")});
-  brief.breakdown.forEach(c=>{b.push({t:"h3",x:c.name});P(`**${C()}:** ${need(c.comp,"40–60 words")}`);P(`**UpKeep:** ${need(c.up,"40–60 words")}`);const w=c.win==="up"?"UpKeep":c.win==="comp"?C():c.win==="tie"?"Tie":MISS+"pick a winner"+MISS;P(`**The difference:** ${need(c.diff,"1–2 sentences")} Winner: ${w}.`);if(filled(c.shot))b.push({t:"img",x:c.shot})});
+  brief.breakdown.forEach(c=>{b.push({t:"h3",x:c.name});P(`**${C()}:** ${need(c.comp,"40–60 words")}`);P(`**UpKeep:** ${need(c.up,"40–60 words")}`);const w=c.win==="up"?"UpKeep":c.win==="comp"?C():c.win==="tie"?"Tie":"";P(`**The difference:** ${need(c.diff,"1–2 sentences")}${w?` Winner: ${w}.`:" "+MISS+"pick a winner"+MISS}`);if(filled(c.shot))b.push({t:"img",x:c.shot})});
   b.push({t:"h2",x:sub("{C} vs UpKeep pricing ({Y})")});
   const pt=(rows,n)=>({t:"table",h:["Plan","$/user/mo (annual)","$/user/mo (monthly)","What it unlocks","Gated to higher plans"],r:rows.filter(r=>filled(r.plan)).map(r=>[r.plan,need(r.annual,"price"),r.monthly||"",r.unlocks||"",r.gated||""]),cap:n});
   b.push({t:"h3",x:"UpKeep plans"});b.push(pt(brief.pricing.up));
@@ -664,7 +670,7 @@ function blocks(){
   const sw=brief.switching;
   if(sw.steps.some(filled)||filled(sw.timeline)){b.push({t:"h2",x:sub("Switching from {C} to UpKeep")});b.push({t:"ol",i:sw.steps.filter(filled)});if(filled(sw.timeline))P(`Typical timeline: ${sw.timeline}.`);if(filled(sw.help))P(sw.help);if(filled(sw.customer))P(`${sw.customer} switched from ${C()}.${filled(sw.customerUrl)?" Read their story: "+sw.customerUrl:""}`);P(sub("See how switching from {C} works →"))}
   b.push({t:"h2",x:sub("Final verdict: {C} or UpKeep?")});
-  P(need(brief.final.summary,"3-sentence summary"));P(`**Where ${C()} wins:** ${need(brief.final.compWins,"one situation")}`);P("**Where UpKeep wins:**");b.push({t:"ul",i:listOr(brief.final.upWins,"2–3 situations")});P(`**${need(brief.final.cta,"CTA")}**`);
+  P(need(brief.final.summary,"3-sentence summary"));P(`**Where ${C()} wins:** ${need(brief.final.compWins,"one situation")}`);L("**Where UpKeep wins:**");b.push({t:"ul",i:listOr(brief.final.upWins,"2–3 situations")});P(`**${need(brief.final.cta,"CTA")}**`);
   b.push({t:"h2",x:sub("{C} vs UpKeep: FAQs")});
   brief.faq.filter(p=>filled(p.q)).forEach(p=>{b.push({t:"h3",x:p.q});P(need(p.a,"40–70 word answer"))});
   b.push({t:"h2",x:"About the author"});
@@ -821,17 +827,92 @@ $("#newGo").addEventListener("click",()=>{createBrief($("#newName").value);$("#n
 $("#newName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#newGo").click();if(e.key==="Escape")$("#newCancel").click()});
 
 /* export */
-function exportText(){const bs=blocks();if(exportFmt==="md")return toMD(bs);
-  return toHTML(bs,false)}
+/* full, styled, standalone HTML document of what has been filled in */
+function pruneBlocks(bs){
+  const strip=x=>String(x).replace(new RegExp(MISS+"[^"+MISS+"]*"+MISS,"g"),"").trim();
+  const emptyText=x=>strip(x).replace(/\*\*[^*]*\*\*/g,"").replace(/[\s.:,·—-]+/g,"")==="";
+  const out=[];
+  for(const b of bs){
+    if(b.t==="ul"||b.t==="ol"){const i=b.i.map(strip).filter(Boolean);
+      if(!i.length){const prev=out[out.length-1];if(prev&&prev.t==="p"&&/^\*\*[^*]+\*\*$/.test(prev.x.trim()))out.pop();continue}
+      out.push({...b,i});continue}
+    if(b.t==="table"){const r=b.r.map(row=>row.map(strip)).filter(row=>row.slice(1).some(Boolean));if(r.length)out.push({...b,r});continue}
+    if(b.t==="h1"||b.t==="h2"||b.t==="h3"){out.push({...b,x:strip(b.x)});continue}
+    if(b.label){out.push(b);continue}
+    if(emptyText(b.x))continue;
+    out.push({...b,x:strip(b.x).replace(/\s+([.,])/g,"$1")});
+  }
+  /* drop headings left with nothing under them: empty H3s first, then empty H2s */
+  const dropEmpty=(arr,lvl,stop)=>arr.filter((b,i)=>{if(b.t!==lvl)return true;const nxt=arr.slice(i+1);const j=nxt.findIndex(x=>stop.includes(x.t));return (j===-1?nxt:nxt.slice(0,j)).length>0});
+  const res=dropEmpty(dropEmpty(out,"h3",["h1","h2","h3"]),"h2",["h1","h2"]);
+  return res;
+}
+function docHTML(gaps){
+  const bs=gaps?blocks():pruneBlocks(blocks());
+  const s=brief.settings;
+  const title=esc(filled(s.title)?s.title:sub("{C} vs UpKeep ({Y})"));
+  const meta=filled(s.metaDesc)?`<meta name="description" content="${esc(s.metaDesc)}">\n`:"";
+  const today=new Date().toISOString().slice(0,10);
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${title}</title>
+${meta}<style>
+:root{--ink:#152030;--ink-2:#4A5668;--ink-3:#7A8496;--line:#D8DEE7;--sunk:#F1F4F8;--accent:#2350C8;--miss:#B23A2E;--miss-soft:#FBE7E4}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font:17px/1.65 Georgia,"Times New Roman",serif}
+.wrap{max-width:820px;margin:0 auto;padding:40px 20px 80px}
+.docmeta{font:13px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-3);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px;display:flex;flex-wrap:wrap;gap:6px 18px}
+.docmeta b{color:var(--ink-2)}
+h1{font-size:34px;line-height:1.2;margin:0 0 10px}
+h2{font-size:25px;line-height:1.25;margin:40px 0 10px;padding-top:10px;border-top:1px solid var(--line)}
+h3{font-size:19px;margin:24px 0 6px}
+p{margin:10px 0}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+.byline{font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-3)}
+.verified{font:14px system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--sunk);padding:8px 12px;border-radius:6px}
+blockquote{margin:14px 0;padding:4px 16px;border-left:3px solid var(--accent);color:var(--ink-2)}
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--sunk)}
+mark.miss{background:var(--miss-soft);color:var(--miss);font:12px system-ui,sans-serif;padding:1px 6px;border-radius:4px}
+@media print{h2{break-after:avoid}table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="docmeta"><span><b>Brief:</b> ${esc(C())} vs UpKeep</span><span><b>Exported:</b> ${today}</span>${filled(s.author)?`<span><b>Author:</b> ${esc(s.author)}</span>`:""}<span><b>Status:</b> ${SECTIONS.filter(x=>x.req&&secState(x)==="done").length}/${SECTIONS.filter(x=>x.req).length} required sections complete</span></div>
+<article>
+${toHTML(bs,gaps)}
+</article>
+</div>
+</body>
+</html>
+`;
+}
+function exportText(){const bs=blocks();if(exportFmt==="md")return toMD(bs);if(exportFmt==="doc")return docHTML($("#gapsChk").checked);return toHTML(bs,false)}
+const FMT={md:["Markdown","md","For a CMS or Google Docs. Missing items show as [ADD: …]."],html:["HTML snippet","html","The article body only, to paste into a CMS. Missing items show as [ADD: …]."],doc:["HTML document","html","A complete, styled page with everything filled in so far. Open it in any browser or send it to the client."]};
 function openSheet(){$("#sheet").hidden=false;setFmt(exportFmt);$("#closeSheet").focus()}
-function setFmt(f){exportFmt=f;$("#fmtMd").classList.toggle("primary",f==="md");$("#fmtHtml").classList.toggle("primary",f==="html");$("#sheetText").value=exportText();$("#sheetTitle").textContent=`Export draft as ${f==="md"?"Markdown":"HTML"}`;$("#dlBtn").textContent=`Download .${f==="md"?"md":"html"}`}
+function setFmt(f){exportFmt=f;
+  ["md","html","doc"].forEach(k=>$("#fmt"+(k==="md"?"Md":k==="html"?"Html":"Doc")).classList.toggle("primary",k===f));
+  $("#gapsWrap").hidden=f!=="doc";
+  $("#sheetText").value=exportText();$("#sheetTitle").textContent=`Export as ${FMT[f][0]}`;$("#sheetHint").textContent=FMT[f][2];
+  $("#dlBtn").textContent=`Download .${FMT[f][1]}`}
 $("#exportBtn").addEventListener("click",openSheet);
-$("#fmtMd").addEventListener("click",()=>setFmt("md"));$("#fmtHtml").addEventListener("click",()=>setFmt("html"));
+$("#fmtMd").addEventListener("click",()=>setFmt("md"));$("#fmtHtml").addEventListener("click",()=>setFmt("html"));$("#fmtDoc").addEventListener("click",()=>setFmt("doc"));$("#gapsChk").addEventListener("change",()=>setFmt("doc"));
 $("#closeSheet").addEventListener("click",()=>{$("#sheet").hidden=true});
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").hidden=true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)$("#sheet").hidden=true});
 $("#copyBtn").addEventListener("click",async()=>{const t=$("#sheetText");try{await navigator.clipboard.writeText(t.value);toast("Copied")}catch(err){t.focus();t.select();toast("Press Ctrl+C or Cmd+C to copy")}});
-$("#dlBtn").addEventListener("click",async()=>{if(!downloads)return;const ext=exportFmt==="md"?"md":"html";try{await downloads.save({filename:`${slug(C())}-vs-upkeep-draft.${ext}`,data:$("#sheetText").value});toast("Saved")}catch(err){if(err&&err.code==="declined")return;if(err&&err.code==="rate_limited"){toast("A save prompt is already open");return}$("#dlBtn").hidden=true;toast("Download isn't available here. Use Copy instead.")}});
+$("#dlBtn").addEventListener("click",async()=>{
+  const ext=FMT[exportFmt][1];const name=`${slug(C())}-vs-upkeep${exportFmt==="doc"?"":"-draft"}.${ext}`;const data=$("#sheetText").value;
+  if(downloads){try{await downloads.save({filename:name,data});toast("Saved")}catch(err){if(err&&err.code==="declined")return;if(err&&err.code==="rate_limited"){toast("A save prompt is already open");return}$("#dlBtn").hidden=true;toast("Download isn't available here. Use Copy instead.")}return}
+  if(!window.claude){const url=URL.createObjectURL(new Blob([data],{type:ext==="md"?"text/markdown":"text/html"}));const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+});
 
 /* ---------- boot ---------- */
 function bootLocal(){
@@ -844,7 +925,7 @@ async function boot(){
   const v=ls.get("cpb:view");if(v==="edit"||v==="preview"||v==="check")view=v;
   fillPicker();render();setStatus("","Connecting…");
   const cl=window.claude;
-  if(!cl||!cl.use){store.kind="local";bootLocal();setStatus("local","Saved in this browser only");return}
+  if(!cl||!cl.use){$("#dlBtn").hidden=false;store.kind="local";bootLocal();setStatus("local","Saved in this browser only");return}
   cl.use("comments").then(c=>{comments=c;if(c&&view==="edit")document.querySelectorAll(".cmt").forEach(b=>b.hidden=false)}).catch(()=>{});
   cl.use("downloads").then(d=>{downloads=d;$("#dlBtn").hidden=!d}).catch(()=>{});
   const [db,user]=await Promise.all([cl.use("db").catch(()=>null),cl.use("user").catch(()=>null)]);
