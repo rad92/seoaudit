@@ -278,7 +278,8 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"brief";
 function getP(o,p){return p.split(".").reduce((a,k)=>a==null?undefined:a[k],o)}
 function setP(o,p,v){const ks=p.split(".");let a=o;for(let i=0;i<ks.length-1;i++){if(a[ks[i]]==null)a[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};a=a[ks[i]]}a[ks[ks.length-1]]=v}
-const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+/* sessionStorage: kept across a refresh, cleared when the tab or browser closes, so every new visit starts from the defaults */
+const ls={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
 function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2200)}
 
 /* ---------- the brief template ---------- */
@@ -758,7 +759,7 @@ async function save(){
     await saving;
   }else{
     const all=JSON.parse(ls.get("cpb:local")||"{}");all[briefId]=body;ls.set("cpb:local",JSON.stringify(all));
-    list[briefId]={competitor:brief.competitor,updatedAt:body.updatedAt};fillPicker();setStatus("local","Saved in this browser only");
+    list[briefId]={competitor:brief.competitor,updatedAt:body.updatedAt};fillPicker();setStatus("local","Kept until you close this tab");
   }
 }
 function fillPicker(){
@@ -923,39 +924,16 @@ function bootLocal(){
 }
 async function boot(){
   const v=ls.get("cpb:view");if(v==="edit"||v==="preview"||v==="check")view=v;
-  fillPicker();render();setStatus("","Connecting…");
+  store.kind="local";bootLocal();
+  setStatus("local",saved?"Kept until you close this tab":"Not saved · clears when you close this tab");
+  banner("This brief clears when you close the tab or browser. Use Export to keep a copy.");
   const cl=window.claude;
-  if(!cl||!cl.use){$("#dlBtn").hidden=false;store.kind="local";bootLocal();setStatus("local","Saved in this browser only");return}
+  if(!cl||!cl.use){$("#dlBtn").hidden=false;return}
   cl.use("comments").then(c=>{comments=c;if(c&&view==="edit")document.querySelectorAll(".cmt").forEach(b=>b.hidden=false)}).catch(()=>{});
   cl.use("downloads").then(d=>{downloads=d;$("#dlBtn").hidden=!d}).catch(()=>{});
-  const [db,user]=await Promise.all([cl.use("db").catch(()=>null),cl.use("user").catch(()=>null)]);
-  if(!db){store.kind="local";bootLocal();setStatus("local","Saved in this browser only");banner("Sign in to claude.ai to save briefs where your team can see them. For now, edits stay in this browser.");return}
-  store.kind="db";store.db=db;
-  if(user&&user.can){try{const w=await user.can("data.write");if(w===false){store.canWrite=false;banner("You can view these briefs but not edit them. Ask the owner for Contributor access.")}}catch(e){}}
-  let first=true;
-  db.collection("briefs").onSnapshot(snap=>{
-    list={};snap.docs.forEach(d=>{const x=d.data();list[d.id]={competitor:x.competitor,updatedAt:x.updatedAt}});
-    if(first){first=false;
-      const last=ls.get("cpb:last");const id=list[last]?last:(list.maintainx?"maintainx":snap.docs[0]&&snap.docs[0].id);
-      if(id){const d=snap.docs.find(x=>x.id===id);briefId=id;brief=normalize(d.data());saved=true}
-      else{saved=false}
-      fillPicker();render();setStatus(store.canWrite?"saved":"",saved?(store.canWrite?"Saved · shared":"View only"):"Not saved yet · your first edit saves it");
-      return;
-    }
-    const d=snap.docs.find(x=>x.id===briefId);
-    if(d&&!dirty&&!saving&&!d.metadata.hasPendingWrites){
-      const incoming=normalize(d.data());
-      if(JSON.stringify(incoming)!==JSON.stringify(normalize(brief))){
-        const act=document.activeElement;const typing=act&&act.dataset&&act.dataset.path;
-        brief=incoming;
-        if(typing){document.querySelectorAll("[data-path]").forEach(el=>{if(el===act)return;const v=getP(brief,el.dataset.path);if(el.type==="checkbox")el.checked=!!v;else if(v!==undefined&&el.value!==String(v))el.value=v});renderToc()}
-        else{const y=window.scrollY;render();window.scrollTo(0,y)}
-        toast("Updated with a teammate's changes");
-      }
-    }
-    fillPicker();
-  },err=>{setStatus("error","Live sync stopped");banner("Live sync stopped. Reload the page to reconnect. Your last saved edits are safe.")});
 }
+/* warn before closing a tab that holds work, since closing clears it */
+window.addEventListener("beforeunload",e=>{if(dirty||ls.get("cpb:local")){e.preventDefault();e.returnValue=""}});
 boot();
 })();
 </script>
