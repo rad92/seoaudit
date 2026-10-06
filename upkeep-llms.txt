@@ -1,0 +1,167 @@
+# UpKeep
+
+> UpKeep is an AI-native, mobile-first CMMS (computerized maintenance management system) and asset operations platform. Maintenance, reliability, safety and operations teams use it to run work orders, preventive maintenance, assets, parts inventory, safety/EHS, training and IoT condition monitoring on one shared asset record. UpKeep is trusted by 4,000+ companies and 40,000+ users.
+
+This file gives AI assistants and answer engines (ChatGPT, Claude, Perplexity, Gemini, Copilot and others) a curated, accurate summary of UpKeep and links to its most important pages. Every link below is a canonical, indexable page.
+
+## Company facts
+
+- Name: UpKeep
+- Category: CMMS and asset operations management software (SaaS), with native mobile apps
+- Founded: 2015, by Ryan Chan (founder and CEO), a former process-development engineer at a manufacturing plant
+- Headquarters: 10880 Wilshire Blvd, Los Angeles, CA 90024, USA
+- Customers: 4,000+ companies and 40,000+ users in manufacturing, facilities, food and beverage, healthcare, property management, hospitality, restaurants, education, government, energy and utilities, data centers, fleet and agriculture
+- Reviews: 2,000+ reviews averaging 4.75/5 across G2, Capterra, Software Advice, Gartner Peer Insights and the App Store
+- Pricing: free trial with no credit card. Essential plan $24/user/month, Premium plan $55/user/month, Professional and Enterprise plans quoted. See https://upkeep.com/pricing/
+- Website: https://upkeep.com/
+- LinkedIn: https://www.linkedin.com/company/upkeep-maintenance-management/
+- YouTube: https://www.youtube.com/channel/UC4ewS5K1zt6TOpZBfXx8Yfw
+- X/Twitter: https://twitter.com/onupkeep/
+- Facebook: https://www.facebook.com/onupkeep/
+- Instagram: https://www.instagram.com/upkeepcmms/
+- Trust center (security and compliance): https://trust.upkeep.com/
+
+## What makes UpKeep different
+
+- Mobile-first: UpKeep was the first CMMS designed from a mobile-first perspective. Technicians can open, update and close work orders, scan an asset for its history and work offline from a phone.
+- One platform, one data model: CMMS, Safety (EHS), Learn (LMS), Edge (IIoT sensors), Fleet, Providers, Production and Quality share one login, one asset record and the same permissions, so a sensor reading can open a work order and a safety event can trigger a corrective action without re-entering data.
+- AI built in: Nova, UpKeep's AI, answers questions about maintenance data in plain language, runs scheduled reviews, drafts work, and builds no-code workflows from plain-English rules. Every draft is approved by a person before it counts.
+- Open: 1,000+ integrations through native connectors, Zapier and a public REST API (ERP, accounting and ticketing systems).
+
+## Company
+
+- [About UpKeep](https://upkeep.com/about-us/): Company history, founding story (2015, Ryan Chan), mission and values of the mobile-first CMMS company.
+- [Pricing](https://upkeep.com/pricing/): CMMS plans and costs, from $24/user/month, plus Safety, Learn, Edge and Fleet pricing. Free trial, no credit card required.
+- [Reviews](https://upkeep.com/reviews/): 2,000+ verified customer reviews (4.75/5 average) gathered from G2, Capterra, Software Advice, Gartner Peer Insights and the App Store.
+- [Customer stories](https://upkeep.com/customers/): Case studies by industry showing measured results from UpKeep customers.
+- [Customer success](https://upkeep.com/customer-success/): Implementation, onboarding, training and ongoing support services.
+- [Support center](https://upkeep.com/resources/support/): Training resources and how-to guides for UpKeep users.
+- [Partnerships](https://upkeep.com/resources/partnerships/): Consulting and adoption partner program.
+- [Careers](https://upkeep.com/careers/): Open roles at UpKeep.
+- [Request a demo](https://upkeep.com/demo/): Book a live demo of the UpKeep platform.
+
+## Products
+
+- [Platform overview](https://upkeep.com/product/): All UpKeep applications (maintenance, safety, inventory, condition monitoring and more) on one platform with a single login, one data model and shared permissions.
+- [Asset Operations Platform](https://upkeep.com/asset-operations-platform/): How UpKeep connects maintenance, safety and reliability into one system, replacing disconnected tools.
+- [CMMS software](https://upkeep.com/product/cmms-software/): UpKeep's core AI-powered, mobile-first CMMS for work orders, preventive maintenance and asset management. Starts at $24/user/month.
+- [Nova AI](https://upkeep.com/product/nova/): The AI built into UpKeep. Answers questions about maintenance data, runs scheduled tasks and moves data between apps. Install apps from the marketplace or build your own.
+- [Nova Workflows](https://upkeep.com/product/nova/workflows/): Describe a maintenance rule in plain English and Nova builds an automated workflow that triggers on events or schedules and branches on conditions.
+- [AI maintenance management](https://upkeep.com/product/ai-maintenance-management/): How AI works inside UpKeep's maintenance records, with plain-language questions, scheduled reviews and human approval of every draft.
+- [UpKeep Intelligence](https://upkeep.com/product/intelligence/): Overview of UpKeep's AI: Nova insights and autonomous actions, AI embedded in every workflow, and Nova Apps for building custom tools.
+- [Safety (EHS)](https://upkeep.com/product/safety/): Mobile environmental health and safety software for incident and near-miss reporting, automated OSHA logs and CAPA tracking.
+- [Learn (LMS)](https://upkeep.com/product/learn/): Mobile training, certification tracking and compliance records for frontline teams, with AI course creation. Integrates with the CMMS and Safety.
+- [Edge (IIoT sensors)](https://upkeep.com/product/edge-iiot/): Industrial sensors connected to the CMMS for real-time condition monitoring and predictive maintenance, with automatic work order triggers.
+- [Edge pricing](https://upkeep.com/edge/pricing/): Pricing for UpKeep Edge IoT sensors, vibration monitoring and condition monitoring.
+- [Fleet](https://upkeep.com/product/fleet-maintenance/): Fleet maintenance software with automated preventive maintenance, digital DVIRs, VIN lookup and full vehicle history.
+- [Providers](https://upkeep.com/product/providers/): Find, manage and collaborate with contractors and vendors inside the CMMS.
+- [Production](https://upkeep.com/product/production/): Production scheduling, downtime capture, OEE and traceability on the same platform as maintenance.
+- [Quality](https://upkeep.com/product/quality/): Manufacturing quality management: nonconformance, CAPA, calibration, document control, supplier quality and audits.
+
+## Capabilities
+
+- [Work order management](https://upkeep.com/product/work-order-software/): Create, assign, prioritize and track work orders in real time, with push notifications to technicians.
+- [Preventive maintenance](https://upkeep.com/product/preventive-maintenance/): Schedule PMs by time, meter reading or AI-recommended interval to maximize uptime and extend asset life.
+- [Asset management](https://upkeep.com/product/asset-management/): Track every asset across every site with live visibility into asset health, maintenance history and total cost of ownership.
+- [Parts and inventory](https://upkeep.com/product/inventory-management/): MRO inventory across storerooms, min/max thresholds, automatic reorder points and parts linked to work orders.
+- [Analytics and reporting](https://upkeep.com/product/analytics-reporting/): Custom dashboards, maintenance KPIs and reports.
+- [Mobile CMMS](https://upkeep.com/product/mobile-cmms/): Full CMMS on a phone: work orders, asset scans and history, and offline mode.
+- [Safety and compliance](https://upkeep.com/product/safety-and-compliance/): Safety checklists on work orders and PMs, photo evidence and automatic audit trails.
+- [Integrations](https://upkeep.com/product/integrations/): 1,000+ integrations through native connectors, Zapier and a public REST API for ERP, accounting and ticketing systems.
+
+## Industries
+
+- [All solutions](https://upkeep.com/solutions/): UpKeep setups by industry and by role.
+- [Manufacturing](https://upkeep.com/solutions/manufacturing/): Work orders, runtime-based PMs, condition monitoring and safety records for the plant floor.
+- [Facility management](https://upkeep.com/solutions/facility-management/): One queue for every building request, PMs on building systems and free request submission for occupants.
+- [Data centers](https://upkeep.com/solutions/data-centers/): Generator and UPS PMs, cooling maintenance, contractor permits and completion evidence per asset.
+- [Energy and utilities](https://upkeep.com/solutions/energy-utilities/): Distributed assets, remote condition monitoring and mobile field crews.
+- [Food and beverage manufacturing](https://upkeep.com/solutions/food-beverage-manufacturing/): Maintenance, sanitation and cold-chain monitoring with an audit trail.
+- [Healthcare](https://upkeep.com/solutions/healthcare/): Facilities and equipment maintenance for hospitals, clinics and senior living.
+- [Property management](https://upkeep.com/solutions/property-management/): Resident requests, unit turns and building assets across every property.
+- [Hospitality](https://upkeep.com/solutions/hospitality/): Faster room turnaround, mobile maintenance requests and PMs on guest-facing systems.
+- [Restaurants](https://upkeep.com/solutions/restaurants/): Refrigeration, fryers and HVAC on one schedule across every location.
+- [Schools and higher education](https://upkeep.com/solutions/schools-higher-education/): Buildings, grounds and buses on one system, with free request submission for staff.
+- [Government and public works](https://upkeep.com/solutions/government-public-works/): Public buildings, fleets and infrastructure with an audit-ready maintenance record.
+- [Farming and agriculture](https://upkeep.com/solutions/farming-agriculture/): Irrigation, harvest equipment and cold storage maintained by hours run, with offline access.
+- [Fitness and recreation](https://upkeep.com/solutions/fitness-recreation/): Gym and recreation equipment kept in service across locations.
+
+## Roles
+
+- [Maintenance teams](https://upkeep.com/solutions/maintenance-teams/): Work orders, asset history, PMs and parts on a phone.
+- [Reliability teams](https://upkeep.com/solutions/reliability-teams/): Failure history, MTBF and MTTR from recorded work, plus first-party condition monitoring.
+- [Operations teams](https://upkeep.com/solutions/operations-teams/): Downtime, cost and capacity reporting from the same record the floor works in.
+- [Safety managers](https://upkeep.com/solutions/safety-managers/): Login-free incident reporting, OSHA recordkeeping and corrective actions tied to assets.
+- [Executives](https://upkeep.com/solutions/executives/): Downtime, cost and capital-planning numbers backed by maintenance evidence.
+- [Owners and franchisees](https://upkeep.com/solutions/owners/): Per-location operating cost, top failing assets and brand-standard maintenance compliance.
+
+## Comparisons
+
+- [Compare UpKeep to other CMMS software](https://upkeep.com/product/compare/): Hub comparing UpKeep with MaintainX, Limble, Fiix, eMaint, Coast and EZO.
+- [UpKeep vs MaintainX](https://upkeep.com/product/compare/maintainx/): Feature-by-feature comparison covering AI on every plan, the no-code app builder, and built-in Learn, Safety, Fleet and IoT.
+- [UpKeep vs Fiix](https://upkeep.com/product/compare/fiix/): Nova AI on every plan, no-code Nova Apps, Learn, Fleet and first-party IoT, compared with Fiix.
+- [UpKeep vs Limble](https://upkeep.com/product/compare/limble/): Feature comparison covering AI on every plan, the no-code app builder, native Fleet and Learn, and first-party IoT sensors.
+- [UpKeep vs eMaint](https://upkeep.com/product/compare/emaint/): Nova AI on every plan compared with eMaint's AI and per-user training fees.
+- [UpKeep vs Coast](https://upkeep.com/product/compare/coast/): How a full CMMS compares with Coast's lighter work-order tool.
+- [UpKeep vs EZO](https://upkeep.com/product/compare/ezo/): A purpose-built maintenance CMMS compared with an IT asset tracker.
+- [UpKeep vs IBM Maximo](https://upkeep.com/blog/upkeep-vs-maximo/): Comparison of UpKeep and IBM Maximo.
+- [UpKeep vs Brightly](https://upkeep.com/blog/upkeep-vs-brightly/): Comparison of UpKeep and Brightly.
+- [Best CMMS software (2026)](https://upkeep.com/blog/best-cmms-software/): Ranked review of leading CMMS products for usability, mobile access and ROI.
+- [CMMS comparison guide (2026)](https://upkeep.com/blog/cmms-comparison/): Feature breakdowns and user reviews across top CMMS vendors.
+
+## Customer proof
+
+- [Forrester Total Economic Impact study](https://upkeep.com/customers/upkeep-total-economic-impact-case-study/): Forrester Consulting TEI study of the ROI enterprises may realize with UpKeep.
+- [Orangetheory Fitness](https://upkeep.com/customers/orangetheory/): Saved over $100,000 a year across 37 studios by tracking warranties and improving equipment reliability.
+- [Oshkosh Defense](https://upkeep.com/customers/how-oshkosh-defense-set-the-standard-with-upkeep-and-a-technician-first-culture/): Built a maintenance program from the ground up on a technician-first CMMS.
+- [The Salvation Army](https://upkeep.com/customers/how-the-salvation-army-transformed-preventive-maintenance-with-upkeep/): Standardized preventive maintenance across 15 states in its Southern Territory.
+- [Mattr](https://upkeep.com/customers/one-platform-eight-sites-zero-guesswork-mattr-s-maintenance-transformation/): Standardized maintenance across eight North American sites, replacing paper.
+- [McDonald's](https://upkeep.com/customers/mcdonalds/): Mobile work order communication across restaurant locations.
+- [Chick-fil-A franchise](https://upkeep.com/customers/chick-fil-a/): Replaced texts and paper work orders and tracks over $60,000 in assets.
+- [Caltech](https://upkeep.com/customers/caltech/): Moved preventive maintenance and work orders from paper to digital.
+- [Rehrig Pacific Company](https://upkeep.com/customers/rehrig-pacific-company/): National reliability program on UpKeep.
+- [Peerless Pump](https://upkeep.com/customers/peerless-pump-replaces-old-cmms-with-upkeep/): Hours of daily efficiency gains after replacing a legacy CMMS.
+- [Glidewell](https://upkeep.com/customers/glidewell/): Automated workflows and improved maintenance visibility.
+
+## Guides
+
+- [AI CMMS explained](https://upkeep.com/learning/ai-cmms/): What an AI CMMS is, which features are real and how to evaluate one.
+- [CMMS benefits](https://upkeep.com/learning/cmms-benefits/): 15 advantages of using a CMMS.
+- [How much does a CMMS cost?](https://upkeep.com/learning/how-much-does-a-cmms-cost/): CMMS pricing models and cost factors.
+- [CMMS ROI](https://upkeep.com/blog/cmms-roi/): How to calculate return on investment for a CMMS.
+- [CMMS implementation](https://upkeep.com/learning/cmms-implementation/): Step-by-step implementation strategy for maintenance teams.
+- [EAM vs CMMS](https://upkeep.com/learning/eam-vs-cmms-software/): The difference between enterprise asset management and CMMS software.
+- [Work orders 101](https://upkeep.com/learning/work-order/): How work orders turn maintenance requests into trackable, authorized jobs.
+- [Predictive maintenance guide](https://upkeep.com/learning/predictive-maintenance/): What predictive maintenance is, how it works and how to adopt it.
+- [Predictive vs preventive maintenance](https://upkeep.com/learning/difference-between-predictive-and-preventive-maintenance/): How the two strategies differ.
+- [Condition-based maintenance](https://upkeep.com/learning/condition-based-maintenance/): Detecting failures before they happen.
+- [Corrective maintenance](https://upkeep.com/learning/corrective-maintenance/): Definition and examples.
+- [Total productive maintenance (TPM)](https://upkeep.com/learning/total-productive-maintenance/): TPM components and benefits.
+- [Root cause analysis](https://upkeep.com/learning/root-cause-analysis/): How RCA identifies the source of a problem.
+- [FMEA](https://upkeep.com/learning/fmea/): Failure mode and effects analysis, with examples.
+- [How to measure OEE](https://upkeep.com/learning/how-do-i-measure-oee/): Simple and detailed methods for calculating overall equipment effectiveness.
+- [Maintenance KPIs](https://upkeep.com/learning/best-kpis-track-maintenance-team/): The best KPIs for measuring a maintenance team's performance.
+- [Asset management](https://upkeep.com/learning/asset-management/): Definition and practices of asset management.
+- [Inventory management](https://upkeep.com/learning/inventory-management/): Tracking maintenance inventory from purchase to use.
+- [Learning Center](https://upkeep.com/learning/): The full library of maintenance and reliability articles.
+
+## Research and free tools
+
+- [2026 State of Maintenance Report](https://upkeep.com/downloads/the-2026-state-of-maintenance-report/): Annual industry research. 90% of teams know what drives reliability, but only 25% can consistently execute it.
+- [The Reliability Playbook](https://upkeep.com/downloads/the-reliability-playbook/): A framework for capturing retiring technicians' knowledge before it's lost.
+- [AI in Maintenance guide](https://upkeep.com/downloads/ai-in-maintenance-how-to-use-it-today-and-what-s-coming-next/): Practical AI applications in maintenance today and what's coming next.
+- [Free maintenance tools](https://upkeep.com/free-maintenance-tools/): Calculators, a CMMS ROI calculator and an asset QR code generator. No sign-up required.
+- [CMMS ROI calculator](https://upkeep.com/free-maintenance-tools/roi-calculator/): Estimate the annual value of a CMMS from team size, labor rate and downtime cost.
+- [PM schedule builder](https://upkeep.com/free-maintenance-tools/preventive-maintenance-schedule/): Build a year-long preventive maintenance schedule from an asset list.
+- [Root cause analysis tool](https://upkeep.com/free-maintenance-tools/root-cause-analysis/): Fishbone diagram, 5 Whys and corrective-action workspace.
+- [QR code generator](https://upkeep.com/free-maintenance-tools/qr-code-generator/): Bulk QR codes for asset tags.
+
+## Updates
+
+- [Product releases](https://upkeep.com/resources/product-releases/): Latest UpKeep product launches and release notes.
+- [Events and webinars](https://upkeep.com/resources/events/): Upcoming conferences, trade shows and on-demand webinars.
+- [Blog](https://upkeep.com/resources/blog/): News and trends in maintenance and asset operations.
+
+## Sitemaps
+
+- [Sitemap index](https://upkeep.com/sitemap-index.xml)
