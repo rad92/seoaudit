@@ -1,0 +1,158 @@
+<title>Stuart Meeting Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: presenter crib sheet. A timed run-of-show strip on top, then Q&A grouped by topic, then watch-outs. */
+:root {
+  --bg: #f3f5f7; --paper: #ffffff; --ink: #17202a; --muted: #5b6875; --line: #d8dee5;
+  --accent: #d9640f; --accent-soft: #fbe9db; --warn: #8a5a00; --warn-soft: #f7ecd2;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #11161c; --paper: #18202a; --ink: #e7ecf1; --muted: #9aa7b4; --line: #2b3643; --accent: #f08a3c; --accent-soft: #3a2616; --warn: #e2b55a; --warn-soft: #352a12; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #11161c; --paper: #18202a; --ink: #e7ecf1; --muted: #9aa7b4; --line: #2b3643; --accent: #f08a3c; --accent-soft: #3a2616; --warn: #e2b55a; --warn-soft: #352a12; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 64px; display: grid; gap: 36px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(32px, 5.5vw, 46px); }
+h2 { font-size: 30px; }
+h3 { font-size: 19px; font-family: var(--body); font-weight: 700; line-height: 1.3; }
+p { margin: 0; }
+a { color: var(--accent); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+header { display: grid; gap: 10px; border-bottom: 3px solid var(--ink); padding-bottom: 18px; }
+.banner { background: var(--warn-soft); color: var(--warn); font-weight: 600; font-size: 14px; padding: 8px 12px; border-radius: 4px; }
+section { display: grid; gap: 16px; }
+
+/* Run of show */
+.bar { display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 2px; }
+.bar span { background: var(--accent); opacity: .35; }
+.bar span:nth-child(2), .bar span:nth-child(4) { opacity: 1; }
+.bar span:nth-child(3) { opacity: .65; }
+.ros { display: grid; gap: 10px; }
+.slot { display: grid; grid-template-columns: 92px 1fr; gap: 4px 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+.slot .t { font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 500; padding-top: 2px; }
+.slot div { min-width: 0; display: grid; gap: 6px; }
+.slot .say { font-style: italic; color: var(--muted); }
+ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+/* Q&A */
+.qa-group { display: grid; gap: 10px; }
+.qa-group > .eyebrow { margin-top: 6px; }
+details.q { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+details.q > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+details.q > summary::-webkit-details-marker { display: none; }
+details.q > summary::after { content: "+"; color: var(--muted); font-family: var(--mono); }
+details.q[open] > summary::after { content: "–"; }
+details.q > div { padding: 0 16px 14px; display: grid; gap: 8px; }
+summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctrl { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: inherit; font-size: 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.watch { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 6px; padding: 16px; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.num { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 2px; }
+.num b { font-family: var(--display); font-size: 26px; font-variant-numeric: tabular-nums; }
+.num span { font-size: 13.5px; color: var(--muted); }
+@media (max-width: 520px) { .slot { grid-template-columns: 1fr; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Internal · Radi &amp; Alex · don't screen-share</span>
+  <h1>Stuart meeting prep, 7 Oct</h1>
+  <p class="muted">Share the client brief on screen and keep this page open next to it. Aim to leave with an owner and a date for each of the nine items.</p>
+  <p class="banner">Goal for the call: Stuart agrees to the 9 items and gives a date for brand facts (#1) and the comparison framework (#4).</p>
+</header>
+
+<section aria-labelledby="ros">
+  <h2 id="ros">Run of show (30 min)</h2>
+  <div class="bar" aria-hidden="true"><span style="flex:3"></span><span style="flex:6"></span><span style="flex:4"></span><span style="flex:12"></span><span style="flex:5"></span></div>
+  <div class="ros">
+    <div class="slot"><span class="t">0:00–0:03</span><div><b>Open and check last batch</b><p>Ask: "Are the first-batch fixes done?" Write down anything still open, and don't go into detail.</p><p class="say">"Today: what we found, what we need from you, and what we're delivering in the next two weeks."</p></div></div>
+    <div class="slot"><span class="t">0:03–0:09</span><div><b>Part 1: What we found</b><p>About one minute per card. Start with brand facts and make clear it's the top priority. Mention one number on each card and move on.</p><p class="say">"In short, Google and AI tools can't tell clearly what UpKeep is, which page to rank, or why to trust it."</p></div></div>
+    <div class="slot"><span class="t">0:09–0:13</span><div><b>Part 2: What we need from you</b><p>Read the 9 items aloud without going into detail. Point out the quick win (#5, footer link, 1 min) and that 5 of the 9 are developer tasks, so Stuart can pass them on as a group.</p></div></div>
+    <div class="slot"><span class="t">0:13–0:25</span><div><b>Part 3: Details</b><p>Spend most of the time on #1 Brand (4 min), #2 Case studies (2 min), #3 Reviews (2 min) and #4 Framework (2 min). Items #5 to #9 are developer tasks, so just say "your developer has the list" (2 min total).</p></div></div>
+    <div class="slot"><span class="t">0:25–0:30</span><div><b>Our deliverables, then agree on owners and dates</b><p>Spend about a minute on what Slingshot delivers. Use the rest to get a name and date for each item, and confirm the check-in on 21 Oct.</p><p class="say">"Who's the developer contact? Can we send them the dev list directly?"</p></div></div>
+  </div>
+</section>
+
+<section aria-labelledby="nums">
+  <h2 id="nums">Numbers to remember</h2>
+  <div class="nums">
+    <div class="num"><b>744 / 180</b><span>blog and learning URLs reviewed / topic groups</span></div>
+    <div class="num"><b>~267</b><span>to merge or redirect (168 merge, 95 redirect, 4 noindex)</span></div>
+    <div class="num"><b>68,427</b><span>impressions for /blog/best-cmms-software/, 0.2% CTR</span></div>
+    <div class="num"><b>~14,350</b><span>clicks from the top /es pages, so don't drop Spanish</span></div>
+    <div class="num"><b>34 / ~17k</b><span>clicks / impressions across the comparison pages</span></div>
+    <div class="num"><b>172</b><span>referring domains to /learning/maintenance-statistics/, the strongest page. Never redirect it.</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="qa">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap"><h2 id="qa">Likely questions</h2><div class="ctrl"><button type="button" id="openAll">Open all</button><button type="button" id="closeAll">Close all</button></div></div>
+
+  <div class="qa-group">
+    <span class="eyebrow">Brand and positioning</span>
+    <details class="q"><summary>Why is brand consistency the top priority and not a technical fix?</summary><div><p>AI answers such as Google AI Overviews and ChatGPT are put together from many sources. If G2 says "EAM", About Us says "asset operations" and a press release gives a different founding year, the model is less sure about UpKeep and less likely to name it. Technical fixes help pages rank. Consistent facts help the brand get cited.</p></div></details>
+    <details class="q"><summary>So should we call ourselves CMMS, EAM or asset operations?</summary><div><p>It's UpKeep's decision, but here's our view. Lead with <b>CMMS</b> as the category because that's what buyers search for ("best CMMS software" gets 68k impressions in our data). Treat asset operations as the longer-term vision on its own page. MaintainX does the same: its CMMS page doesn't mention asset operations. Whatever UpKeep chooses, use it everywhere.</p></div></details>
+    <details class="q"><summary>How long does it take to update G2, Capterra and the rest?</summary><div><p>Start with the five sources that matter most: G2, Capterra, About Us, the homepage and /product. Those take a few hours once the facts sheet is agreed. We can then find the other third-party mentions that need correcting.</p></div></details>
+  </div>
+
+  <div class="qa-group">
+    <span class="eyebrow">Proof: case studies and reviews</span>
+    <details class="q"><summary>Customers won't share exact numbers. What then?</summary><div><p>Percentages work well, such as "-30% unplanned downtime" or "2 hrs/week saved on reporting", and don't reveal sensitive figures. Get the customer to approve the wording. One strong case study in a key industry is better than five vague ones.</p></div></details>
+    <details class="q"><summary>Isn't asking for industry terms in reviews against G2, Capterra or Google rules?</summary><div><p>It's fine to ask customers to describe how they actually use UpKeep. Writing their text for them or offering incentives isn't, and Google and G2 penalize fake or incentivized reviews. The ask should be: "Tell people what you use UpKeep for in your plant or facility, including any audits or standards it helps with." Never provide a script.</p></div></details>
+    <details class="q"><summary>How many reviews do we need?</summary><div><p>There's no fixed number. A steady flow over time looks more natural than a burst, and specific detail matters more than the count. A realistic target is a few new reviews a month on each platform, with some going to the Google Business Profile.</p></div></details>
+  </div>
+
+  <div class="qa-group">
+    <span class="eyebrow">Consolidation and content</span>
+    <details class="q"><summary>Won't removing about 260 pages lose traffic?</summary><div><p>We only merge pages that compete for the same search. The page we keep is the one with more clicks and links, it takes in any unique content from the others, and 301 redirects pass on most of the link value. Pages that attract links, such as maintenance statistics with 172 referring domains, stay. Expect a short dip on some URLs and overall gains on the remaining pages.</p></div></details>
+    <details class="q"><summary>Why are blog and learning pages competing at all?</summary><div><p>Over the years the same topics were published in both sections. For example, "asset lifecycle management" has 7 URLs. Google can't tell which one to rank, so none of them ranks well.</p></div></details>
+    <details class="q"><summary>Is the full plan finished?</summary><div><p>No. We've finished some topic groups, and those are ready for your developer now. The rest take detailed analysis per group, and we'll deliver them in batches.</p></div></details>
+    <details class="q"><summary>Why do you need us for the comparison pages?</summary><div><p>Claims about competitors' features and pricing have to be accurate and defensible. Your product and sales teams know the details. The framework takes about an hour and helps prevent errors on pages that buyers read closely.</p></div></details>
+  </div>
+
+  <div class="qa-group">
+    <span class="eyebrow">Technical and Spanish site</span>
+    <details class="q"><summary>Should we just noindex the Spanish site?</summary><div><p>No. The top /es learning pages are translated and earn about 14k clicks, and the best one ranks around position 4. The problems come from the template: the English homepage, broken nav and footer links, and product links that point to English pages. Fixing the template fixes all of them. After that, add hreflang tags so Google pairs each EN page with its ES version.</p></div></details>
+    <details class="q"><summary>Why do the headings before the H1 matter?</summary><div><p>Search engines and AI tools use the heading order to understand a page. When "Products, Solutions, Resources" come first, the menu looks like the main topic of every product page. It's one template change that applies to every product page.</p></div></details>
+    <details class="q"><summary>Can Slingshot do the developer items?</summary><div><p>We can if you give us CMS or staging access. Otherwise we'll send your developer the exact lists, including the URLs and redirect maps, and check the work after it's deployed.</p></div></details>
+  </div>
+
+  <div class="qa-group">
+    <span class="eyebrow">Results and measurement</span>
+    <details class="q"><summary>When will we see results?</summary><div><p>Technical fixes and redirects are usually recrawled within a few weeks. Ranking changes from content and consolidation usually show within 1 to 3 months. AI citations follow brand consistency and reviews, so they take longer. Don't promise specific dates.</p></div></details>
+    <details class="q"><summary>How will you measure success?</summary><div><p>Search Console clicks and CTR on the target pages, starting with best-cmms-software, the comparison pages and the industry pages. Also: indexing of the /es pages, rankings for the 21 Q4 keywords, and how often AI Overviews cite UpKeep for "best CMMS for [industry]".</p></div></details>
+    <details class="q"><summary>Our developer only has a few hours. What comes first?</summary><div><p>1. Footer GBP link (1 min). 2. Nav headings before the H1 (one template change). 3. Broken /es links. 4. Redirect batches. 5. Trust bar.</p></div></details>
+  </div>
+</section>
+
+<section aria-labelledby="watch">
+  <h2 id="watch">Watch-outs from the source docs</h2>
+  <div class="watch">
+    <ul>
+      <li>The meeting doc lists <b>food-beverage-manufacturing twice</b> (items 6 and 15) and <b>/product/compare/maintainx/ twice</b>. The real counts are <b>37 industry pages</b> and <b>10 comparison pages</b>.</li>
+      <li>The doc says "GFSCI", which should be <b>GFSI</b>. Use GFSI if it comes up.</li>
+      <li>Twitter fix: the doc says x.com/onupkeep and the sheet says twitter.com/onupkeep. The brief uses <b>x.com</b>.</li>
+      <li>The status of the first-batch fixes isn't in either file. Ask Stuart at the start of the call.</li>
+      <li>The PM-cluster sheet has redirect targets for <b>improve-reliability-pm-program</b> and <b>pm-equipment-schedules</b> that need checking (one has no target, the other is marked Keep and Redirect). Fix them before sending the redirect list.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<script>
+document.getElementById("openAll").addEventListener("click", function () { document.querySelectorAll("details.q").forEach(function (d) { d.open = true; }); });
+document.getElementById("closeAll").addEventListener("click", function () { document.querySelectorAll("details.q").forEach(function (d) { d.open = false; }); });
+</script>

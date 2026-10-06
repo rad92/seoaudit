@@ -1,0 +1,371 @@
+<title>UpKeep Sprint 1 Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column styled like a maintenance work order. Three numbered parts follow the meeting order. */
+:root {
+  --bg: #f3f5f7;
+  --paper: #ffffff;
+  --ink: #17202a;
+  --muted: #5b6875;
+  --line: #d8dee5;
+  --accent: #d9640f;
+  --accent-soft: #fbe9db;
+  --high: #b3261e;
+  --high-soft: #f8e1df;
+  --med: #8a5a00;
+  --med-soft: #f7ecd2;
+  --ok: #1f6f4a;
+  --ok-soft: #dcefe5;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161c; --paper: #18202a; --ink: #e7ecf1; --muted: #9aa7b4; --line: #2b3643;
+    --accent: #f08a3c; --accent-soft: #3a2616; --high: #f2867e; --high-soft: #3b1d1b;
+    --med: #e2b55a; --med-soft: #352a12; --ok: #6fcf9e; --ok-soft: #15301f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161c; --paper: #18202a; --ink: #e7ecf1; --muted: #9aa7b4; --line: #2b3643;
+  --accent: #f08a3c; --accent-soft: #3a2616; --high: #f2867e; --high-soft: #3b1d1b;
+  --med: #e2b55a; --med-soft: #352a12; --ok: #6fcf9e; --ok-soft: #15301f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 64px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.1; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(34px, 6vw, 52px); }
+h2 { font-size: clamp(26px, 4vw, 34px); }
+h3 { font-size: 22px; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); font-size: 13px; overflow-wrap: anywhere; }
+.muted { color: var(--muted); }
+
+header { display: grid; gap: 12px; border-bottom: 3px solid var(--ink); padding-bottom: 20px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 600; }
+.lede { font-size: 18px; max-width: 65ch; }
+
+.part { display: grid; gap: 20px; }
+.part-head { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; align-items: baseline; }
+.part-num { font-family: var(--display); font-size: 44px; color: var(--accent); line-height: 1; grid-row: span 2; }
+.part-head p { color: var(--muted); grid-column: 2; }
+
+/* Findings */
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.finding { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.finding .stat { font-family: var(--display); font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; }
+.finding .stat small { font-family: var(--body); font-size: 13px; color: var(--muted); font-weight: 500; }
+.finding h3 { font-size: 20px; }
+.finding p { font-size: 14.5px; color: var(--muted); }
+
+/* Ask list */
+.asks { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.ask { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px 12px; padding: 14px 16px; border-top: 1px solid var(--line); align-items: start; }
+.ask:first-child { border-top: 0; }
+.ask input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--ok); }
+.ask label { font-weight: 600; cursor: pointer; }
+.ask .who { font-size: 13.5px; color: var(--muted); grid-column: 2; }
+.ask .tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; grid-row: span 2; }
+.ask.done label { text-decoration: line-through; color: var(--muted); }
+.pill { font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.p-high { background: var(--high-soft); color: var(--high); }
+.p-med { background: var(--med-soft); color: var(--med); }
+.p-quick { background: var(--ok-soft); color: var(--ok); }
+.p-dev { background: var(--accent-soft); color: var(--accent); }
+.progress { font-size: 14px; color: var(--muted); }
+
+/* Breakdown cards */
+.cards { display: grid; gap: 14px; }
+details.card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+details.card > summary { list-style: none; cursor: pointer; padding: 16px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+details.card > summary::-webkit-details-marker { display: none; }
+.card-num { font-family: var(--display); font-size: 26px; color: var(--accent); min-width: 1.6em; }
+.card-title { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.15; }
+.chev { color: var(--muted); transition: transform .15s; }
+details[open] .chev { transform: rotate(90deg); }
+.card-body { padding: 0 16px 18px; display: grid; gap: 14px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px 24px; }
+.cols > div { min-width: 0; display: grid; gap: 6px; align-content: start; }
+.label { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+li { padding-left: 2px; }
+.deliver { border-top: 1px dashed var(--line); padding-top: 12px; display: grid; gap: 4px; }
+.deliver p { font-weight: 600; }
+.urls { background: var(--bg); border-radius: 4px; padding: 10px 12px; display: grid; gap: 2px; overflow-x: auto; }
+
+/* Slingshot + on deck */
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.panel h3 { font-size: 22px; }
+.ondeck { background: transparent; border-style: dashed; }
+footer { border-top: 3px solid var(--ink); padding-top: 16px; font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+@media (max-width: 520px) {
+  .ask { grid-template-columns: 28px 1fr; }
+  .ask .tags { grid-row: auto; grid-column: 2; justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Slingshot × UpKeep · Sprint 1 · 7 Oct – 21 Oct 2026</span>
+  <h1>UpKeep Sprint 1: what we found and what we need</h1>
+  <div class="meta"><span><b>Meeting</b> 7 Oct 2026</span><span><b>Attendees</b> Stuart (UpKeep), Alex, Radi (Slingshot)</span><span><b>Length</b> 30 min</span></div>
+  <p class="lede">Google and AI search engines can't tell clearly what UpKeep is, which pages to rank, or why to trust it. Over the next two weeks, UpKeep fixes the brand facts and the site errors, and Slingshot rebuilds the content.</p>
+</header>
+
+<!-- PART 1 -->
+<section class="part" aria-labelledby="p1">
+  <div class="part-head"><span class="part-num">1</span><h2 id="p1">What we found</h2><p>Six problems, starting with the one that costs the most.</p></div>
+  <div class="findings">
+    <article class="finding">
+      <span class="pill p-high" style="justify-self:start">Top priority</span>
+      <div class="stat">5 <small>brand facts that conflict</small></div>
+      <h3>UpKeep describes itself differently in different places</h3>
+      <p>Category (CMMS, EAM or asset operations), tagline, product names, founding year, pricing and customer count all vary across About Us, PR, G2 and Capterra. When the facts conflict, AI tools cite UpKeep less.</p>
+    </article>
+    <article class="finding">
+      <span class="pill p-high" style="justify-self:start">High</span>
+      <div class="stat">0 <small>industry case studies with numbers</small></div>
+      <h3>Not enough proof</h3>
+      <p>There are no case studies with named customers and real results, and reviews don't mention industry-specific work. Google and AI tools look for this kind of evidence.</p>
+    </article>
+    <article class="finding">
+      <span class="pill p-high" style="justify-self:start">High</span>
+      <div class="stat">12 <small>broken links (404s) in the /es nav and footer</small></div>
+      <h3>Spanish site serves English content and broken links</h3>
+      <p>The /es homepage is mostly in English, which Google treats as duplicate content. Product links skip the /es pages. These pages earn about <b>14,350 clicks</b>, so they're worth fixing rather than removing.</p>
+    </article>
+    <article class="finding">
+      <span class="pill p-med" style="justify-self:start">Template</span>
+      <div class="stat">3 <small>site-wide template issues</small></div>
+      <h3>Template problems on key pages</h3>
+      <p>On product pages, the nav headings load before the H1. The footer address doesn't link to UpKeep's Google Business Profile. The homepage has no security or award badges, which MaintainX shows.</p>
+    </article>
+    <article class="finding">
+      <span class="pill p-med" style="justify-self:start">Content</span>
+      <div class="stat">~260 <small>pages to merge or redirect</small></div>
+      <h3>Pages compete with each other</h3>
+      <p>We reviewed 744 blog and learning URLs in 180 topic groups. Many pages cover the same topic, so they compete with each other. For example, "best CMMS software" gets 68,427 impressions but only 0.2% CTR, and a second page competes with it.</p>
+    </article>
+    <article class="finding">
+      <span class="pill p-med" style="justify-self:start">Content</span>
+      <div class="stat">34 <small>clicks from ~17k impressions</small></div>
+      <h3>Comparison pages don't convert search traffic</h3>
+      <p>There are 10 "UpKeep vs" pages covering MaintainX, Fiix, eMaint, Limble, Coast and EZO. Blog and product versions split the traffic, and the content needs accurate input from your team.</p>
+    </article>
+  </div>
+</section>
+
+<!-- PART 2 -->
+<section class="part" aria-labelledby="p2">
+  <div class="part-head"><span class="part-num">2</span><h2 id="p2">What we need from you</h2><p>Nine items for the next two weeks, most important first. Tick them off as they're done.</p></div>
+  <div class="asks" id="asks">
+    <div class="ask"><input type="checkbox" id="a1"><label for="a1">Decide on the brand facts</label><span class="who">Category, modifier, value points, product names, key stats</span><span class="tags"><span class="pill p-high">#1 priority</span></span></div>
+    <div class="ask"><input type="checkbox" id="a2"><label for="a2">Provide industry case studies with real numbers</label><span class="who">One per industry, with linked customer names</span><span class="tags"><span class="pill p-high">High</span></span></div>
+    <div class="ask"><input type="checkbox" id="a3"><label for="a3">Get industry-specific reviews on G2, Capterra and Google</label><span class="who">Customers describe their real industry work</span><span class="tags"><span class="pill p-high">High</span></span></div>
+    <div class="ask"><input type="checkbox" id="a4"><label for="a4">Fill in the comparison-page framework</label><span class="who">Product or sales team, then export as HTML and send it to us</span><span class="tags"><span class="pill p-high">High</span></span></div>
+    <div class="ask"><input type="checkbox" id="a5"><label for="a5">Link the footer address to the Google Business Profile</label><span class="who">Developer, about 1 minute</span><span class="tags"><span class="pill p-quick">Quick win</span><span class="pill p-dev">Dev</span></span></div>
+    <div class="ask"><input type="checkbox" id="a6"><label for="a6">Remove the nav headings that load before the H1 on product pages</label><span class="who">Developer, one template change</span><span class="tags"><span class="pill p-dev">Dev</span></span></div>
+    <div class="ask"><input type="checkbox" id="a7"><label for="a7">Fix the Spanish (/es) site</label><span class="who">Developer: homepage translation, broken nav and footer links, product links</span><span class="tags"><span class="pill p-high">High</span><span class="pill p-dev">Dev</span></span></div>
+    <div class="ask"><input type="checkbox" id="a8"><label for="a8">Add a trust bar with security badges and awards to the homepage</label><span class="who">Developer and designer</span><span class="tags"><span class="pill p-dev">Dev</span></span></div>
+    <div class="ask"><input type="checkbox" id="a9"><label for="a9">Set up redirects for the page groups we've finished</label><span class="who">Developer: 301 redirects and internal link updates, from our plan</span><span class="tags"><span class="pill p-dev">Dev</span></span></div>
+  </div>
+  <p class="progress" id="progress" aria-live="polite">0 of 9 done</p>
+</section>
+
+<!-- PART 3 -->
+<section class="part" aria-labelledby="p3">
+  <div class="part-head"><span class="part-num">3</span><h2 id="p3">Details for each item</h2><p>Why it matters, what to do, and what to send us.</p></div>
+  <div class="cards">
+
+    <details class="card" open>
+      <summary><span class="card-num">1</span><span class="card-title">Brand facts</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>AI answers draw on G2, Capterra, press releases and your own site. When these sources disagree about what UpKeep is, AI tools trust UpKeep less and cite it less often.</p></div>
+          <div><span class="label">Decide</span><ul>
+            <li><b>Category:</b> CMMS, EAM, asset operations platform or maintenance platform</li>
+            <li><b>Modifier:</b> AI-native, mobile-first, or AI built in</li>
+            <li><b>Value points:</b> for example, less downtime, % of time saved on reports, built for technicians</li>
+            <li><b>Product names:</b> one name for each product, used everywhere</li>
+            <li><b>Key stats:</b> founding year (About Us and press releases disagree), pricing plans, current number of customers</li>
+          </ul></div>
+        </div>
+        <div><span class="label">Then update, starting with</span><p>Capterra, G2, About Us, homepage, /product</p></div>
+        <div class="deliver"><span class="label">Send us</span><p>A one-page brand facts sheet with the final category, modifier, value points, product names and stats.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">2</span><span class="card-title">Industry case studies</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>Concrete results are the evidence Google and AI tools quote. A quote alone isn't enough. A named person and company with a link makes it credible.</p></div>
+          <div><span class="label">What good looks like</span><p class="muted">"Company A (food and beverage) cut maintenance spend by 44% in Q1 after rolling out UpKeep." The spokesperson is linked to their LinkedIn or company page.</p></div>
+        </div>
+        <div><span class="label">Where to start</span><p>Any industry. Our highest-traffic industry pages are facility management, restaurants, property management, hospitality and fitness.</p></div>
+        <div class="deliver"><span class="label">Send us</span><p>Ideally one case study per industry, with real numbers and linked names. Short customer interviews would also help a lot.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">3</span><span class="card-title">Industry-specific reviews</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>Generic reviews such as "great tool" don't help. Reviews that use industry terms show which industries UpKeep serves.</p></div>
+          <div><span class="label">Terms customers might use (food and beverage example)</span><p class="muted">FDA preventive controls, GFSI, BRCGS, FSSC 22000, GMP, CIP (clean-in-place), allergen changeovers, calibration of metal detectors, scales and thermometers</p></div>
+        </div>
+        <div><span class="label">How</span><ul><li>Ask customers to describe how they actually use UpKeep in their industry. Don't write the review for them.</li><li>Send some reviewers to the Google Business Profile as well as G2 and Capterra.</li></ul></div>
+        <div class="deliver"><span class="label">Send us</span><p>A note when new reviews go live, so we can check them.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">4</span><span class="card-title">Comparison-page framework</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>Comparison searches come from buyers who are close to deciding. We're rebuilding all 10 pages, and the claims about features and pricing have to be accurate.</p></div>
+          <div><span class="label">Pages</span><p class="mono">MaintainX (product + blog) · Fiix (product + blog) · eMaint (product + blog) · Limble (product + blog) · Coast · EZO</p></div>
+        </div>
+        <div><span class="label">How</span><ul><li>Open the <a href="https://drive.google.com/file/d/1zMArz5e_YItCAPQXENBxC_Ln7aqgzyKU/view?usp=sharing" target="_blank" rel="noopener">framework file</a> in a browser and fill in every field.</li><li>Click Export, choose HTML document, then download.html, and send us the file.</li></ul></div>
+        <div class="deliver"><span class="label">Send us</span><p>The completed framework as an HTML file.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">5</span><span class="card-title">Footer address link</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Problem</span><p>The footer address (10880 Wilshire Blvd, Los Angeles, CA 90024) links to a generic Google Maps address instead of UpKeep's business listing.</p></div>
+          <div><span class="label">Fix</span><p>Replace the link with the Google Maps link to UpKeep's Google Business Profile. This helps Google connect the listing with the brand.</p></div>
+        </div>
+        <div class="deliver"><span class="label">Send us</span><p>A quick message once it's live.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">6</span><span class="card-title">Nav headings before the H1</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Problem</span><p>On every product page, the menu renders headings before the H1, so search engines see the menu as the start of the page. Some pages also put H4s directly after H2s.</p></div>
+          <div><span class="label">Fix</span><p>Stop rendering the menu labels as heading tags (H2 to H4) in the template, and clean up the heading order. The same problem appears on the /es pages.</p></div>
+        </div>
+        <div class="deliver"><span class="label">Send us</span><p>A confirmation once it's deployed.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">7</span><span class="card-title">Spanish (/es) site</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Content</span><ul><li>Translate the English content on the /es homepage and other ES pages</li><li>/es/product/cmms-software/ uses a different template from the English page</li></ul></div>
+          <div><span class="label">Nav links</span><ul><li>Product and capability items in the /es menu link to the English pages</li><li>/es/solutions/owners/, /safety-managers/ and /executives/ return 404</li><li>The free tools menu returns 404 (6 links)</li></ul></div>
+        </div>
+        <div class="urls mono">
+          <span>404 · /es/free-maintenance-tools/ (+ calculators, roi-calculator, qr-code-generator, preventive-maintenance-schedule, root-cause-analysis)</span>
+          <span>404 · /es/press-releases/ · /es/blog/ · /es/eam-software/ (footer)</span>
+          <span>Fix · twitter.com/onupkeep/ → x.com/onupkeep</span>
+          <span>Check · /es/what-is-a-work-order/ redirects to /es/product/</span>
+        </div>
+        <div class="deliver"><span class="label">Send us</span><p>Confirmation that the ES homepage, nav and footer are fixed, so we can recrawl.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">8</span><span class="card-title">Homepage trust bar</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>MaintainX's homepage shows awards and security badges, which build trust with buyers and AI tools. UpKeep's homepage doesn't show either.</p></div>
+          <div><span class="label">What to add</span><ul><li>Security certifications and award badges under "Trusted by 4,000+ companies"</li><li>Optional: link each customer logo to a page that shows the company uses UpKeep</li></ul></div>
+        </div>
+        <div class="deliver"><span class="label">Send us</span><p>A design or staging link for us to review before it goes live.</p></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary><span class="card-num">9</span><span class="card-title">Redirects for finished page groups</span><span class="chev" aria-hidden="true">▸</span></summary>
+      <div class="card-body">
+        <div class="cols">
+          <div><span class="label">Why it matters</span><p>Merging duplicate pages makes the remaining page stronger and removes the competition between them. The 301 redirects keep the existing links and traffic.</p></div>
+          <div><span class="label">What your developer does</span><ul><li>Set up the 301 redirects from our plan for the groups we've finished</li><li>Update every internal link that points to a redirected URL</li><li>Apply the same changes to the /es versions</li></ul></div>
+        </div>
+        <div class="deliver"><span class="label">Send us</span><p>A note when each batch is live. We'll check for redirect chains and 404s.</p></div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- WHAT SLINGSHOT DELIVERS -->
+<section class="part" aria-labelledby="p4">
+  <div class="part-head"><span class="part-num">→</span><h2 id="p4">What Slingshot delivers in these two weeks</h2><p>Our side of the sprint.</p></div>
+  <div class="two">
+    <div class="panel">
+      <h3>Industry pages, expanded</h3>
+      <p>37 /solutions/ pages get industry terms (FSMA, HACCP, SQF audit, GFSI, BRCGS…), in order of impressions, starting with:</p>
+      <p class="mono">facility-management · restaurants · property-management · hospitality · fitness-recreation</p>
+    </div>
+    <div class="panel">
+      <h3>Comparison pages, rebuilt</h3>
+      <p>We'll rebuild all 10 MaintainX, Fiix, eMaint, Limble, Coast and EZO pages from your framework, and fix the competition between the blog and product versions.</p>
+    </div>
+    <div class="panel">
+      <h3>21 new Q4 keywords</h3>
+      <p>For example: best CMMS for small businesses, best EAM software, best fleet maintenance software for construction companies, commercial HVAC maintenance, and quality assurance vs quality control.</p>
+    </div>
+    <div class="panel">
+      <h3>Consolidation plan and outreach</h3>
+      <p>We'll finish the page-merge plan for the remaining topic groups (about 260 URLs in total). We'll also list the sites that AI Overviews cite for "best CMMS for [industry]" so we can ask them for links.</p>
+    </div>
+  </div>
+</section>
+
+<section class="part" aria-labelledby="p5">
+  <div class="part-head"><span class="part-num">+</span><h2 id="p5">Next sprints</h2><p>Already in the audit. We'll work through these after Sprint 1.</p></div>
+  <div class="panel ondeck">
+    <ul>
+      <li><b>Duplicate industry pages:</b> /maintenance-software-for/X/ and /solutions/X/ target the same keywords. This is the biggest overlap on the site.</li>
+      <li><b>25 overlaps between core and blog pages</b> (14 high priority), such as two "what is CMMS" pages, two ROI calculators and three asset-operations pages</li>
+      <li><b>Blog cleanup:</b> 24 release notes duplicated in /blog/, 61 podcast duplicates, 183 thin HR posts, and trashed or placeholder URLs that are still indexed</li>
+      <li><b>On-page fixes</b> for "what is CMMS", "CMMS ROI", "what is preventive/predictive maintenance" and "what is a work order"</li>
+      <li><b>/product/cmms-software/</b> to focus only on CMMS, plus a homepage video, separate sitemaps per section, and contextual preventive-maintenance links on 20 solution pages</li>
+    </ul>
+  </div>
+</section>
+
+<footer><span>Next check-in: 21 Oct 2026, end of Sprint 1</span><span>Slingshot · Alex &amp; Radi</span></footer>
+
+</div>
+
+<script>
+(function () {
+  var KEY = "upkeep-sprint1-asks";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#asks input[type=checkbox]"));
+  var out = document.getElementById("progress");
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function render() {
+    var n = 0;
+    boxes.forEach(function (b) { b.closest(".ask").classList.toggle("done", b.checked); if (b.checked) n++; });
+    out.textContent = n + " of " + boxes.length + " done";
+  }
+  boxes.forEach(function (b) {
+    b.checked = !!saved[b.id];
+    b.addEventListener("change", function () {
+      saved[b.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      render();
+    });
+  });
+  render();
+})();
+</script>
