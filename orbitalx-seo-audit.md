@@ -1,6 +1,6 @@
 # SEO Audit: orbitalx.com
 
-**Audit date:** 2026-10-13 (v2, with Semrush data)
+**Audit date:** 2026-10-13 (v3, with Semrush, Google Search Console and competitor data)
 **Site:** https://orbitalx.com/ (ABM and B2B pipeline agency for lean marketing teams, London + Cebu)
 **Overall health:** 🔴 Critical. The technical base is sound: HTTPS, clean canonicals, a working sitemap, unique titles and one H1 per page. There are about 50 solid long-form guides. But **organic search brings in almost no new business.** Semrush estimates about **150 US visits a month, and 97% of them are people searching the brand name "orbital x"**. Not one service page ranks in the top 50 for a non-brand keyword. The crawl explains why: 96 pages share one meta description, about 100 articles can only be reached through the sitemap, the guides don't link to the service pages, and several pages compete for the same terms.
 
@@ -33,6 +33,26 @@
 **Brand searches are messy.** "orbital x" (170/mo) ranks #1, but Google also shows `www.orbitalx.com` (#10, knowledge panel), `app.orbitalx.com` (#84, #88) and nine other site pages. The site also turns up for look-alike names it shouldn't care about: "orbitx" (4,400/mo, #52, via `app.`), "orbit x", "orbital inc.", "orbital software", "orbital tech", "orbital company", "asteroidx", "billionx".
 
 ---
+
+## 0c. Google Search Console (11 Jul – 10 Oct 2026)
+
+| Metric | Value | What it means |
+|---|---|---|
+| Clicks / impressions | **886 / 31,342** (CTR 2.83%) | |
+| Avg position, first 30 days → last 30 days | **20.9 → 11.6** | Rankings improved a lot, but clicks rose only ~19% (249 → 296) |
+| Clicks to brand pages (home, team, www, contact) | **779 of 900 page clicks (87%)** | Confirms the Semrush picture: search traffic is almost all brand |
+| Blog (`/resources/*`) | **25,411 impressions, 77 clicks (0.30% CTR)** | Google already shows the content. The snippets don't earn clicks (see 1.1). |
+| Page-1 pages with <1% CTR | `demand-gen-vs-performance-max` (3,004 impr, pos 7.8, 0.6%), `how-to-measure-marketing-qualified-leads-effectively` (1,700, pos 7.0, 0.06%), StackOne case study (1,010, pos 8.6, 0 clicks), `the-larger-market-formula…` (715, pos 7.6, 0.4%) | Fastest wins: rewrite titles and metas, then refresh the content |
+| Service pages | `/services/ai-agents` pos 2.6, 1,423 impr, 0.21% CTR. `/services` pos 3.3, 0.19%. `/platform` pos 3.3, 0.23%. | These impressions come from brand sitelinks, not from non-brand rankings |
+| Countries | UK: 38% of clicks, 9.8% CTR. US: **48% of impressions** but 0.76% CTR (pos 20). | The UK is the market that converts. Get a UK Semrush export. |
+| 404 URLs still in Google | `/services/earned` (4 clicks, 67 impr), `/resources-v2`, `/resources/demand-net-vs-performance-max`, `/resources/account-abased-marketing-tools`, `/blog-categories/brand-storytelling` | 301 them (Redirect Map tab) |
+| Subdomains in Google | `app.` (487 impr), `www.` (630), `domorewithless.` + `episode4/5/6.`, `marketingunderattack-uk/au.`, `fixcoldoutbound.` | Noindex `app.`. Fix or retire the microsites; their SSL handshake failed from the audit environment. |
+
+## 0d. Competitors (search results, 13 Oct 2026)
+- **Direct UK ABM competitors:** strategicabm (ABM-only, strategy and enablement, G2 presence) and Gripped (content-led SaaS agency that ranks its own ABM agency guide). Directive (performance-led, with a UK subfolder) competes on demand gen.
+- **Roundups and directories dominate the shortlist searches.** Results for "best ABM agencies" and "best demand generation agencies UK" are almost all roundups (Blend, Polaris, B2B Marketing, Directive UK, Digital Litmus, OneMetrik, GTM 8020, RevvGrowth, Growth Syndicate, bestabmagencies, PipeRocket, 310 Creative). **OrbitalX isn't listed in any of them.** It has a Clutch profile, but no G2, salesforge or syncgtm listing.
+- **Open ground:** results for "GTM engineering agency" are mostly job posts and fractional firms. A pillar page plus a service page could rank early.
+- The full competitor table, the results landscape and the outreach list are in the workbook.
 
 ## 0b. Crawl snapshot
 
