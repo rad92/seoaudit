@@ -695,11 +695,11 @@ function toHTML(bs,preview,editDate){
   return bs.map(b=>{const I=x=>inlineHTML(x,preview);
     switch(b.t){
       case "h1":return `<h1>${I(b.x)}</h1>`;case "h2":return `<h2>${I(b.x)}</h2>`;case "h3":return `<h3>${I(b.x)}</h3>`;
-      case "byline":return `<p class="byline">${I(b.x)} · Updated <time datetime="${b.iso}"${editDate?' contenteditable="true" spellcheck="false" title="Click to edit the date"':""}>${esc(longDate(b.iso))}</time></p>`;case "verified":return `<p class="verified">${I(b.x)}</p>`;
+      case "byline":{const by=I(b.x).trim();return `<p class="byline">${by&&by!=="By"?by+" · ":""}Updated <time datetime="${b.iso}"${editDate?' contenteditable="true" spellcheck="false" title="Click to edit the date"':""}>${esc(longDate(b.iso))}</time></p>`}case "verified":return `<p class="verified">${I(b.x)}</p>`;
       case "p":return `<p>${I(b.x).replace(/\n/g,"<br>")}</p>`;case "quote":return `<blockquote><p>${I(b.x)}</p></blockquote>`;
       case "img":return `<p>${preview?`<mark class="miss">Screenshot</mark> `:""}<em>[Image: ${esc(b.x)}]</em></p>`;
       case "ul":return `<ul>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ul>`;case "ol":return `<ol>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ol>`;
-      case "table":return `<div class="tw"><table><thead><tr>${b.h.map(x=>`<th>${I(x)}</th>`).join("")}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(x=>`<td>${I(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+      case "table":return `<div class="tw"><table><thead><tr>${b.h.map(x=>`<th>${I(x)}</th>`).join("")}</tr></thead><tbody>${b.r.map(r=>`<tr>${r.map(x=>`<td${editDate?' contenteditable="true"':""}>${I(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     }return ""}).join("\n");
 }
 function toMD(bs){
@@ -707,7 +707,7 @@ function toMD(bs){
   return bs.map(b=>{const I=inlineMD;
     switch(b.t){
       case "h1":return "# "+I(b.x);case "h2":return "## "+I(b.x);case "h3":return "### "+I(b.x);
-      case "byline":return "_"+I(b.x)+" · Updated "+longDate(b.iso)+"_";case "verified":return "_"+I(b.x)+"_";case "p":return I(b.x);case "quote":return "> "+I(b.x);
+      case "byline":{const by=I(b.x).trim();return "_"+(by&&by!=="By"?by+" · ":"")+"Updated "+longDate(b.iso)+"_"}case "verified":return "_"+I(b.x)+"_";case "p":return I(b.x);case "quote":return "> "+I(b.x);
       case "img":return `![${b.x}](screenshot.png)`;
       case "ul":return b.i.map(x=>"- "+I(x)).join("\n");case "ol":return b.i.map((x,i)=>`${i+1}. ${I(x)}`).join("\n");
       case "table":return `| ${b.h.map(cell).join(" | ")} |\n| ${b.h.map(()=>"---").join(" | ")} |\n`+b.r.map(r=>`| ${r.map(cell).join(" | ")} |`).join("\n");
@@ -886,7 +886,15 @@ th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-ali
 th{background:var(--sunk)}
 time[contenteditable]{border-bottom:1px dashed var(--ink-3);cursor:text;padding:0 2px}
 time[contenteditable]:hover,time[contenteditable]:focus{background:var(--sunk);outline:none}
-.hint{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-3);margin:0 0 20px}
+.hint{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-3);margin:0}
+td[contenteditable]{cursor:text}
+td[contenteditable]:hover{background:var(--sunk)}
+td[contenteditable]:focus{outline:2px solid var(--accent);outline-offset:-2px;background:#fff}
+.edited{background:#FFF4C2!important}
+.review{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 0;margin-bottom:20px}
+.review button{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+.review .count{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-2)}
+@media print{.review{display:none}.edited{background:none!important}}
 @media print{time[contenteditable]{border:0}.hint{display:none}}
 mark.miss{background:var(--miss-soft);color:var(--miss);font:12px system-ui,sans-serif;padding:1px 6px;border-radius:4px}
 @media print{h2{break-after:avoid}table{break-inside:avoid}}
@@ -895,17 +903,31 @@ mark.miss{background:var(--miss-soft);color:var(--miss);font:12px system-ui,sans
 <body>
 <div class="wrap">
 <div class="docmeta"><span><b>Brief:</b> ${esc(C())} vs UpKeep</span><span><b>Date:</b> <time datetime="${docDateISO()}" contenteditable="true" spellcheck="false" title="Click to edit the date">${esc(longDate(docDateISO()))}</time></span>${filled(s.author)?`<span><b>Author:</b> ${esc(s.author)}</span>`:""}<span><b>Status:</b> ${SECTIONS.filter(x=>x.req&&secState(x)==="done").length}/${SECTIONS.filter(x=>x.req).length} required sections complete</span></div>
-<p class="hint">Dates with a dashed underline can be edited: click one and type a new date.</p>
+<div class="review"><button type="button" id="saveCopy">Download edited copy</button><span class="count" id="editCount">No edits yet</span><p class="hint">Click any table cell or date to edit it. Edited cells turn yellow. Download an edited copy to keep your changes.</p></div>
 <article>
 ${toHTML(bs,gaps,true)}
 </article>
 </div>
+<script>
+(function(){
+  var n=document.querySelectorAll(".edited").length,count=document.getElementById("editCount");
+  function show(){count.textContent=n?n+(n===1?" cell edited":" cells edited"):"No edits yet"}
+  show();
+  document.addEventListener("input",function(e){var t=e.target.closest&&e.target.closest("[contenteditable]");if(t&&!t.classList.contains("edited")){t.classList.add("edited");n++;show()}});
+  document.getElementById("saveCopy").addEventListener("click",function(){
+    var html="<!doctype html>\\n"+document.documentElement.outerHTML;
+    var name=(document.title||"comparison").replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"").toLowerCase()+"-reviewed.html";
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+  });
+})();
+<\/script>
 </body>
 </html>
 `;
 }
 function exportText(){const bs=blocks();if(exportFmt==="md")return toMD(bs);if(exportFmt==="doc")return docHTML($("#gapsChk").checked);return toHTML(bs,false)}
-const FMT={md:["Markdown","md","For a CMS or Google Docs. Missing items show as [ADD: …]."],html:["HTML snippet","html","The article body only, to paste into a CMS. Missing items show as [ADD: …]."],doc:["HTML document","html","A complete, styled page with everything filled in so far. Open it in any browser or send it to the client."]};
+const FMT={md:["Markdown","md","For a CMS or Google Docs. Missing items show as [ADD: …]."],html:["HTML snippet","html","The article body only, to paste into a CMS. Missing items show as [ADD: …]."],doc:["HTML document","html","A complete, styled page with everything filled in so far. Open it in any browser and send it to the client: table cells and dates can be edited in place, and 'Download edited copy' saves the changes."]};
 function openSheet(){$("#sheet").hidden=false;setFmt(exportFmt);$("#closeSheet").focus()}
 function setFmt(f){exportFmt=f;$("#docDate").value=docDateISO();
   ["md","html","doc"].forEach(k=>$("#fmt"+(k==="md"?"Md":k==="html"?"Html":"Doc")).classList.toggle("primary",k===f));
