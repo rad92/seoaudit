@@ -255,6 +255,7 @@ article.doc .wcnt{font-family:var(--f-ui);font-size:12px;color:var(--ink-3)}
       <button class="btn small" id="fmtMd">Markdown</button>
       <button class="btn small" id="fmtHtml">HTML snippet</button>
       <button class="btn small" id="fmtDoc">HTML document</button>
+      <label class="gaps" for="docDate">Date <input type="date" id="docDate" style="width:auto;padding:3px 6px"></label>
       <label class="gaps" id="gapsWrap" hidden><input type="checkbox" id="gapsChk"> Show missing items</label>
       <button class="btn small primary" id="copyBtn">Copy</button>
       <button class="btn small" id="dlBtn" hidden>Download</button>
@@ -639,7 +640,7 @@ const need=(v,label)=>filled(v)?String(v):MISS+label+MISS;
 function blocks(){
   const b=[],s=brief.settings;const P=(t)=>b.push({t:"p",x:t});const L=(t)=>b.push({t:"p",x:t,label:true});
   b.push({t:"h1",x:need(s.h1,"H1")});
-  b.push({t:"byline",x:`By ${need(s.author,"author")}${filled(s.authorRole)?", "+s.authorRole:""}`});
+  b.push({t:"byline",x:`By ${need(s.author,"author")}${filled(s.authorRole)?", "+s.authorRole:""}`,iso:docDateISO()});
   P(need(brief.opening.answer,"short answer (50–80 words)"));
   if(filled(brief.opening.firstHand))P(brief.opening.firstHand);
   b.push({t:"h2",x:sub("{C} vs UpKeep at a glance")});
@@ -679,6 +680,10 @@ function blocks(){
   if(filled(brief.author.url)||filled(brief.author.linkedin))P([brief.author.url,brief.author.linkedin].filter(filled).join(" · "));
   return b;
 }
+/* document date: the reviewer can change it in the Export window, and again inside the exported HTML document */
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function docDateISO(){const v=brief.settings.updated;return /^\d{4}-\d{2}-\d{2}$/.test(v||"")?v:todayISO()}
+function longDate(iso){const[y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}
 function listOr(arr,label){const f=(arr||[]).filter(filled);return f.length?f:[MISS+label+MISS]}
 function inlineHTML(t,preview){
   let h=esc(t).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
@@ -686,11 +691,11 @@ function inlineHTML(t,preview){
   return h;
 }
 function inlineMD(t){return String(t).replace(new RegExp(MISS+"([^"+MISS+"]*)"+MISS,"g"),"[ADD: $1]")}
-function toHTML(bs,preview){
+function toHTML(bs,preview,editDate){
   return bs.map(b=>{const I=x=>inlineHTML(x,preview);
     switch(b.t){
       case "h1":return `<h1>${I(b.x)}</h1>`;case "h2":return `<h2>${I(b.x)}</h2>`;case "h3":return `<h3>${I(b.x)}</h3>`;
-      case "byline":return `<p class="byline">${I(b.x)}</p>`;case "verified":return `<p class="verified">${I(b.x)}</p>`;
+      case "byline":return `<p class="byline">${I(b.x)} · Updated <time datetime="${b.iso}"${editDate?' contenteditable="true" spellcheck="false" title="Click to edit the date"':""}>${esc(longDate(b.iso))}</time></p>`;case "verified":return `<p class="verified">${I(b.x)}</p>`;
       case "p":return `<p>${I(b.x).replace(/\n/g,"<br>")}</p>`;case "quote":return `<blockquote><p>${I(b.x)}</p></blockquote>`;
       case "img":return `<p>${preview?`<mark class="miss">Screenshot</mark> `:""}<em>[Image: ${esc(b.x)}]</em></p>`;
       case "ul":return `<ul>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ul>`;case "ol":return `<ol>${b.i.map(x=>`<li>${I(x)}</li>`).join("")}</ol>`;
@@ -702,7 +707,7 @@ function toMD(bs){
   return bs.map(b=>{const I=inlineMD;
     switch(b.t){
       case "h1":return "# "+I(b.x);case "h2":return "## "+I(b.x);case "h3":return "### "+I(b.x);
-      case "byline":case "verified":return "_"+I(b.x)+"_";case "p":return I(b.x);case "quote":return "> "+I(b.x);
+      case "byline":return "_"+I(b.x)+" · Updated "+longDate(b.iso)+"_";case "verified":return "_"+I(b.x)+"_";case "p":return I(b.x);case "quote":return "> "+I(b.x);
       case "img":return `![${b.x}](screenshot.png)`;
       case "ul":return b.i.map(x=>"- "+I(x)).join("\n");case "ol":return b.i.map((x,i)=>`${i+1}. ${I(x)}`).join("\n");
       case "table":return `| ${b.h.map(cell).join(" | ")} |\n| ${b.h.map(()=>"---").join(" | ")} |\n`+b.r.map(r=>`| ${r.map(cell).join(" | ")} |`).join("\n");
@@ -853,7 +858,6 @@ function docHTML(gaps){
   const s=brief.settings;
   const title=esc(filled(s.title)?s.title:sub("{C} vs UpKeep ({Y})"));
   const meta=filled(s.metaDesc)?`<meta name="description" content="${esc(s.metaDesc)}">\n`:"";
-  const today=new Date().toISOString().slice(0,10);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -880,15 +884,20 @@ blockquote{margin:14px 0;padding:4px 16px;border-left:3px solid var(--accent);co
 table{border-collapse:collapse;width:100%;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
 th{background:var(--sunk)}
+time[contenteditable]{border-bottom:1px dashed var(--ink-3);cursor:text;padding:0 2px}
+time[contenteditable]:hover,time[contenteditable]:focus{background:var(--sunk);outline:none}
+.hint{font:12px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink-3);margin:0 0 20px}
+@media print{time[contenteditable]{border:0}.hint{display:none}}
 mark.miss{background:var(--miss-soft);color:var(--miss);font:12px system-ui,sans-serif;padding:1px 6px;border-radius:4px}
 @media print{h2{break-after:avoid}table{break-inside:avoid}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="docmeta"><span><b>Brief:</b> ${esc(C())} vs UpKeep</span><span><b>Exported:</b> ${today}</span>${filled(s.author)?`<span><b>Author:</b> ${esc(s.author)}</span>`:""}<span><b>Status:</b> ${SECTIONS.filter(x=>x.req&&secState(x)==="done").length}/${SECTIONS.filter(x=>x.req).length} required sections complete</span></div>
+<div class="docmeta"><span><b>Brief:</b> ${esc(C())} vs UpKeep</span><span><b>Date:</b> <time datetime="${docDateISO()}" contenteditable="true" spellcheck="false" title="Click to edit the date">${esc(longDate(docDateISO()))}</time></span>${filled(s.author)?`<span><b>Author:</b> ${esc(s.author)}</span>`:""}<span><b>Status:</b> ${SECTIONS.filter(x=>x.req&&secState(x)==="done").length}/${SECTIONS.filter(x=>x.req).length} required sections complete</span></div>
+<p class="hint">Dates with a dashed underline can be edited: click one and type a new date.</p>
 <article>
-${toHTML(bs,gaps)}
+${toHTML(bs,gaps,true)}
 </article>
 </div>
 </body>
@@ -898,13 +907,14 @@ ${toHTML(bs,gaps)}
 function exportText(){const bs=blocks();if(exportFmt==="md")return toMD(bs);if(exportFmt==="doc")return docHTML($("#gapsChk").checked);return toHTML(bs,false)}
 const FMT={md:["Markdown","md","For a CMS or Google Docs. Missing items show as [ADD: …]."],html:["HTML snippet","html","The article body only, to paste into a CMS. Missing items show as [ADD: …]."],doc:["HTML document","html","A complete, styled page with everything filled in so far. Open it in any browser or send it to the client."]};
 function openSheet(){$("#sheet").hidden=false;setFmt(exportFmt);$("#closeSheet").focus()}
-function setFmt(f){exportFmt=f;
+function setFmt(f){exportFmt=f;$("#docDate").value=docDateISO();
   ["md","html","doc"].forEach(k=>$("#fmt"+(k==="md"?"Md":k==="html"?"Html":"Doc")).classList.toggle("primary",k===f));
   $("#gapsWrap").hidden=f!=="doc";
   $("#sheetText").value=exportText();$("#sheetTitle").textContent=`Export as ${FMT[f][0]}`;$("#sheetHint").textContent=FMT[f][2];
   $("#dlBtn").textContent=`Download .${FMT[f][1]}`}
 $("#exportBtn").addEventListener("click",openSheet);
 $("#fmtMd").addEventListener("click",()=>setFmt("md"));$("#fmtHtml").addEventListener("click",()=>setFmt("html"));$("#fmtDoc").addEventListener("click",()=>setFmt("doc"));$("#gapsChk").addEventListener("change",()=>setFmt("doc"));
+$("#docDate").addEventListener("change",e=>{brief.settings.updated=e.target.value||"";if(store.canWrite)scheduleSave();setFmt(exportFmt)});
 $("#closeSheet").addEventListener("click",()=>{$("#sheet").hidden=true});
 $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").hidden=true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)$("#sheet").hidden=true});
