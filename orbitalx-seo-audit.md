@@ -1,17 +1,40 @@
 # SEO Audit: orbitalx.com
 
-**Audit date:** 2026-10-13
+**Audit date:** 2026-10-13 (v2, with Semrush data)
 **Site:** https://orbitalx.com/ (ABM and B2B pipeline agency for lean marketing teams, London + Cebu)
-**Overall health:** 🟡 Needs work. The technical base is sound: HTTPS, clean canonicals, a working sitemap, unique titles and one H1 per page. The library holds about 50 solid long-form guides. But most of that content is set up badly for search. 96 pages use the same default meta description. About 100 articles can only be reached through the sitemap. The guides don't link to the service pages. And three pages compete for "account-based marketing services".
+**Overall health:** 🔴 Critical. The technical base is sound: HTTPS, clean canonicals, a working sitemap, unique titles and one H1 per page. There are about 50 solid long-form guides. But **organic search brings in almost no new business.** Semrush estimates about **150 US visits a month, and 97% of them are people searching the brand name "orbital x"**. Not one service page ranks in the top 50 for a non-brand keyword. The crawl explains why: 96 pages share one meta description, about 100 articles can only be reached through the sitemap, the guides don't link to the service pages, and several pages compete for the same terms.
 
-> **How this audit was done.** I crawled all **152 URLs in the sitemap** on 13 Oct 2026. For each page I extracted the status code, title, meta description, canonical, robots tag, Open Graph tags, headings, JSON-LD, images, internal links and word count. I also tested robots.txt, URL variants, pagination, the 404 page and the homepage assets.
-> **Not covered** (no data in this session): keyword rankings and volumes, backlinks, traffic, index coverage and Core Web Vitals. See §7. A Semrush or Ahrefs export plus GSC access would let me add a keyword layer, as I did for the crewhu audit.
+> **How this audit was done.**
+> 1. **A full crawl of all 152 sitemap URLs** (13 Oct 2026). For each page I extracted the status code, title, meta description, canonical, robots tag, Open Graph tags, headings, JSON-LD, images, internal links and word count. I also tested robots.txt, URL variants, pagination, the 404 page, the homepage assets and the `app.` subdomain.
+> 2. **Two Semrush exports** (Organic Positions and Organic Pages, **US** database, 12 Oct 2026): 97 ranking rows, 65 unique keywords, 39 pages.
 >
-> The page-by-page data is in **`orbitalx-seo-audit.xlsx`**.
+> Semrush traffic numbers are estimates. Use them for direction and relative size, and confirm against Google Search Console. The data covers the **US only**. OrbitalX prices in £ and is based in London, so pull a **UK** export too (§7).
+> Backlinks, index coverage and Core Web Vitals are still unverified (§7).
+>
+> The page-by-page data and the keyword tables are in **`orbitalx-seo-audit.xlsx`**.
 
 ---
 
-## 0. Crawl snapshot
+## 0a. Semrush snapshot (US, 12 Oct 2026)
+
+| Metric | Value | What it means |
+|---|---|---|
+| Ranking keywords (top 100) | **65 unique** (97 rows, because some keywords rank with more than one URL) | Very small footprint for 150 indexed pages |
+| Est. organic traffic | **~150 visits/month** | **136 (91%) go to the homepage for "orbital x"**, and 10 more go to `www.orbitalx.com` for the same term |
+| Non-brand traffic | **~3 visits/month** | From "larger market formula" (#2), "performance marketing job category signals" (#11) and "withorbital" (#14) |
+| Best-position distribution | 1–3: **4** · 4–10: **0** · 11–20: **9** · 21–50: **24** · 51–100: **28** | Most rankings sit on pages 3–10 |
+| Pages with any traffic | **6 of 39** ranking pages | 33 pages rank for something but get no clicks |
+| Service pages | `/services/abm` ranks for one keyword ("abx campaign", **#80**). The other service pages rank only for "orbital x", at #61–92. | **The money pages are invisible.** |
+| Keyword intent (unique) | Informational 41 · Commercial 9 · Commercial + informational 8 · Navigational 7 | The commercial terms all rank #17–85 |
+| Top keyword page | `/resources/account-based-marketing-tools`: **15 keywords, all ranking #41–85** | Includes "account based marketing platform" (#73, CPC **$91.81**), "account based marketing vendors" (#76, vol 320), "account based marketing planning services" (#69, vol 170) |
+| AI answer engines | `demand-gen-vs-performance-max` (Google), `b2b-account-based-marketing` (Google AI Overview, #1 for "programmatic advertising b2b"), `demand-gen-funnel` (SearchGPT) | Some AI citations already happen, so there's a base for AI search work |
+| Lost ground | `/resources/b2b-marketing-strategies`: traffic change **-3** (it now ranks for nothing) | |
+
+**Brand searches are messy.** "orbital x" (170/mo) ranks #1, but Google also shows `www.orbitalx.com` (#10, knowledge panel), `app.orbitalx.com` (#84, #88) and nine other site pages. The site also turns up for look-alike names it shouldn't care about: "orbitx" (4,400/mo, #52, via `app.`), "orbit x", "orbital inc.", "orbital software", "orbital tech", "orbital company", "asteroidx", "billionx".
+
+---
+
+## 0b. Crawl snapshot
 
 | Metric | Value | Comment |
 |---|---|---|
@@ -81,6 +104,41 @@ On top of that, **46–63% of the text on each of the four main service pages is
 - Retitle the blog post to informational intent, for example "What to Expect From Account-Based Marketing Services (and How to Evaluate Them)". Make it link to `/services/abm`. Do the same for `/resources/demand-gen-agency` → `/services/demand-generation`.
 - Rewrite at least the "broken", "how it works" and FAQ blocks on each service page so they're specific to that service. Keep the shared proof bar and testimonials.
 
+**Semrush shows the cannibalization in action:**
+| Keyword (vol, CPC) | Ranking URL(s) | Should rank |
+|---|---|---|
+| demand gen company (480, $39.51) | `/blog-categories/demand-generation` **#25**, a category page with 640 words and the default meta description | `/services/demand-generation` |
+| demand gen firm (110) | `/resources/demand-gen-agency` #59, #60 | `/services/demand-generation` |
+| account based marketing planning services (170) | `/resources/account-based-marketing-tools` #69, #74 | `/services/abm` |
+| leading account-based marketing consulting options… (40) | `/resources/account-based-marketing-tools` #85 | `/services/abm` |
+| top services for scaling account-based marketing (50) | `/resources/account-based-marketing-tools` #39 | `/services/abm` |
+| abm personalization tools (70) | `account-based-marketing-personalization` #46 **and** #78, plus `account-based-marketing-tools` #52 | One page (the tools post) |
+| performance marketing job category signals (210) | `performance-marketing-tools` #11, #21, plus `demand-gen-software` #38, #54 | `performance-marketing-tools` |
+| demand gen vs. lead gen (40) | `demand-gen-vs-performance-max` **#38** (wrong page) | `lead-generation-vs-demand-generation…` (#69, #92) |
+| demandx (50) | `/blog-categories/demand-generation` #26, `demand-gen-software` #70 | — (brand look-alike) |
+
+### 1.5 The service pages rank for nothing, and blog posts take their commercial searches
+- Across 6 service pages plus `/services`, the only non-brand ranking is `/services/abm` at **#80 for "abx campaign"**.
+- Searches with clear service intent ("…planning services", "…consulting options", "demand gen company", "demand gen firm") go to a **blog post or a category page** instead, at positions #25–85.
+- The causes are all in the crawl: the service pages share 46–63% of their text with the homepage (1.4), get no in-text links from the guides (2.1), are linked only from the nav and footer, and are thin for money pages (`/services/paid` 568 words, `/services/owned` 850).
+
+**Fix (in this order):**
+1. Make the service pages distinct from the homepage (1.4).
+2. Add links from the guides that Google already associates with these terms, using descriptive anchors. Example: `account-based-marketing-tools` (15 ranking keywords) → `/services/abm` with the anchor "account-based marketing services". `demand-gen-agency` and `/blog-categories/demand-generation` → `/services/demand-generation` with "B2B demand generation agency".
+3. Give `/blog-categories/demand-generation` a proper intro that sends readers to `/services/demand-generation`, so Google can tell the hub from the money page.
+4. Add commercial sections to each service page: pricing and engagement models, "ABM agency vs in-house", process timeline, client logos for that service, and service-specific FAQs with `FAQPage` / `Service` schema.
+
+### 1.6 `app.orbitalx.com` (a white-labelled Smartlead app) is indexed and ranks for the brand
+- `https://app.orbitalx.com/` returns 200 with the title **"Smartlead"** and no `noindex`. Its robots.txt explicitly allows `/`, `/login` and `/sign-up`.
+- Semrush shows it ranking for "orbital x" (#84, #88), "orbitx" (#52, 4,400/mo), "orbit x" (#51) and "orbit-x" (#46).
+
+**Why it matters:** A third-party product name shows up in brand search results. The page competes with the main site for brand terms, and the login page is a poor result for someone searching "orbital x".
+**Fix:** Send `X-Robots-Tag: noindex` (Netlify `_headers` file) on every `app.` route. Keep crawling allowed until the pages drop out of Google, then you can add a disallow. Change the app's `<title>` to "OrbitalX Platform Login".
+
+### 1.7 `www.orbitalx.com` still shows in Google
+Semrush records `https://www.orbitalx.com/` ranking #10 for "orbital x" (knowledge panel), with about 10 visits/month (6.7% of all traffic). The site 301s www to non-www correctly. The likely cause is the knowledge panel or Google Business Profile still pointing at the www URL, together with the `www.` sitemap line in robots.txt (2.10) and the `www.` internal links (2.11).
+**Fix:** Fix 2.10 and 2.11. Update the website URL in Google Business Profile, LinkedIn and the other `sameAs` profiles to `https://orbitalx.com/`. In GSC, check that the non-www property is the one that's indexed.
+
 ---
 
 ## 2. Important issues 🟡
@@ -116,7 +174,9 @@ On top of that, **46–63% of the text on each of the four main service pages is
 ## 3. What's working
 - **Technically clean:** HTTPS, www → non-www in one 301, consistent self-canonicals, parameter URLs canonicalised, a real 404 page, every sitemap URL returns 200, no stray `noindex`.
 - **Titles are unique and contain keywords.** Every page has one H1, and the service pages have strong commercial titles ("B2B Demand Generation Agency", "GTM Engineering Services | CRM, Routing & Integrations").
-- **The long-form library is substantial.** 52 guides of 2,000+ words target real commercial-informational terms: ABM tools, lead generation cost per lead, B2B GTM strategy, demand gen software, performance marketing tools.
+- **The long-form library is substantial and Google is starting to pick it up.** 52 guides of 2,000+ words target real commercial-informational terms. `account-based-marketing-tools` already ranks for 15 keywords, including high-CPC ones ($91.81 "account based marketing platform"). `demand-gen-software` (#17) and `demand-gen-vs-performance-max` (#20) are close to page 1.
+- **Some content already shows up in AI search.** `b2b-account-based-marketing` holds #1 in Google's AI Overview for "programmatic advertising b2b", `demand-gen-vs-performance-max` is cited by Google's answer engine, and `demand-gen-funnel` is cited by SearchGPT.
+- **The brand term is under control.** The homepage holds #1 for "orbital x" with a knowledge panel and sitelinks.
 - **There's strong proof material:** "11.7x ROI · £300M pipeline · 100+ B2B companies", named case studies (Yieldify, Levanta, StackOne, Cylindo, Bold Commerce, occy, EngageTech), a podcast, and a free Competitor Intelligence Report as a lead magnet (a good fit for link building).
 - **The service pages have FAQ sections.** They're a good base for FAQ schema and for AI-search answer extraction.
 
@@ -142,18 +202,33 @@ On top of that, **46–63% of the text on each of the four main service pages is
 
 ## 5. Quick wins (do these first)
 
-Ordered by impact relative to effort. All of them can be done in the CMS by one person in 1–2 weeks.
+Ordered by impact relative to effort. All of them can be done in the CMS by one person, plus a little dev time, in 1–2 weeks.
 
 | # | Action | Effort | Impact |
 |---|---|---|---|
-| 1 | **Write unique meta descriptions** for the 83 articles that use the default. Start with the 10 below, then the other 42 long-form guides. Set SEO Pro to fall back to the excerpt. | 1–2 days | CTR on every article listing and LinkedIn share |
-| 2 | **301 the 3 exact duplicates** (gate/un-gate webinar, early-stage full-episodes, pipeline slump 2025) and merge the 4 near-duplicates in 1.3 | 2 hrs | Consolidates signals, removes thin pages |
-| 3 | **Add 1–3 contextual links to a service page in each of the 52 long-form guides**, plus a service CTA block in the article template | 1–2 days | Sends authority from the content library to the money pages |
-| 4 | **Fix the ABM cannibalization**: retitle the homepage, retitle `/resources/account-based-marketing-services` and `/resources/demand-gen-agency`, and point them at `/services/abm` and `/services/demand-generation` | 1 hr | Gives Google one clear page to rank for "ABM services" / "demand gen agency" |
-| 5 | **Fix the 13 category and type pages**: proper names instead of slugs, a 150-word intro, a unique meta description | Half a day | Turns 13 thin pages into topic hubs |
-| 6 | **Add BlogPosting + BreadcrumbList + author `Person` schema** in the article template and show a byline. Fix the Organization schema (logo on own domain, full addresses, valid properties, sameAs). | Half a day (dev) | E-E-A-T, rich results, AI citations |
-| 7 | **Make `/resources` pagination crawlable** (real page 2+, self-canonicals) | Half a day (dev) | Gets about 100 near-orphaned articles crawled and linked |
-| 8 | **Small technical fixes:** robots.txt sitemap host, change the `www.` internal links, link `/faqs` in the footer, rename the H2 paragraphs to `<p>` | 1 hr | Fewer redirect hops, cleaner crawl |
+| 1 | **Noindex `app.orbitalx.com`** (`X-Robots-Tag: noindex` in Netlify `_headers`) and rename its title from "Smartlead" | 15 min (dev) | Removes a third-party brand from "orbital x" results (1.6) |
+| 2 | **Push the 9 striking-distance and high-value keywords** (table below): refresh the content, title and H2s, and add internal links | 2–3 days | The quickest path to the first non-brand traffic |
+| 3 | **Fix the cannibalization**: retitle the homepage, retitle `/resources/account-based-marketing-services` and `/resources/demand-gen-agency`, and add intro copy on `/blog-categories/demand-generation` that links to `/services/demand-generation` | 2 hrs | Gives "demand gen company" (480/mo, #25) and the ABM service terms one clear target (1.4, 1.5) |
+| 4 | **Add 1–3 in-text links to a service page in each of the 52 long-form guides**. Start with `account-based-marketing-tools`, `demand-gen-agency`, `demand-gen-software` and `b2b-account-based-marketing`, which already rank. | 1–2 days | Moves authority from pages that rank to the money pages |
+| 5 | **Write unique meta descriptions** for the 83 articles that use the default (drafts for the top 10 below). Set SEO Pro to fall back to the excerpt. | 1–2 days | CTR on every listing and share |
+| 6 | **301 the 3 exact duplicates** and merge the 4 near-duplicates (1.3) | 2 hrs | Consolidates signals |
+| 7 | **Small technical fixes:** robots.txt sitemap host, the `www.` internal links, update the `sameAs` and GBP website URL to non-www, link `/faqs` in the footer | 1 hr | Gets `www.` out of the index (1.7) and cuts redirect hops |
+| 8 | **Schema and crawlability:** BlogPosting + BreadcrumbList + `Person` author, fixed Organization markup, crawlable `/resources` pagination | 1 day (dev) | E-E-A-T, AI citations, ~100 near-orphaned articles found |
+| 9 | **Fix the 13 category and type pages**: proper names, a 150-word intro, unique meta descriptions | Half a day | Turns thin pages into topic hubs |
+
+**Striking-distance and high-value keywords (Semrush, US):**
+
+| Keyword | Vol | KD | CPC | Pos | URL | Action |
+|---|---|---|---|---|---|---|
+| demand gen vs performance max | 140 | 10 | $34.95 | **20** | `/resources/demand-gen-vs-performance-max` | Low KD and already cited by Google's answer engine. Add a comparison table at the top, a "when to use which" section and an FAQ. Retitle it "Demand Gen vs Performance Max: Which Google Ads Campaign for B2B?" Also targets "demand gen vs pmax" (#28) and "google ads demand gen vs performance max optimization" (#47). |
+| demand gen software | 140 | 23 | $19.25 | **17** | `/resources/demand-gen-software` | Add a ranked tool list with a comparison table and pricing. Put "Demand Gen Software" first in the title. Link to `/services/demand-generation`. |
+| performance marketing job category signals | 210 | 9 | — | **11** | `/resources/performance-marketing-tools` | Odd query, but low KD. Add a short section on job-change and hiring signals. Remove the competing section from `demand-gen-software`. |
+| ai marketing agent qualify intent book meetings | 50 | 1 | — | 13 | `/resources/ai-lead-generation` | Add an "AI agents that qualify intent and book meetings" H2. Link to `/services/ai-agents`. |
+| b2b accounts | 140 | 20 | $10.91 | 20 | `/resources/b2b-account-based-marketing` | Broad query. Add a short "What are B2B accounts?" definition section. Low priority. |
+| demand gen company | 480 | 43 | **$39.51** | 25 | `/blog-categories/demand-generation` | Make `/services/demand-generation` the target. Add "demand generation company" to its H2 and FAQ, and link from the category page (1.5). |
+| demand generation program | 260 | 34 | $25.16 | 38 | `/resources/demand-generation-programs` | Write a unique meta description, add a program template or download, and link from the category page. |
+| account based marketing vendors | 320 | 47 | $29.05 | 76 | `/resources/account-based-marketing-tools` | Use "ABM vendors" and "ABM platforms" in the H2s. This is the cluster page. |
+| account based marketing platform | 170 | 57 | **$91.81** | 73 | `/resources/account-based-marketing-tools` | The same refresh: add "best ABM platforms" comparison rows. |
 
 **Draft meta descriptions for the top 10 guides** (under 155 characters; check them against each article's actual angle):
 
@@ -179,6 +254,7 @@ Ordered by impact relative to effort. All of them can be done in the CMS by one 
 ## 6. Off-site and local
 - **NAP consistency:** the footer lists London (12 Red Lion Square, WC1R 4QH) and Cebu. The schema has London without a street and only a Philippine phone number. Line these up, and create or verify **Google Business Profiles** for both offices if you want visibility in local and branded map results.
 - **Agency directories:** Clutch, G2 (Marketing Services), DesignRush, Sortlist, The Manifest and GoodFirms. In these categories (ABM agency, demand gen agency), listings often rank on page 1 and pass referral traffic.
+- **Brand name confusion:** "OrbitalX" sits close to Orbital Inc., OrbitX and other "Orbital" companies, and Semrush shows the site appearing for seven look-alike brand searches. Keep the name written as one word, "OrbitalX", everywhere. Add `alternateName: ["Orbital X", "OrbitalX Agency"]` to the Organization schema, and use "OrbitalX, the ABM agency" in profile bios so Google ties the brand to the category.
 - **The podcast as a link engine:** guest pages, show notes with backlinks, and listings on Apple and Spotify that link to the site.
 
 ---
@@ -187,10 +263,12 @@ Ordered by impact relative to effort. All of them can be done in the CMS by one 
 
 | Item | Tool |
 |---|---|
-| Keyword rankings, search volumes, striking-distance terms, competitor overlap | Semrush / Ahrefs (send an export and I'll add a keyword layer like the crewhu v2 audit) |
+| **UK rankings** (the primary market: £ pricing, London HQ). This audit uses the **US** Semrush database only. | Semrush Organic Positions + Pages, **UK** database |
+| Competitor overlap and keyword gap against other ABM and demand gen agencies | Semrush → Competitive Research / Keyword Gap |
+| Real clicks, impressions and queries, including brand vs non-brand (Semrush estimates ~150 visits/month) | Google Search Console → Performance |
 | Index coverage: how many of the 152 URLs are indexed, "Crawled – not indexed", "Discovered – not indexed" (likely for the orphaned articles) | Google Search Console → Pages |
 | Core Web Vitals (LCP and CLS, given 570 KB+ HTML and images without dimensions) | PageSpeed Insights / CrUX / GSC → Core Web Vitals |
-| Backlink profile and 404s on old URLs (possible Webflow migration) | Ahrefs → Best by links → 404 filter; GSC → Not found |
+| Backlink profile (referring domains, anchors) and 404s on old URLs (possible Webflow migration) | Ahrefs → Best by links → 404 filter; GSC → Not found |
 | Whether the logo at `cdn.prod.website-files.com` still loads (my access to that host was blocked) | Open the URL / Rich Results Test |
 | HTTP → HTTPS redirect (I could only test HTTPS from the audit environment) | `curl -I http://orbitalx.com` |
 | Google Business Profile status for London and Cebu | Google Business Profile Manager |
