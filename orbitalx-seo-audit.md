@@ -116,13 +116,13 @@ Remove the retired URLs from the sitemap once the 301s are live.
 
 The same thing happens with demand generation: `/services/demand-generation` ("B2B Demand Generation Agency") and `/resources/demand-gen-agency` ("Choosing a Demand Gen Agency…") target the same "demand gen agency" intent.
 
-On top of that, **46–63% of the text on each of the four main service pages is copied from the homepage** ("B2B marketing is broken", "One system that runs your entire pipeline engine", "What it costs to build this yourself", testimonials and FAQs).
+On top of that, **46–63% of the text on each of the four main service pages is copied from the homepage** (word for word: the proof bar, "One system that runs your entire pipeline engine", "How it works", "What it costs to build this yourself", "See what our clients have to say" and "See how your target accounts see you". Partly copied: "Real results from our customers" and the FAQs).
 
 **Why it matters:** When several URLs compete for one query, Google often rotates between them and none ranks well. Heavy template duplication also makes the service pages look less distinct.
 **Fix:**
 - Make `/services/abm` the ABM money page. Point the homepage at the brand plus a broader term. Suggested title: `OrbitalX | ABM & Demand Generation Agency for Lean B2B Teams`. Link the homepage's ABM section to `/services/abm` with the anchor "account-based marketing services".
 - Retitle the blog post to informational intent, for example "What to Expect From Account-Based Marketing Services (and How to Evaluate Them)". Make it link to `/services/abm`. Do the same for `/resources/demand-gen-agency` → `/services/demand-generation`.
-- Rewrite at least the "broken", "how it works" and FAQ blocks on each service page so they're specific to that service. Keep the shared proof bar and testimonials.
+- Rewrite "One system that runs your entire pipeline engine", "How it works" and "What it costs to build this yourself" for each service, and make the FAQs and results service-specific. Keep the proof bar and testimonials shared.
 
 **Semrush shows the cannibalization in action:**
 | Keyword (vol, CPC) | Ranking URL(s) | Should rank |
