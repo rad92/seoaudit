@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitor vs UpKeep: Comparison Framework</title>
+<style>
+:root{--ink:#152030;--ink-2:#4A5668;--ink-3:#8A93A3;--line:#D8DEE7;--sunk:#F1F4F8;--accent:#2350C8;--ph:#A3ACBA;--fill:#FBFCFE}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font:17px/1.65 Georgia,"Times New Roman",serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 0;margin-bottom:24px;font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+.bar label{font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.bar input{font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:6px;width:180px}
+.bar input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.bar button{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:8px 13px;cursor:pointer}
+.bar .stat{color:var(--ink-3);font-size:13px;margin-left:auto}
+.bar .tip{flex-basis:100%;color:var(--ink-3);font-size:12.5px;margin:0}
+article:focus{outline:none}
+h1{font-size:34px;line-height:1.2;margin:8px 0 10px}
+h2{font-size:25px;line-height:1.25;margin:44px 0 10px;padding-top:12px;border-top:1px solid var(--line)}
+h3{font-size:19px;margin:26px 0 6px}
+p{margin:10px 0}
+ul,ol{padding-left:24px}
+li{margin:5px 0}
+.byline,.verified,.hint,.shot,.lab{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.byline{font-size:14px;color:var(--ink-3)}
+.verified{font-size:14px;background:var(--sunk);padding:8px 12px;border-radius:6px}
+.hint{font-size:13px;color:var(--ink-3);font-style:italic}
+.shot{font-size:13px;color:var(--ink-3)}
+.lab{font-weight:700;font-size:15px;margin:14px 0 4px}
+blockquote{margin:14px 0;padding:6px 16px;border-left:3px solid var(--accent);color:var(--ink-2)}
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;min-width:90px}
+th{background:var(--sunk)}
+td.rl{font-weight:600;background:#FAFBFD}
+.c,.y{font-weight:inherit}
+/* empty fields show their hint in grey; the hint is not part of the text */
+.f{background:var(--fill);border-radius:3px}
+.f:empty::before{content:attr(data-ph);color:var(--ph);font-style:italic;pointer-events:none}
+span.f.in{display:inline;padding:1px 4px;border-bottom:1px dashed var(--ph)}
+p.f,li.f,blockquote.f,h3.f{min-height:1.6em;padding:2px 6px;outline:1px dashed var(--line)}
+td.f:empty::before{font-size:12.5px}
+@media print{.bar,.hint{display:none}.f{background:none;outline:none!important;border:0!important}.f:empty::before{content:""}h2{break-after:avoid}table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="bar">
+<label for="cname">Competitor <input id="cname" value="" placeholder="e.g. Limble"></label>
+<label for="year">Year <input id="year" value="2026" style="width:80px"></label>
+<button type="button" id="save">Download filled copy</button>
+<span class="stat" id="stat">0 words</span>
+<p class="tip">Click any grey hint and type to replace it. The competitor name and year update every heading. Download a filled copy to keep your work: edits aren't saved when you close this tab.</p>
+</div>
+<article id="doc" contenteditable="true" spellcheck="true">
+<h1><span class="c">[Competitor]</span> vs UpKeep: An Honest <span class="y">2026</span> Comparison</h1>
+<p class="byline">By <span class="f in" data-ph="Author name"></span>, <span class="f in" data-ph="role"></span> · Updated <span class="f in" data-ph="Month D, YYYY"></span></p>
+<p class="verified"><span class="c">[Competitor]</span> pricing and features verified on <span class="f in" data-ph="date"></span> from <span class="f in" data-ph="sources, e.g. pricing page and G2"></span>.</p>
+<p class="f" data-ph="Short answer, 50–80 words: what each tool is best for (one sentence each), both starting prices, and who the page is for."></p>
+<p class="f" data-ph="Optional first-hand line: e.g. “Our team has helped [X] teams move from [Competitor] to UpKeep…”"></p>
+<h2><span class="c">[Competitor]</span> vs UpKeep at a glance</h2>
+<div class="tw"><table><thead><tr><th></th><th>UpKeep</th><th><span class="c">[Competitor]</span></th></tr></thead><tbody><tr><td class="rl">Best for</td><td class="f" data-ph="One buyer type"></td><td class="f" data-ph="One buyer type, stated fairly"></td></tr><tr><td class="rl">Starting price</td><td class="f" data-ph="$X/user/month (plan)"></td><td class="f" data-ph="$X/user/month (plan)"></td></tr><tr><td class="rl">Free plan / trial</td><td class="f" data-ph="e.g. No free plan; X-day trial"></td><td class="f" data-ph="e.g. Free plan for up to X users"></td></tr><tr><td class="rl">G2 rating</td><td class="f" data-ph="X.X (count reviews)"></td><td class="f" data-ph="X.X (count reviews)"></td></tr><tr><td class="rl">Standout strengths</td><td class="f" data-ph="2–3 items"></td><td class="f" data-ph="2–3 items"></td></tr><tr><td class="rl">Main limitations</td><td class="f" data-ph="1–2 honest items"></td><td class="f" data-ph="1–2 items"></td></tr><tr><td class="rl">Mobile apps</td><td class="f" data-ph="iOS, Android; offline on [plan]"></td><td class="f" data-ph="iOS, Android; offline on [plan]"></td></tr><tr><td class="rl">Gated to higher plans</td><td class="f" data-ph="Feature: plan"></td><td class="f" data-ph="Feature: plan"></td></tr></tbody></table></div>
+<h2>Quick verdict: which should you choose?</h2>
+<p class="lab">Choose UpKeep if:</p><ul><li class="f" data-ph="…a concrete situation (4–5 items)"></li><li class="f" data-ph="…a concrete situation (4–5 items)"></li><li class="f" data-ph="…a concrete situation (4–5 items)"></li><li class="f" data-ph="…a concrete situation (4–5 items)"></li><li class="f" data-ph="…a concrete situation (4–5 items)"></li></ul>
+<p class="lab">Choose <span class="c">[Competitor]</span> if:</p><ul><li class="f" data-ph="…a real reason (2–3 items)"></li><li class="f" data-ph="…a real reason (2–3 items)"></li><li class="f" data-ph="…a real reason (2–3 items)"></li></ul>
+<h2>What are <span class="c">[Competitor]</span> and UpKeep?</h2>
+<h3>What is <span class="c">[Competitor]</span>?</h3>
+<p class="f" data-ph="About 80 words: founded, headquarters, customer count, what it's known for. Same length for both tools."></p>
+<p class="lab">Strengths</p><ul><li class="f" data-ph="Strength"></li><li class="f" data-ph="Strength"></li><li class="f" data-ph="Strength"></li></ul>
+<p class="lab">Limitations</p><ul><li class="f" data-ph="Honest limitation"></li><li class="f" data-ph="Honest limitation"></li><li class="f" data-ph="Honest limitation"></li></ul>
+<p class="lab">What customers say</p><ul><li class="f" data-ph="“Quote” — Role, source (G2/Capterra, date)"></li><li class="f" data-ph="“Quote” — Role, source (G2/Capterra, date)"></li></ul>
+<h3>What is UpKeep?</h3>
+<p class="f" data-ph="About 80 words: founded, headquarters, customer count, what it's known for. Same length for both tools."></p>
+<p class="lab">Strengths</p><ul><li class="f" data-ph="Strength"></li><li class="f" data-ph="Strength"></li><li class="f" data-ph="Strength"></li></ul>
+<p class="lab">Limitations</p><ul><li class="f" data-ph="Honest limitation"></li><li class="f" data-ph="Honest limitation"></li><li class="f" data-ph="Honest limitation"></li></ul>
+<p class="lab">What customers say</p><ul><li class="f" data-ph="“Quote” — Role, source (G2/Capterra, date)"></li><li class="f" data-ph="“Quote” — Role, source (G2/Capterra, date)"></li></ul>
+<h2>Feature comparison: <span class="c">[Competitor]</span> vs UpKeep</h2>
+<p class="hint">Write every cell as text (e.g. “Yes — meter triggers (Premium plan)”), name the plan when a feature is gated, and let <span class="c">[Competitor]</span> win or tie at least 3 rows. The last two rows are free for your own capabilities.</p>
+<div class="tw"><table><thead><tr><th>Group</th><th>Capability</th><th>UpKeep</th><th><span class="c">[Competitor]</span></th><th>Edge</th></tr></thead><tbody><tr><td class="rl" >AI</td><td class="rl" >AI assistant for work orders, assets and insights</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >AI</td><td class="rl" >Autonomous AI agents for multi-step tasks</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >AI</td><td class="rl" >AI data audits and anomaly detection</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Work orders &amp; PM</td><td class="rl" >Dedicated preventive maintenance module</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Work orders &amp; PM</td><td class="rl" >Meter- and sensor-based PM triggers</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Work orders &amp; PM</td><td class="rl" >Custom work order statuses</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Work orders &amp; PM</td><td class="rl" >Bulk actions for work orders, assets and schedules</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Assets</td><td class="rl" >Asset hierarchy depth</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Assets</td><td class="rl" >Asset lifecycle and depreciation</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Parts &amp; inventory</td><td class="rl" >Parts and inventory tracking</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Parts &amp; inventory</td><td class="rl" >Purchase orders</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Reporting</td><td class="rl" >Custom reports and dashboards</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Reporting</td><td class="rl" >Asset-level reporting (MTBF, MTTR, downtime)</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Reporting</td><td class="rl" >PDF / CSV export</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Mobile</td><td class="rl" >iOS and Android apps</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Mobile</td><td class="rl" >Offline mode</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Multi-site</td><td class="rl" >Location-based permissions per site</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Multi-site</td><td class="rl" >Custom user roles</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Multi-site</td><td class="rl" >Free view-only seats for leadership</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Customization</td><td class="rl" >No-code app builder</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Integrations</td><td class="rl" >Open API</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Integrations</td><td class="rl" >ERP integrations (e.g. SAP)</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Communication</td><td class="rl" >In-app team messaging</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Safety / EHS</td><td class="rl" >Safety module with OSHA recordkeeping</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Fleet</td><td class="rl" >Native fleet module (DVIRs, VIN lookup, telematics)</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Training</td><td class="rl" >Learning and certification management</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Sensors / IoT</td><td class="rl" >Wireless condition-monitoring sensors</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Support</td><td class="rl" >24/7 live chat</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Security</td><td class="rl" >SSO</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="rl" >Pricing</td><td class="rl" >Free plan</td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="f" data-ph="Group"></td><td class="f" data-ph="Capability"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr><tr><td class="f" data-ph="Group"></td><td class="f" data-ph="Capability"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="Text, e.g. Yes — (plan)"></td><td class="f" data-ph="UpKeep / competitor / Tie"></td></tr></tbody></table></div>
+<h2><span class="c">[Competitor]</span> vs UpKeep: feature-by-feature breakdown</h2>
+<h3>Work order management</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Preventive maintenance</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Asset management</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Parts and inventory</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Reporting and analytics</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Mobile app and offline use</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>AI features</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Integrations</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Safety, fleet and training</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h3>Sensors and condition monitoring</h3>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="40–60 words, fairly stated, with a source link"></span></p>
+<p><b>UpKeep:</b> <span class="f in" data-ph="40–60 words, with one specific detail (a number, a trigger type, a plan)"></span></p>
+<p><b>The difference:</b> <span class="f in" data-ph="1–2 sentences on who should care"></span> Winner: <span class="f in" data-ph="UpKeep / competitor / Tie"></span>.</p>
+<p class="shot">Screenshot: <span class="f in" data-ph="alt text, e.g. UpKeep PM schedule triggered by a meter reading"></span></p>
+<h2><span class="c">[Competitor]</span> vs UpKeep pricing (<span class="y">2026</span>)</h2>
+<h3>UpKeep plans</h3>
+<div class="tw"><table><thead><tr><th>Plan</th><th>$/user/mo (annual)</th><th>$/user/mo (monthly)</th><th>What it unlocks</th><th>Gated to higher plans</th></tr></thead><tbody><tr><td class="f" data-ph="Plan name"></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr></tbody></table></div>
+<h3><span class="c">[Competitor]</span> plans</h3>
+<div class="tw"><table><thead><tr><th>Plan</th><th>$/user/mo (annual)</th><th>$/user/mo (monthly)</th><th>What it unlocks</th><th>Gated to higher plans</th></tr></thead><tbody><tr><td class="f" data-ph="Plan name"></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr></tbody></table></div>
+<p><b>Free plan and trial.</b> UpKeep: <span class="f in" data-ph="terms"></span>. <span class="c">[Competitor]</span>: <span class="f in" data-ph="terms"></span>.</p>
+<p><b>Example.</b> <span class="f in" data-ph="A team of [N] technicians and [N] managers on the plan with PM + inventory pays $X/year on UpKeep vs $X on the competitor. Show the math."></span></p>
+<p><b>Costs beyond the subscription.</b> <span class="f in" data-ph="Free seats, add-ons, onboarding fees, hardware"></span></p>
+<p>Sources: <span class="f in" data-ph="links to both pricing pages"></span></p>
+<h2>Ease of use and implementation</h2>
+<p class="f" data-ph="Typical go-live time, what onboarding includes, and ease-of-use/setup scores (150–250 words)."></p>
+<blockquote class="f" data-ph="“Customer quote about technician adoption” — Name, Role, Company"></blockquote>
+<h2>Customer support and onboarding</h2>
+<p><b>UpKeep:</b> <span class="f in" data-ph="Channels and hours per plan, dedicated CS, migration help (50–100 words)"></span></p>
+<p><b><span class="c">[Competitor]</span>:</b> <span class="f in" data-ph="Channels and hours per plan, dedicated CS, migration help (50–100 words)"></span></p>
+<h2>Ratings and reviews</h2>
+<p class="f" data-ph="Intro: if the competitor rates higher, say so and explain what reviewers praise in each."></p>
+<div class="tw"><table><thead><tr><th>Source</th><th>UpKeep</th><th><span class="c">[Competitor]</span></th><th>Checked on</th></tr></thead><tbody><tr><td class="rl">G2</td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="date"></td></tr><tr><td class="rl">Capterra</td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="date"></td></tr><tr><td class="rl">App Store</td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="date"></td></tr><tr><td class="rl">Google Play</td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="X.X (count)"></td><td class="f" data-ph="date"></td></tr></tbody></table></div>
+<p><span class="f in" data-ph="G2 report name, e.g. G2 Fall 2026"></span> category scores:</p>
+<div class="tw"><table><thead><tr><th>Category</th><th>UpKeep</th><th><span class="c">[Competitor]</span></th></tr></thead><tbody><tr><td class="rl">Customer satisfaction</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="rl">Ease of use</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="rl">Ease of setup</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="rl">Quality of support</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="rl">Preventive maintenance</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr><tr><td class="rl">Reporting &amp; dashboards</td><td class="f" data-ph=""></td><td class="f" data-ph=""></td></tr></tbody></table></div>
+<ul><li class="f" data-ph="“Short real review quote” — Role, source"></li><li class="f" data-ph="“Short real review quote” — Role, source"></li><li class="f" data-ph="“Short real review quote” — Role, source"></li><li class="f" data-ph="“Short real review quote” — Role, source"></li></ul>
+<h2>Switching from <span class="c">[Competitor]</span> to UpKeep</h2>
+<ol><li class="f" data-ph="Export your data from the competitor"></li><li class="f" data-ph="Import into UpKeep and check every record"></li><li class="f" data-ph="Rebuild PM schedules and checklists"></li><li class="f" data-ph="Train technicians and go live"></li></ol>
+<p class="f" data-ph="Typical timeline, what UpKeep's team does, and a customer who switched (with link). End with: “See how switching works →”"></p>
+<h2>Final verdict: <span class="c">[Competitor]</span> or UpKeep?</h2>
+<p class="f" data-ph="3-sentence summary (40–80 words). Never “the winner is UpKeep!” — say “For [buyer type], UpKeep is the better fit because…”"></p>
+<p><b>Where <span class="c">[Competitor]</span> wins:</b> <span class="f in" data-ph="One honest situation (15–40 words)"></span></p>
+<p class="lab">Where UpKeep wins:</p><ul><li class="f" data-ph="For [buyer type], because…"></li><li class="f" data-ph="For [buyer type], because…"></li><li class="f" data-ph="For [buyer type], because…"></li></ul>
+<p><b><span class="f in" data-ph="Call to action, e.g. Book a demo"></span></b></p>
+<h2><span class="c">[Competitor]</span> vs UpKeep: FAQs</h2>
+<p class="hint">Answer each in 40–70 words, starting with a direct answer (Yes, No, or a number). Add 2–3 questions from Google's “People also ask”.</p>
+<h3>Is <span class="c">[Competitor]</span> better than UpKeep?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Is <span class="c">[Competitor]</span> cheaper than UpKeep?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Does <span class="c">[Competitor]</span> have a free plan? Does UpKeep?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Which is easier to use, <span class="c">[Competitor]</span> or UpKeep?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Can I migrate my data from <span class="c">[Competitor]</span> to UpKeep?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Do <span class="c">[Competitor]</span> and UpKeep work offline?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Which has better reporting and analytics?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>Which is better for manufacturing or multi-site teams?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3>What are the best <span class="c">[Competitor]</span> alternatives?</h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3 class="f" data-ph="Your extra question"></h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h3 class="f" data-ph="Your extra question"></h3>
+<p class="f" data-ph="Answer (40–70 words)"></p>
+<h2>About the author</h2>
+<p class="f" data-ph="Name, role, years in maintenance or CMMS, hands-on experience with both tools (40–60 words), plus author page and LinkedIn links."></p>
+</article>
+</div>
+<script>
+(function(){
+  var doc=document.getElementById("doc"),cn=document.getElementById("cname"),yr=document.getElementById("year"),stat=document.getElementById("stat");
+  function setAll(sel,v){document.querySelectorAll(sel).forEach(function(e){e.textContent=v})}
+  function apply(){setAll(".c",cn.value.trim()||"[Competitor]");setAll(".y",yr.value.trim()||"2026");document.title=(cn.value.trim()||"Competitor")+" vs UpKeep: Comparison"}
+  /* names typed in the bar: keep them in the input's value attribute so a downloaded copy reopens with them */
+  cn.addEventListener("input",function(){cn.setAttribute("value",cn.value);apply()});
+  yr.addEventListener("input",function(){yr.setAttribute("value",yr.value);apply()});
+  function count(){var n=0;doc.querySelectorAll(".f").forEach(function(e){var t=e.textContent.trim();if(t)n+=t.split(/\s+/).length});stat.textContent=n+" words written"}
+  /* an emptied field must be truly empty (no stray <br>) so its hint comes back */
+  doc.addEventListener("input",function(e){var f=window.getSelection().anchorNode;f=f&&(f.nodeType===1?f:f.parentElement);f=f&&f.closest(".f");if(f&&!f.textContent.trim()&&f.children.length<=1)f.innerHTML="";count()});
+  document.getElementById("save").addEventListener("click",function(){
+    var html="<!doctype html>\n"+document.documentElement.outerHTML;
+    var name=((cn.value.trim()||"competitor")+"-vs-upkeep-comparison").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".html";
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download=name;document.body.appendChild(a);a.click();a.remove();
+  });
+  apply();count();
+})();
+</script>
+</body>
+</html>
