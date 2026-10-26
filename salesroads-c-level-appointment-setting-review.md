@@ -28,7 +28,7 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
 ### 1.3 Factual and consistency errors
 1. **"Executive outreach tends to break down in four predictable ways"**, but the section lists **five** challenges, and the intro sentence names four that don't match the five headings. Change it to "five", and make the intro list mirror the H3s, or cut the list.
 2. **Gartner statistic:** the draft says "73% of business buyers actively **reject** vendors that **push** irrelevant outreach." The finding, from Gartner's 2024 survey of 632 B2B buyers published in 2025, is that 73% **actively avoid suppliers who send irrelevant outreach**. Use that wording and **link to the Gartner press release**. The next sentence ("These leads only want seller involvement for highly contextual questions…") reads as if it's part of the same finding. Rephrase it as your own interpretation, or cite the Gartner rep-free-buying finding separately (61% of buyers prefer a rep-free buying experience).
-3. The Key Takeaways say campaigns coordinate "phone and email channels", and the body never mentions LinkedIn. Every competitor treats channel mix (including LinkedIn and referrals) as a core tip. See 2.3.
+3. **LinkedIn: say where SalesRoads stands instead of staying silent.** Every competitor treats channel mix (including LinkedIn and referrals) as a core tip. SalesRoads' own methodology page says it uses LinkedIn **for research and validation only**: connect-and-pitch is spammy and risks account bans. The draft's phone + email focus is consistent with that, but readers will notice that LinkedIn is missing. Add one short paragraph explaining the position: use LinkedIn to verify roles and find triggers, but don't pitch there. That turns a gap into a point of view. See 2.3.
 
 ### 1.4 Internal links point to the wrong places
 | Anchor in draft | Likely target | Change to |
@@ -75,7 +75,7 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
 1. **Practical assets.** Every top result gives tactical, copyable help, while the draft is mostly principles. Add a "Scripts and Templates" section (copy-ready versions below).
 2. **Timing guidance** (best days and times, periods to avoid). Both visible competitors cover it, and searchers expect it. Present it as a starting hypothesis to test, which fits the draft's measurement philosophy.
 3. **A starting cadence.** Competitors give "6–8 touches over 2–3 weeks". Keep the draft's point that there's no universal number, but give a sample cadence as a baseline to test.
-4. **LinkedIn, referrals and social proof**, as part of the channel mix.
+4. **LinkedIn (as a research channel, per SalesRoads' methodology), warm referrals and social proof**. Competitors recommend LinkedIn outreach. SalesRoads' stated position is research-only, so present it as a deliberate choice.
 5. **Top-down vs. bottom-up entry.** When to go straight to the C-suite and when to start with a VP or director who can sponsor you, plus how to vet an internal champion.
 6. **Objection examples.** 4–5 real objection → response pairs.
 7. **SalesRoads proof and E-E-A-T:**
@@ -89,7 +89,7 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
 
 ## 3. Recommended Outline (changes in bold)
 
-1. Key Takeaways *(update the channel line to "phone, email and LinkedIn")*
+1. Key Takeaways *(keep "phone and email" and add "with LinkedIn used for research and role verification")*
 2. Intro *(add a 40–50 word definition in the first 100 words for the featured snippet: move a condensed version of "What is…" up)*
 3. What Is C-Level Appointment Setting?
 4. Why C-Level Outreach Needs a Different Approach *(fixed Gartner citation)*
@@ -98,12 +98,12 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
    - **Go Top-Down or Start With a VP? (new)**
    - Research Verified Account Context
    - Build an Executive-Relevant Message With Credible Proof
-   - Coordinate Outreach and Treat Assistants as Partners *(add LinkedIn + warm referrals)*
+   - Coordinate Outreach and Treat Assistants as Partners *(add the LinkedIn-for-research position + warm referrals)*
    - **When to Reach Out: Timing and a Sample Cadence (new)**
    - Follow Up While Adding Information
    - Ask for an Outcome-Driven Meeting
    - Equip the Sales Team With Complete Context
-6. **C-Level Appointment-Setting Scripts and Templates (new)**: email, call opener, gatekeeper, voicemail, LinkedIn note
+6. **C-Level Appointment-Setting Scripts and Templates (new)**: email, call opener, gatekeeper, voicemail, referral ask
 7. **Worked Example: Booking a CFO Meeting (new, optional but recommended)**
 8. Common C-Level Appointment-Setting Challenges *("five", plus an objection-response table)*
 9. How to Measure C-Level Appointment Setting Performance
@@ -133,7 +133,7 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
 > |---|---|---|
 > | 1 | Email | State the account context, the business implication and the meeting ask |
 > | 2 | Call + voicemail | Test role ownership and timing live. Reference the email. |
-> | 4 | LinkedIn connection (no pitch) | Add a familiar name to the inbox |
+> | 4 | LinkedIn research check (no outreach) | Re-verify role and look for new triggers to use in the next touch. SalesRoads uses LinkedIn for research only. |
 > | 7 | Email | Add one new piece of evidence (peer example or benchmark) |
 > | 9 | Call (assistant if needed) | Confirm ownership or ask for the right route |
 > | 14 | Email | A sharper question or a relevant account development |
@@ -161,8 +161,10 @@ While you're there, the current page has an Elementor placeholder H2, **"Add You
 **Voicemail (under 25 seconds)**
 > "[Name], [Rep] with [Company]. I'm calling about [verified signal] and its effect on [implication]. I've sent a short note with a peer example. If it's relevant, my number is [number]; if not, a quick reply pointing me to the right person would help. Again, [number]."
 
-**LinkedIn connection note (under 300 characters)**
-> "[Name], I've been following [Company]'s [initiative]. I work with [peer type] leaders on [outcome] and share what we learn from those conversations. Happy to connect."
+**Referral ask (to an existing contact at the account or a mutual connection)**
+> "[Name], I'm hoping to reach whoever owns [business outcome] at [Company]. I believe that's [Executive]. Would you be comfortable pointing me in the right direction, or letting them know I'll be in touch? I'll keep it to one short, relevant note."
+
+*(SalesRoads uses LinkedIn for research and validation only, per its methodology page, so the cadence and templates leave out LinkedIn messaging.)*
 
 ### 4.4 Objection Responses (add to challenge #5)
 | Objection | Response approach |
