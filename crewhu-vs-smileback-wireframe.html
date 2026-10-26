@@ -1,0 +1,533 @@
+<title>Crewhu vs SmileBack Wireframe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky outline rail on the left + a single-column "page under construction" on the right.
+   Content blocks are wireframe grey; annotations are colour-coded by type (note, image, table, CTA, SEO). */
+:root{
+  --bg:#f5f6f4; --paper:#ffffff; --fg:#1d211f; --muted:#5d655f; --line:#d5dad5; --wire:#eceeeb;
+  --note:#8a5a00; --note-bg:#fff6e3; --note-line:#efd29a;
+  --img:#1f5f9e; --img-bg:#eef5fc; --img-line:#9cc1e6;
+  --tbl:#2f7346; --tbl-bg:#eef7f0; --tbl-line:#a6d1b2;
+  --cta:#6b3fa0; --cta-bg:#f4eefb; --cta-line:#cdb6e8;
+  --seo:#4d5560; --seo-bg:#eff1f3; --seo-line:#c3c9d0;
+  --tag:#1d211f; --tag-fg:#ffffff;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141716; --paper:#1b1f1d; --fg:#e6e9e6; --muted:#9aa39c; --line:#323935; --wire:#252a27;
+  --note:#f0c36a; --note-bg:#2b2416; --note-line:#5c4a22;
+  --img:#8cc0f2; --img-bg:#16222e; --img-line:#2f4c69;
+  --tbl:#8fd3a4; --tbl-bg:#15241a; --tbl-line:#2f5a3c;
+  --cta:#c9a8f0; --cta-bg:#221a2e; --cta-line:#4a3768;
+  --seo:#b7c0ca; --seo-bg:#1f2328; --seo-line:#3a424b;
+  --tag:#e6e9e6; --tag-fg:#141716; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141716; --paper:#1b1f1d; --fg:#e6e9e6; --muted:#9aa39c; --line:#323935; --wire:#252a27;
+  --note:#f0c36a; --note-bg:#2b2416; --note-line:#5c4a22;
+  --img:#8cc0f2; --img-bg:#16222e; --img-line:#2f4c69;
+  --tbl:#8fd3a4; --tbl-bg:#15241a; --tbl-line:#2f5a3c;
+  --cta:#c9a8f0; --cta-bg:#221a2e; --cta-line:#4a3768;
+  --seo:#b7c0ca; --seo-bg:#1f2328; --seo-line:#3a424b;
+  --tag:#e6e9e6; --tag-fg:#141716; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px}
+@media (max-width:880px){.wrap{grid-template-columns:minmax(0,1fr)}.rail{position:static!important;max-height:none!important}}
+
+/* header */
+.top{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--fg);padding-bottom:16px}
+.top h1{font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin:0;text-wrap:balance;font-weight:700;letter-spacing:-.01em}
+.top .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.top p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.toggles button{font:500 13px var(--sans);border:1px solid var(--line);background:var(--paper);color:var(--fg);padding:7px 12px;border-radius:6px;cursor:pointer}
+.toggles button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.toggles button:focus-visible,a:focus-visible{outline:2px solid var(--img);outline-offset:2px}
+
+/* rail */
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:13px}
+.rail h2{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.rail a{display:flex;gap:8px;align-items:baseline;color:var(--fg);text-decoration:none;padding:4px 6px;border-radius:4px}
+.rail a:hover{background:var(--wire)}
+.rail .lv{font:600 10px var(--mono);color:var(--muted);min-width:22px}
+.rail .h3 a{padding-left:24px;color:var(--muted)}
+.legend{margin-top:22px;display:flex;flex-direction:column;gap:6px}
+.legend span{display:flex;gap:8px;align-items:center}
+.legend i{width:14px;height:14px;border-radius:3px;border:1.5px solid;flex:none}
+
+/* page */
+main{min-width:0;display:flex;flex-direction:column;gap:22px}
+.sec{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,3vw,28px);display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.sec.hero{border-top:4px solid var(--fg)}
+.sid{font:500 11px var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hd{display:flex;gap:12px;align-items:flex-start}
+.tag{flex:none;font:600 11px var(--mono);background:var(--tag);color:var(--tag-fg);padding:3px 7px;border-radius:4px;margin-top:5px;letter-spacing:.04em}
+.hd h2,.hd h3,.hd .h1{margin:0;text-wrap:balance;line-height:1.25}
+.hd .h1{font-size:clamp(22px,2.8vw,30px);font-weight:700}
+.hd h2{font-size:21px;font-weight:650}
+.hd h3{font-size:17px;font-weight:600}
+.sub{padding-left:14px;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.wire{background:var(--wire);border-radius:6px;padding:12px 14px;color:var(--muted);font-size:14px}
+.wire b{color:var(--fg);font-weight:600}
+.wire.lines{display:flex;flex-direction:column;gap:7px}
+.wire.lines span{display:block;height:8px;background:var(--line);border-radius:4px}
+
+/* annotations */
+.note,.seo{border:1px solid var(--note-line);background:var(--note-bg);border-radius:8px;padding:12px 14px;font-size:14px}
+.note h4,.seo h4{margin:0 0 8px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--note)}
+.note dl,.seo dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 14px;margin:0}
+.note dt,.seo dt{font-weight:600;color:var(--note)}
+.note dd,.seo dd{margin:0}
+.note ul{margin:4px 0 0;padding-left:18px}
+.seo{border-color:var(--seo-line);background:var(--seo-bg)}
+.seo h4,.seo dt{color:var(--seo)}
+@media (max-width:560px){.note dl,.seo dl{grid-template-columns:minmax(0,1fr)}.note dt,.seo dt{margin-top:4px}}
+
+.ph{border:2px dashed;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.ph .lbl{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.ph.img{border-color:var(--img-line);background:var(--img-bg);color:var(--fg)}
+.ph.img .lbl{color:var(--img)}
+.ph.img .box{aspect-ratio:16/7;max-width:100%;border-radius:6px;background:repeating-linear-gradient(135deg,transparent 0 10px,color-mix(in srgb,var(--img-line) 35%,transparent) 10px 11px);display:grid;place-items:center;color:var(--img);font:500 13px var(--mono);text-align:center;padding:8px}
+.ph.img.sq .box{aspect-ratio:16/9}
+.ph.tbl{border-color:var(--tbl-line);background:var(--tbl-bg)}
+.ph.tbl .lbl{color:var(--tbl)}
+.ph.cta{border-color:var(--cta-line);background:var(--cta-bg)}
+.ph.cta .lbl{color:var(--cta)}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:1.5px solid var(--cta);color:var(--cta);border-radius:6px;padding:8px 14px;font-weight:600;font-size:14px}
+.btn.solid{background:var(--cta);color:var(--paper)}
+.spec{color:var(--muted);font-size:13px}
+.spec b{color:var(--fg);font-weight:600}
+
+.tw{overflow-x:auto;border-radius:6px;border:1px solid var(--tbl-line);background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--wire);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td.f{color:var(--tbl);font-family:var(--mono);font-size:12.5px}
+td.rk{font-weight:600;white-space:nowrap}
+
+.faq{display:flex;flex-direction:column;gap:8px}
+.faq div{border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+.faq b{display:flex;gap:8px;align-items:baseline}
+.faq .spec{display:block;margin-top:3px}
+
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.rules div{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper)}
+.rules b{display:block;margin-bottom:4px}
+.rules p{margin:0;font-size:13.5px;color:var(--muted)}
+
+body.clean .note,body.clean .seo,body.clean .spec,body.clean .rules-sec{display:none}
+code{font-family:var(--mono);font-size:.9em;background:var(--wire);padding:1px 5px;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Content brief + wireframe · /compare/crewhu-vs-smileback</div>
+      <h1>Crewhu vs. SmileBack: comparison page wireframe</h1>
+      <p>Build the page top to bottom. Each block shows its heading level, the working headline, what copy to write, which facts to collect, and where images, tables and CTAs go. Toggle the notes off to see the clean layout.</p>
+    </div>
+    <div class="toggles" role="group" aria-label="View">
+      <button id="btn-notes" type="button" aria-pressed="true">Notes on</button>
+      <button id="btn-clean" type="button" aria-pressed="false">Clean wireframe</button>
+    </div>
+  </header>
+
+  <nav class="rail" aria-label="Page outline">
+    <h2>Heading hierarchy</h2>
+    <ol>
+      <li><a href="#setup"><span class="lv">SEO</span>Page setup</a></li>
+      <li><a href="#hero"><span class="lv">H1</span>Crewhu vs. SmileBack</a></li>
+      <li><a href="#glance"><span class="lv">H2</span>At a glance</a></li>
+      <li><a href="#difference"><span class="lv">H2</span>The core difference</a></li>
+      <li><a href="#smileback-wins"><span class="lv">H2</span>Where SmileBack wins</a></li>
+      <li><a href="#crewhu-further"><span class="lv">H2</span>Where Crewhu goes further</a></li>
+      <li class="h3"><a href="#h3-recognition"><span class="lv">H3</span>Recognition</a></li>
+      <li class="h3"><a href="#h3-gamify"><span class="lv">H3</span>Gamification</a></li>
+      <li class="h3"><a href="#h3-rewards"><span class="lv">H3</span>Rewards</a></li>
+      <li class="h3"><a href="#h3-reviews"><span class="lv">H3</span>Reviews</a></li>
+      <li class="h3"><a href="#h3-onboarding"><span class="lv">H3</span>Implementation</a></li>
+      <li><a href="#psa"><span class="lv">H2</span>PSA &amp; independence</a></li>
+      <li><a href="#pricing"><span class="lv">H2</span>Pricing</a></li>
+      <li><a href="#switchers"><span class="lv">H2</span>MSPs who switched</a></li>
+      <li><a href="#migrate"><span class="lv">H2</span>How to switch</a></li>
+      <li><a href="#verdict"><span class="lv">H2</span>Verdict</a></li>
+      <li><a href="#faq"><span class="lv">H2</span>FAQ</a></li>
+      <li><a href="#sources"><span class="lv">H2</span>Sources</a></li>
+      <li><a href="#final-cta"><span class="lv">CTA</span>Final CTA band</a></li>
+    </ol>
+    <div class="legend" aria-label="Legend">
+      <span><i style="border-color:var(--note-line);background:var(--note-bg)"></i>Writer notes</span>
+      <span><i style="border-color:var(--img-line);background:var(--img-bg);border-style:dashed"></i>Image / video slot</span>
+      <span><i style="border-color:var(--tbl-line);background:var(--tbl-bg);border-style:dashed"></i>Table slot</span>
+      <span><i style="border-color:var(--cta-line);background:var(--cta-bg);border-style:dashed"></i>CTA slot</span>
+      <span><i style="border-color:var(--seo-line);background:var(--seo-bg)"></i>SEO / schema</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- GLOBAL RULES -->
+    <section class="rules-sec" aria-label="Writing rules">
+      <div class="rules">
+        <div><b>Be fair, cite everything</b><p>Every claim about SmileBack links to its own page or a third-party source. Write "not offered", never "lacks" or "fails".</p></div>
+        <div><b>Date the facts</b><p>Show "Last verified: [date]" under the tables. Recheck prices and ratings every quarter.</p></div>
+        <div><b>Write for quoting</b><p>Open each H2 with a 1–2 sentence direct answer. AI Overviews and featured snippets lift these lines.</p></div>
+        <div><b>Voice</b><p>Plain, confident, MSP-insider. Keep "BADASS" out of this page: buyers comparing vendors want a neutral tone.</p></div>
+        <div><b>Length</b><p>1,800–2,500 words in total. Let the tables carry the detail rather than long paragraphs.</p></div>
+        <div><b>Names</b><p>Use "SmileBack" in headings. Add "(ConnectWise Customer Feedback)" in the H1, the table and the FAQ. No competitor logos without legal sign-off.</p></div>
+      </div>
+    </section>
+
+    <!-- SETUP -->
+    <section class="sec" id="setup">
+      <div class="sid"><span>Block 00 · Page setup</span><span>Not visible on page</span></div>
+      <div class="seo">
+        <h4>SEO &amp; schema</h4>
+        <dl>
+          <dt>URL</dt><dd><code>/compare/crewhu-vs-smileback</code> (create the <code>/compare/</code> hub first)</dd>
+          <dt>Title tag</dt><dd>Crewhu vs SmileBack (ConnectWise Customer Feedback): 2026 Comparison. Max ~60 characters; drop "(ConnectWise…)" if it gets cut off.</dd>
+          <dt>Meta description</dt><dd>SmileBack measures CSAT. Crewhu measures it and turns it into recognition, rewards and reviews. Compare features, pricing and fit for MSPs. (140–155 characters)</dd>
+          <dt>Primary keywords</dt><dd>crewhu vs smileback · smileback vs crewhu · smileback alternative · connectwise customer feedback alternative</dd>
+          <dt>Secondary keywords</dt><dd>smileback pricing · smileback review · msp csat software · employee recognition for msps</dd>
+          <dt>Schema</dt><dd><code>WebPage</code> + <code>BreadcrumbList</code> + <code>FAQPage</code> + <code>VideoObject</code> (each switcher video) + Crewhu <code>Organization</code>/<code>SoftwareApplication</code>. Don't mark up SmileBack as a product.</dd>
+          <dt>OG image</dt><dd>1200×630: "Crewhu vs SmileBack" text with the Crewhu logo only.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- HERO -->
+    <section class="sec hero" id="hero">
+      <div class="sid"><span>Block 01 · Above the fold</span><span>~90 words</span></div>
+      <div class="wire"><b>Breadcrumb:</b> Home › Compare › Crewhu vs SmileBack</div>
+      <div class="hd"><span class="tag">H1</span><div class="h1">Crewhu vs. SmileBack: CSAT Survey Tool or Full Feedback-to-Recognition Platform?</div></div>
+      <div class="wire"><b>Subhead (1 line):</b> Both are built for MSPs. Here's where they differ, and when SmileBack is the better pick.</div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Copy</dt><dd>Keep the H1 as written, or test: "Crewhu vs. SmileBack (ConnectWise Customer Feedback): Which Fits Your MSP?"</dd>
+          <dt>Guideline</dt><dd>Subhead under 20 words. It has to signal that the page is fair, because it promises a section where SmileBack wins.</dd>
+        </dl>
+      </div>
+
+      <div class="wire"><b>Answer box (shaded panel, 40–60 words):</b></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:96%"></span><span style="width:92%"></span><span style="width:88%"></span><span style="width:54%"></span></div>
+      <div class="note">
+        <h4>Answer box: the most important copy on the page</h4>
+        <dl>
+          <dt>Draft</dt><dd><i>SmileBack, now ConnectWise Customer Feedback, is a CSAT and NPS survey tool for MSP help desks. Crewhu includes the same one-click ticket surveys and adds employee recognition, gamified KPIs, rewards and review generation, so client feedback turns into technician motivation. Pick SmileBack for surveys only; pick Crewhu if you want feedback to drive culture and retention.</i></dd>
+          <dt>Rules</dt><dd>Name both products in sentence one. One sentence on what each product does. End with a "pick X if / pick Y if" line. No adjectives like "best" or "leading".</dd>
+          <dt>Why</dt><dd>This block is the most likely line for an AI Overview or featured snippet to quote.</dd>
+        </dl>
+      </div>
+
+      <div class="wire"><b>Byline row:</b> Last verified [DD Mon YYYY] · Written by [Name, role, MSP background] · <u>Sources</u> (anchor link to Block 12)</div>
+      <div class="note"><h4>Info needed</h4><dl><dt>Author</dt><dd>A named person with MSP or CX experience, linked to an author bio page. Ask Crewhu who will put their name on it.</dd></dl></div>
+
+      <div class="ph cta">
+        <span class="lbl">CTA-01 · Hero buttons</span>
+        <div class="btns"><span class="btn solid">See Crewhu with your PSA data</span><span class="btn">Switching from SmileBack? Talk migration</span></div>
+        <span class="spec"><b>Primary:</b> demo booking (Zoom scheduler). <b>Secondary:</b> the same booking form with a "migration" tag so sales knows the context.</span>
+      </div>
+
+      <div class="ph img">
+        <span class="lbl">IMG-01 · Hero visual</span>
+        <div class="box">Crewhu dashboard showing a CSAT score next to a badge awarded for that ticket</div>
+        <span class="spec"><b>Size:</b> 1600×700, WebP, under 150 KB · <b>Alt:</b> "Crewhu dashboard showing a 5-star CSAT response that automatically awarded a badge to the technician" · <b>Don't:</b> put the SmileBack UI or logo here</span>
+      </div>
+    </section>
+
+    <!-- AT A GLANCE -->
+    <section class="sec" id="glance">
+      <div class="sid"><span>Block 02</span><span>~40 words + table</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Crewhu vs. SmileBack at a glance</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:90%"></span><span style="width:60%"></span></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>One or two sentences introducing the table. Mention that both products are built for MSPs.</dd><dt>Guideline</dt><dd>Keep each cell under 12 words. Use ✓ / ✗ / "Partial". This table is the second most quoted element after the answer box.</dd></dl></div>
+
+      <div class="ph tbl">
+        <span class="lbl">TBL-01 · Comparison table (HTML table, not an image)</span>
+        <div class="tw"><table>
+          <thead><tr><th>Row</th><th>Crewhu</th><th>SmileBack (ConnectWise Customer Feedback)</th><th>Source to cite</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">What it is</td><td>Feedback + recognition + gamification + rewards platform for MSPs</td><td>CSAT/NPS survey tool for MSPs and help desks</td><td class="f">Both vendor sites</td></tr>
+            <tr><td class="rk">Ownership</td><td>Independent (Crewhu, LLC)</td><td>Owned by ConnectWise since Dec 2021</td><td class="f">Acquisition press release</td></tr>
+            <tr><td class="rk">Surveys</td><td>One-click CSAT, NPS, custom</td><td>One-click CSAT, NPS</td><td class="f">[verify on vendor pages]</td></tr>
+            <tr><td class="rk">PSA integrations</td><td>ConnectWise, Autotask, Kaseya BMS, HaloPSA, Syncro +</td><td>ConnectWise, Autotask, Kaseya BMS · [confirm Halo]</td><td class="f">Integrations pages</td></tr>
+            <tr><td class="rk">Employee recognition</td><td>✓ Peer, manager, core-value badges</td><td>✗</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Gamification / KPI contests</td><td>✓ CSAT + PSA, docs, VoIP metrics</td><td>✗</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Rewards store</td><td>✓ Crewhu Bucks + store</td><td>✗</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Reviews / website widget</td><td>✓ Widget, testimonial feed, review requests</td><td>✓ Widget, Google Reviews</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Pricing basis</td><td>Per active employee · from $[119]/mo (5 users)</td><td>Per ticket agent · from $[99]/mo (1–5 agents)</td><td class="f">Pricing pages [recheck]</td></tr>
+            <tr><td class="rk">Free trial</td><td>[✓ 14 days, no card · confirm]</td><td>[✓ · confirm]</td><td class="f">Pricing pages</td></tr>
+            <tr><td class="rk">Ratings</td><td>Capterra [4.9] ([98] reviews)</td><td>Capterra [4.9] ([35]) · G2 [4.8] ([34])</td><td class="f">Capterra, G2 [recheck]</td></tr>
+            <tr><td class="rk">Best for</td><td>MSPs that want CSAT to drive culture and retention</td><td>MSPs that want simple CSAT only</td><td class="f">Our verdict</td></tr>
+          </tbody>
+        </table></div>
+        <span class="spec"><b>Below the table:</b> "Last verified [date] from vendor pricing pages, Capterra and G2. Tell us if something has changed." · Values in [brackets] must be rechecked before publishing. · On mobile the table scrolls sideways; freeze the first column.</span>
+      </div>
+    </section>
+
+    <!-- CORE DIFFERENCE -->
+    <section class="sec" id="difference">
+      <div class="sid"><span>Block 03</span><span>150–200 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>The core difference: measuring satisfaction vs. acting on it</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:94%"></span><span style="width:97%"></span><span style="width:70%"></span></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Opening line</dt><dd>"SmileBack tells you how a client felt about a ticket. Crewhu sends that answer to the technician, the leaderboard and the rewards store."</dd>
+          <dt>Cover</dt><dd>
+            <ul>
+              <li>Both send one-click surveys when a ticket closes. Say this plainly.</li>
+              <li>With SmileBack, the score goes to dashboards and alerts.</li>
+              <li>With Crewhu, the same score triggers recognition, points and review requests on its own.</li>
+              <li>Why it matters: technicians see the feedback, so engagement and retention improve.</li>
+            </ul>
+          </dd>
+          <dt>Proof point</dt><dd>Pick one: XL.net +20% engagement and 95% CSAT, or Succurri's quote "make informed decisions based on measured facts."</dd>
+        </dl>
+      </div>
+      <div class="ph img sq">
+        <span class="lbl">IMG-02 · Diagram: the feedback loop</span>
+        <div class="box">Ticket closed → Survey → Score (shared row) ⟶ Crewhu-only row: Badge + Crewhu Bucks → Leaderboard → Contest → Review request → Website widget</div>
+        <span class="spec"><b>Format:</b> SVG or inline HTML so it's crisp and readable to crawlers · Two rows: "Both tools" and "Crewhu adds" · <b>Alt:</b> "Diagram: both tools collect CSAT at ticket close; Crewhu then turns the score into recognition, rewards and online reviews"</span>
+      </div>
+    </section>
+
+    <!-- SMILEBACK WINS -->
+    <section class="sec" id="smileback-wins">
+      <div class="sid"><span>Block 04 · Credibility section</span><span>100–150 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>When SmileBack is the better choice</h2></div>
+      <div class="wire"><b>Bullet list (3–4 items), each with a short explanation</b></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Bullets</dt><dd>
+            <ul>
+              <li>You only need CSAT/NPS and don't plan to run a recognition program.</li>
+              <li>A very small team on a tight budget: per-agent pricing is cheaper for surveys alone.</li>
+              <li>You're fully on ConnectWise and want fewer vendors.</li>
+              <li>Ease of use is your top priority: reviewers consistently praise SmileBack's simplicity.</li>
+            </ul>
+          </dd>
+          <dt>Guideline</dt><dd>Don't undercut these points with "but…" in the same bullet. Leave the contrast to Block 05.</dd>
+          <dt>Why</dt><dd>Admitting where the competitor fits makes the page credible to buyers and less likely to read as self-promotion to AI Overviews.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- CREWHU FURTHER -->
+    <section class="sec" id="crewhu-further">
+      <div class="sid"><span>Block 05</span><span>~80 words per H3 · 400–450 total</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Where Crewhu goes further</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:80%"></span></div>
+      <div class="note"><h4>Pattern for every H3</h4><dl><dt>Structure</dt><dd>One sentence on what it does → one sentence on why an MSP cares → one proof point with a number → a screenshot. Link each H3 to its product page.</dd></dl></div>
+
+      <div class="sub">
+        <div class="hd" id="h3-recognition"><span class="tag">H3</span><h3>Recognition tied to real client feedback</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Badges are awarded automatically on positive CSAT, plus core-value, manager and executive badges. Recognition also appears in Slack and Teams.</dd><dt>Link</dt><dd><code>/recognize-your-team</code></dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-03 · Screenshot</span><div class="box">Badge feed / recognition wall</div><span class="spec"><b>Size:</b> 1200×525 · Blur client names · <b>Alt:</b> "Crewhu recognition feed with core-value badges"</span></div>
+
+        <div class="hd" id="h3-gamify"><span class="tag">H3</span><h3>Gamify the metrics that matter, not just CSAT</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Contests built on PSA data (tickets, SLAs), IT Glue documentation and VoIP metrics. Use the Kraft Technology Group documentation story.</dd><dt>Link</dt><dd><code>/gamify-your-metrics</code></dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-04 · Screenshot</span><div class="box">Contest leaderboard</div><span class="spec"><b>Alt:</b> "Crewhu contest leaderboard ranking technicians by tickets resolved"</span></div>
+
+        <div class="hd" id="h3-rewards"><span class="tag">H3</span><h3>Rewards your team actually redeems</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Crewhu Bucks (100 = $1), a custom store, and weekly or monthly budgets per profile. Succurri: gift cards, time off, an Apple Watch.</dd><dt>Link</dt><dd><code>/reward-a-job-well-done</code></dd></dl></div>
+
+        <div class="hd" id="h3-reviews"><span class="tag">H3</span><h3>From happy survey to Google review</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Both tools have a widget and Google Reviews, so differentiate on results: GO2 Tech went from 18 to 130 Google reviews (+600%), with about 10% of positive responses becoming reviews.</dd><dt>Link</dt><dd><code>/improve-your-online-rep</code> + GO2 Tech case study</dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-05 · Stat graphic</span><div class="box">"18 → 130 Google reviews" stat card</div><span class="spec">Write the number as HTML text, not inside an image, so it can be read and quoted.</span></div>
+
+        <div class="hd" id="h3-onboarding"><span class="tag">H3</span><h3>Implementation with a consultant on every plan</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>1, 2 or 5 sessions depending on plan. Be upfront that there's a one-time implementation fee.</dd><dt>Info needed</dt><dd>Typical time to go live (ask Crewhu's customer success team).</dd></dl></div>
+      </div>
+    </section>
+
+    <!-- PSA -->
+    <section class="sec" id="psa">
+      <div class="sid"><span>Block 06 · Independence overlay</span><span>100–150 words + table</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>PSA compatibility and vendor independence</h2></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Opening line</dt><dd>"SmileBack has been part of ConnectWise since 2021. Crewhu is independent and works the same way across ConnectWise, Autotask, HaloPSA, Kaseya BMS and Syncro."</dd>
+          <dt>Guideline</dt><dd>State the facts only. <b>Don't speculate</b> about ConnectWise's roadmap or say anything about other PSAs being neglected.</dd>
+          <dt>Info needed</dt><dd>What happens to survey history if a customer switches (export format, import into Crewhu). Ask Crewhu.</dd>
+        </dl>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-02 · PSA matrix</span>
+        <div class="tw"><table>
+          <thead><tr><th>PSA</th><th>Crewhu</th><th>SmileBack</th><th>Notes / source</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">ConnectWise PSA</td><td>✓</td><td>✓</td><td class="f">[link both integration docs]</td></tr>
+            <tr><td class="rk">Autotask (Datto/Kaseya)</td><td>✓</td><td>✓</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">Kaseya BMS</td><td>✓</td><td>[✓ verify]</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">HaloPSA</td><td>[✓ verify]</td><td>[? unconfirmed]</td><td class="f">[verify; leave the cell blank if unknown]</td></tr>
+            <tr><td class="rk">Syncro</td><td>✓</td><td>[?]</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">Survey write-back to ticket</td><td>✓</td><td>✓</td><td class="f">[verify]</td></tr>
+          </tbody>
+        </table></div>
+        <span class="spec">Use "Not listed" rather than ✗ wherever you couldn't confirm.</span>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="sec" id="pricing">
+      <div class="sid"><span>Block 07</span><span>150–200 words + 2 tables</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Pricing: what you'd actually pay</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:92%"></span><span style="width:76%"></span></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Copy</dt><dd>Explain that the two vendors charge on different bases: SmileBack per technician working tickets, Crewhu per active employee. Comparing headline prices directly is misleading.</dd>
+          <dt>Be honest</dt><dd>SmileBack is cheaper if you only need surveys. Say so, then show the full-stack scenario.</dd>
+          <dt>Include</dt><dd>Crewhu's 60-day money-back guarantee on annual plans and its implementation fees.</dd>
+        </dl>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-03 · Plan-by-plan pricing</span>
+        <div class="tw"><table>
+          <thead><tr><th>Vendor</th><th>Plan</th><th>Price / mo</th><th>Billing basis</th><th>Includes</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">Crewhu</td><td>Listen / Recognize / Grow</td><td>$[119] / $[239] / $[399]</td><td>5 active users (scales by headcount)</td><td class="f">[top 3 features per plan]</td></tr>
+            <tr><td class="rk">Crewhu</td><td>Implementation (one-time)</td><td>$[300] / $[600] / $[1,000]</td><td>Per plan</td><td class="f">1 / 2 / 5 sessions</td></tr>
+            <tr><td class="rk">SmileBack</td><td>Starter → Enterprise</td><td>$[99] → $[259]</td><td>Ticket-handling agents (Starter = 1–5)</td><td class="f">All features on every tier</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-04 · Scenario: "20-person MSP, 12 technicians"</span>
+        <div class="tw"><table>
+          <thead><tr><th>Need</th><th>SmileBack + other tools</th><th>Crewhu</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">CSAT / NPS</td><td>SmileBack $[x]</td><td rowspan="3">Crewhu [Recognize/Grow] $[y]</td></tr>
+            <tr><td class="rk">Recognition</td><td>[e.g. Bonusly] $[x]</td></tr>
+            <tr><td class="rk">Rewards / contests</td><td>[manual / spreadsheet] $[x]</td></tr>
+            <tr><td class="rk">Total per month</td><td>$[sum]</td><td>$[y]</td></tr>
+          </tbody>
+        </table></div>
+        <span class="spec"><b>Approval gate:</b> Crewhu has to sign off on these numbers. If Crewhu doesn't come out ahead, cut this table and write "cost per capability" copy instead.</span>
+      </div>
+    </section>
+
+    <!-- SWITCHERS -->
+    <section class="sec" id="switchers">
+      <div class="sid"><span>Block 08 · Proof</span><span>~120 words + 2 videos</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>MSPs who switched from SmileBack to Crewhu</h2></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>2–3 sentences per customer: why they switched, what changed, the number. Add a pull quote from the transcript.</dd><dt>Info needed</dt><dd>Video transcripts; permission to quote; job titles.</dd></dl></div>
+      <div class="ph img sq">
+        <span class="lbl">VID-01 · Platinum Systems: Danny Carlson, CEO</span>
+        <div class="box">Video thumbnail + play button · stat overlay "+17% survey conversion in 10 months"</div>
+        <span class="spec">Self-hosted (HubSpot/Mux) with <code>VideoObject</code> schema · Put the transcript excerpt underneath as text · Stat in HTML, not baked into the thumbnail</span>
+      </div>
+      <div class="ph img sq">
+        <span class="lbl">VID-02 · InnoTek Computer Consulting: Curtis Jones, VP of Operations</span>
+        <div class="box">Video thumbnail · "Higher CSAT and better culture within 6 months"</div>
+        <span class="spec">Same specs as VID-01</span>
+      </div>
+      <div class="wire"><b>Review quotes (2–3 cards):</b> Capterra quotes that mention SmileBack, each with reviewer role, company size and a link</div>
+      <div class="note"><h4>Info needed</h4><dl><dt>Task</dt><dd>Search Crewhu's Capterra reviews for "SmileBack" and copy the exact wording. Don't paraphrase it into a quote.</dd></dl></div>
+    </section>
+
+    <!-- MIGRATE -->
+    <section class="sec" id="migrate">
+      <div class="sid"><span>Block 09</span><span>120–180 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>How to switch from SmileBack to Crewhu</h2></div>
+      <div class="wire"><b>Numbered steps (a real sequence, so numbers are correct here):</b> 1 Connect your PSA → 2 Import survey history → 3 Map technicians and teams → 4 Choose badges, metrics and rewards → 5 Go live with your implementation consultant</div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Copy</dt><dd>One sentence per step, plus the realistic total time ("most MSPs go live in [X] weeks").</dd>
+          <dt>Info needed</dt><dd>Confirm "Survey Import" can take SmileBack exports (it's a Grow-plan feature). Confirm the typical timeline.</dd>
+          <dt>Schema</dt><dd>Optional <code>HowTo</code>; plain numbered HTML is enough.</dd>
+        </dl>
+      </div>
+      <div class="ph cta"><span class="lbl">CTA-02 · Inline</span><div class="btns"><span class="btn">Plan your migration with our team</span></div><span class="spec">Same booking form, tagged "migration-smileback"</span></div>
+    </section>
+
+    <!-- VERDICT -->
+    <section class="sec" id="verdict">
+      <div class="sid"><span>Block 10</span><span>~120 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Verdict: which should you choose?</h2></div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-05 · Two-column verdict cards</span>
+        <div class="tw"><table>
+          <thead><tr><th>Choose SmileBack if…</th><th>Choose Crewhu if…</th></tr></thead>
+          <tbody>
+            <tr><td>[2–3 bullets, the same points as Block 04]</td><td>[3–4 bullets: feedback-driven recognition, gamified KPIs, rewards, multi-PSA independence]</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Closing line</dt><dd>One sentence that restates the answer box in different words. AI Overviews often quote verdict sections.</dd></dl></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sec" id="faq">
+      <div class="sid"><span>Block 11</span><span>2–4 sentences per answer</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Frequently asked questions</h2></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Format</dt><dd>Each question is an <b>H3</b>. Answer the question directly in the first sentence, then add context. Mark it all up with <code>FAQPage</code>.</dd><dt>Source</dt><dd>Check Google's "People also ask" and AI Overview follow-ups for these queries and swap questions in if they differ.</dd></dl></div>
+      <div class="faq">
+        <div><b><span class="tag">H3</span>Is SmileBack the same as ConnectWise Customer Feedback?</b><span class="spec">Yes. ConnectWise renamed it after the 2021 acquisition. Link the ConnectWise page.</span></div>
+        <div><b><span class="tag">H3</span>Who owns SmileBack?</b><span class="spec">ConnectWise, since 1 Dec 2021. Cite the press release.</span></div>
+        <div><b><span class="tag">H3</span>Is Crewhu better than SmileBack?</b><span class="spec">It depends on scope. Repeat the "pick X if / Y if" logic.</span></div>
+        <div><b><span class="tag">H3</span>How much does SmileBack cost compared with Crewhu?</b><span class="spec">Both price ranges, the different billing bases, the date checked.</span></div>
+        <div><b><span class="tag">H3</span>Does Crewhu work with Autotask, HaloPSA and Kaseya BMS?</b><span class="spec">Yes, plus a link to /integrations.</span></div>
+        <div><b><span class="tag">H3</span>Can I use SmileBack and Crewhu together?</b><span class="spec">[Ask Crewhu: does survey import or an API make this workable?]</span></div>
+        <div><b><span class="tag">H3</span>Can I import my SmileBack survey history?</b><span class="spec">[Confirm the Survey Import process.]</span></div>
+        <div><b><span class="tag">H3</span>Does SmileBack have employee recognition or gamification?</b><span class="spec">"Not offered as of [date]," with a link to its feature page.</span></div>
+        <div><b><span class="tag">H3</span>What's the best SmileBack alternative for MSPs?</b><span class="spec">Name Crewhu, Simplesat and HappySat fairly, and link the /compare/ hub.</span></div>
+      </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="sec" id="sources">
+      <div class="sid"><span>Block 12 · Small print</span><span>List</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Sources and how we compared</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:70%"></span><span style="width:64%"></span><span style="width:58%"></span></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Include</dt><dd>Every external figure with its link and date checked: ConnectWise pricing, the acquisition press release, Capterra, G2. Add one line: "We're Crewhu, so we're biased. Here's how we kept this fair."</dd><dt>Format</dt><dd>Small type, numbered list. Footnote-style numbers in the tables can point here.</dd></dl></div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="sec" id="final-cta">
+      <div class="sid"><span>Block 13 · Full-width band</span><span>~30 words</span></div>
+      <div class="ph cta">
+        <span class="lbl">CTA-03 · Final band</span>
+        <div class="wire"><b>Headline (H2-styled, not an H2 tag):</b> See what your CSAT data could do for your team</div>
+        <div class="btns"><span class="btn solid">Book a demo</span><span class="btn">Talk migration</span><span class="btn">See all comparisons</span></div>
+        <span class="spec">Use a <code>&lt;p&gt;</code> or <code>&lt;div&gt;</code> styled as a heading so the outline stays clean. "See all comparisons" goes to the <code>/compare/</code> hub.</span>
+      </div>
+      <div class="seo">
+        <h4>Internal links checklist</h4>
+        <dl>
+          <dt>Links out</dt><dd>/collect-customer-feedback · /recognize-your-team · /gamify-your-metrics · /improve-your-online-rep · /pricing · /integrations · GO2 Tech and XL.net case studies · /blog/what-is-csat</dd>
+          <dt>Links in</dt><dd>/video-library (next to the switcher videos) · /blog/customer-feedback-software · /blog/employee-recognition-software · /pricing FAQ · footer "Compare" menu</dd>
+        </dl>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var bNotes=document.getElementById('btn-notes'), bClean=document.getElementById('btn-clean');
+  function set(clean){
+    document.body.classList.toggle('clean',clean);
+    bNotes.setAttribute('aria-pressed',String(!clean));
+    bClean.setAttribute('aria-pressed',String(clean));
+    try{localStorage.setItem('wf-clean',clean?'1':'0')}catch(e){}
+  }
+  bNotes.addEventListener('click',function(){set(false)});
+  bClean.addEventListener('click',function(){set(true)});
+  try{if(localStorage.getItem('wf-clean')==='1')set(true)}catch(e){}
+})();
+</script>
