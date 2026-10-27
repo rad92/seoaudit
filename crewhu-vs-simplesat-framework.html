@@ -1,0 +1,747 @@
+<title>Crewhu vs Simplesat Wireframe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky outline rail on the left + a single-column "page under construction" on the right.
+   Content blocks are wireframe grey; annotations are colour-coded by type (note, image, table, CTA, SEO). */
+:root{
+  --bg:#f5f6f4; --paper:#ffffff; --fg:#1d211f; --muted:#5d655f; --line:#d5dad5; --wire:#eceeeb;
+  --note:#8a5a00; --note-bg:#fff6e3; --note-line:#efd29a;
+  --img:#1f5f9e; --img-bg:#eef5fc; --img-line:#9cc1e6;
+  --tbl:#2f7346; --tbl-bg:#eef7f0; --tbl-line:#a6d1b2;
+  --cta:#6b3fa0; --cta-bg:#f4eefb; --cta-line:#cdb6e8;
+  --seo:#4d5560; --seo-bg:#eff1f3; --seo-line:#c3c9d0;
+  --tag:#1d211f; --tag-fg:#ffffff;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141716; --paper:#1b1f1d; --fg:#e6e9e6; --muted:#9aa39c; --line:#323935; --wire:#252a27;
+  --note:#f0c36a; --note-bg:#2b2416; --note-line:#5c4a22;
+  --img:#8cc0f2; --img-bg:#16222e; --img-line:#2f4c69;
+  --tbl:#8fd3a4; --tbl-bg:#15241a; --tbl-line:#2f5a3c;
+  --cta:#c9a8f0; --cta-bg:#221a2e; --cta-line:#4a3768;
+  --seo:#b7c0ca; --seo-bg:#1f2328; --seo-line:#3a424b;
+  --tag:#e6e9e6; --tag-fg:#141716; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141716; --paper:#1b1f1d; --fg:#e6e9e6; --muted:#9aa39c; --line:#323935; --wire:#252a27;
+  --note:#f0c36a; --note-bg:#2b2416; --note-line:#5c4a22;
+  --img:#8cc0f2; --img-bg:#16222e; --img-line:#2f4c69;
+  --tbl:#8fd3a4; --tbl-bg:#15241a; --tbl-line:#2f5a3c;
+  --cta:#c9a8f0; --cta-bg:#221a2e; --cta-line:#4a3768;
+  --seo:#b7c0ca; --seo-bg:#1f2328; --seo-line:#3a424b;
+  --tag:#e6e9e6; --tag-fg:#141716; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px}
+@media (max-width:880px){.wrap{grid-template-columns:minmax(0,1fr)}.rail{position:static!important;max-height:none!important}}
+
+/* header */
+.top{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--fg);padding-bottom:16px}
+.top h1{font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin:0;text-wrap:balance;font-weight:700;letter-spacing:-.01em}
+.top .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.top p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.toggles button{font:500 13px var(--sans);border:1px solid var(--line);background:var(--paper);color:var(--fg);padding:7px 12px;border-radius:6px;cursor:pointer}
+.toggles button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.toggles button:focus-visible,a:focus-visible{outline:2px solid var(--img);outline-offset:2px}
+
+/* rail */
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;font-size:13px}
+.rail h2{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.rail a{display:flex;gap:8px;align-items:baseline;color:var(--fg);text-decoration:none;padding:4px 6px;border-radius:4px}
+.rail a:hover{background:var(--wire)}
+.rail .lv{font:600 10px var(--mono);color:var(--muted);min-width:22px}
+.rail .h3 a{padding-left:24px;color:var(--muted)}
+.legend{margin-top:22px;display:flex;flex-direction:column;gap:6px}
+.legend span{display:flex;gap:8px;align-items:center}
+.legend i{width:14px;height:14px;border-radius:3px;border:1.5px solid;flex:none}
+
+/* page */
+main{min-width:0;display:flex;flex-direction:column;gap:22px}
+.sec{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,3vw,28px);display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.sec.hero{border-top:4px solid var(--fg)}
+.sid{font:500 11px var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hd{display:flex;gap:12px;align-items:flex-start}
+.tag{flex:none;font:600 11px var(--mono);background:var(--tag);color:var(--tag-fg);padding:3px 7px;border-radius:4px;margin-top:5px;letter-spacing:.04em}
+.hd h2,.hd h3,.hd .h1{margin:0;text-wrap:balance;line-height:1.25}
+.hd .h1{font-size:clamp(22px,2.8vw,30px);font-weight:700}
+.hd h2{font-size:21px;font-weight:650}
+.hd h3{font-size:17px;font-weight:600}
+.sub{padding-left:14px;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.wire{background:var(--wire);border-radius:6px;padding:12px 14px;color:var(--muted);font-size:14px}
+.wire b{color:var(--fg);font-weight:600}
+.wire.lines{display:flex;flex-direction:column;gap:7px}
+.wire.lines span{display:block;height:8px;background:var(--line);border-radius:4px}
+
+/* annotations */
+.note,.seo{border:1px solid var(--note-line);background:var(--note-bg);border-radius:8px;padding:12px 14px;font-size:14px}
+.note h4,.seo h4{margin:0 0 8px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--note)}
+.note dl,.seo dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 14px;margin:0}
+.note dt,.seo dt{font-weight:600;color:var(--note)}
+.note dd,.seo dd{margin:0}
+.note ul{margin:4px 0 0;padding-left:18px}
+.seo{border-color:var(--seo-line);background:var(--seo-bg)}
+.seo h4,.seo dt{color:var(--seo)}
+@media (max-width:560px){.note dl,.seo dl{grid-template-columns:minmax(0,1fr)}.note dt,.seo dt{margin-top:4px}}
+
+.ph{border:2px dashed;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.ph .lbl{font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.ph.img{border-color:var(--img-line);background:var(--img-bg);color:var(--fg)}
+.ph.img .lbl{color:var(--img)}
+.ph.img .box{aspect-ratio:16/7;max-width:100%;border-radius:6px;background:repeating-linear-gradient(135deg,transparent 0 10px,color-mix(in srgb,var(--img-line) 35%,transparent) 10px 11px);display:grid;place-items:center;color:var(--img);font:500 13px var(--mono);text-align:center;padding:8px}
+.ph.img.sq .box{aspect-ratio:16/9}
+.ph.tbl{border-color:var(--tbl-line);background:var(--tbl-bg)}
+.ph.tbl .lbl{color:var(--tbl)}
+.ph.cta{border-color:var(--cta-line);background:var(--cta-bg)}
+.ph.cta .lbl{color:var(--cta)}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:1.5px solid var(--cta);color:var(--cta);border-radius:6px;padding:8px 14px;font-weight:600;font-size:14px}
+.btn.solid{background:var(--cta);color:var(--paper)}
+.spec{color:var(--muted);font-size:13px}
+.spec b{color:var(--fg);font-weight:600}
+
+.tw{overflow-x:auto;border-radius:6px;border:1px solid var(--tbl-line);background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--wire);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td.f{color:var(--tbl);font-family:var(--mono);font-size:12.5px}
+td.rk{font-weight:600;white-space:nowrap}
+
+.faq{display:flex;flex-direction:column;gap:8px}
+.faq div{border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+.faq b{display:flex;gap:8px;align-items:baseline}
+.faq .spec{display:block;margin-top:3px}
+
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.rules div{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper)}
+.rules b{display:block;margin-bottom:4px}
+.rules p{margin:0;font-size:13.5px;color:var(--muted)}
+
+body.clean .note,body.clean .seo,body.clean .spec,body.clean .rules-sec{display:none}
+code{font-family:var(--mono);font-size:.9em;background:var(--wire);padding:1px 5px;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* research part */
+.part{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-top:6px}
+.part::after{content:"";flex:1;height:1px;background:var(--line)}
+.research h2.rh{font-size:21px;margin:0;font-weight:650;text-wrap:balance}
+.research h3.rh{font-size:15px;margin:4px 0 0;font-weight:600}
+.research p{margin:0;max-width:72ch}
+.research ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:80ch}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{margin:0;font-size:15px}
+.card.win{border-left:4px solid var(--tbl)}
+.card.lose{border-left:4px solid var(--note)}
+.gap{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.gap div{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.gap b{font-size:14.5px}
+.gap p{font-size:13.5px;color:var(--muted)}
+.gap .use{color:var(--fg)}
+.pill{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pill.hi{border-color:var(--tbl-line);color:var(--tbl);background:var(--tbl-bg)}
+.pill.md{border-color:var(--note-line);color:var(--note);background:var(--note-bg)}
+.pill.vf{border-color:var(--img-line);color:var(--img);background:var(--img-bg)}
+.src{font-size:12.5px;color:var(--muted)}
+.src a{color:var(--img)}
+body.clean .research,body.clean .part.rpart{display:none}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Research + content brief + wireframe · /compare/crewhu-vs-simplesat</div>
+      <h1>Crewhu vs. Simplesat: comparison page framework</h1>
+      <p>Part A is the research: who ranks, what each product really offers, what Simplesat already says about Crewhu, and the gaps Crewhu can take. Part B is the page, block by block, with heading levels, writer notes, and image, table and CTA slots. "Clean wireframe" hides the research and notes.</p>
+    </div>
+    <div class="toggles" role="group" aria-label="View">
+      <button id="btn-notes" type="button" aria-pressed="true">Notes on</button>
+      <button id="btn-clean" type="button" aria-pressed="false">Clean wireframe</button>
+    </div>
+  </header>
+
+  <nav class="rail" aria-label="Page outline">
+    <h2>Part A · Research</h2>
+    <ol>
+      <li><a href="#a-serp"><span class="lv">A1</span>Who ranks today</a></li>
+      <li><a href="#a-aio"><span class="lv">A2</span>How AI answers it</a></li>
+      <li><a href="#a-facts"><span class="lv">A3</span>Head-to-head facts</a></li>
+      <li><a href="#a-their"><span class="lv">A4</span>Simplesat's framing</a></li>
+      <li><a href="#a-gaps"><span class="lv">A5</span>Gaps to take</a></li>
+      <li><a href="#a-adv"><span class="lv">A6</span>Strengths, both sides</a></li>
+      <li><a href="#a-strategy"><span class="lv">A7</span>Page strategy</a></li>
+    </ol>
+    <h2 style="margin-top:18px">Part B · Heading hierarchy</h2>
+    <ol>
+      <li><a href="#setup"><span class="lv">SEO</span>Page setup</a></li>
+      <li><a href="#hero"><span class="lv">H1</span>Crewhu vs. Simplesat</a></li>
+      <li><a href="#glance"><span class="lv">H2</span>At a glance</a></li>
+      <li><a href="#difference"><span class="lv">H2</span>The core difference</a></li>
+      <li><a href="#simplesat-wins"><span class="lv">H2</span>Where Simplesat wins</a></li>
+      <li><a href="#crewhu-further"><span class="lv">H2</span>Where Crewhu goes further</a></li>
+      <li class="h3"><a href="#h3-recognition"><span class="lv">H3</span>Recognition</a></li>
+      <li class="h3"><a href="#h3-gamify"><span class="lv">H3</span>Gamification</a></li>
+      <li class="h3"><a href="#h3-rewards"><span class="lv">H3</span>Rewards</a></li>
+      <li class="h3"><a href="#h3-reviews"><span class="lv">H3</span>Google reviews</a></li>
+      <li class="h3"><a href="#h3-onboarding"><span class="lv">H3</span>Implementation</a></li>
+      <li><a href="#responses"><span class="lv">H2</span>Response rates</a></li>
+      <li><a href="#psa"><span class="lv">H2</span>PSA integrations</a></li>
+      <li><a href="#pricing"><span class="lv">H2</span>Pricing</a></li>
+      <li><a href="#proof"><span class="lv">H2</span>Customer proof</a></li>
+      <li><a href="#migrate"><span class="lv">H2</span>Switch or combine</a></li>
+      <li><a href="#verdict"><span class="lv">H2</span>Verdict</a></li>
+      <li><a href="#faq"><span class="lv">H2</span>FAQ</a></li>
+      <li><a href="#sources"><span class="lv">H2</span>Sources</a></li>
+      <li><a href="#final-cta"><span class="lv">H2</span>Final CTA band</a></li>
+    </ol>
+    <div class="legend" aria-label="Legend">
+      <span><i style="border-color:var(--note-line);background:var(--note-bg)"></i>Writer notes</span>
+      <span><i style="border-color:var(--img-line);background:var(--img-bg);border-style:dashed"></i>Image / video slot</span>
+      <span><i style="border-color:var(--tbl-line);background:var(--tbl-bg);border-style:dashed"></i>Table slot</span>
+      <span><i style="border-color:var(--cta-line);background:var(--cta-bg);border-style:dashed"></i>CTA slot</span>
+      <span><i style="border-color:var(--seo-line);background:var(--seo-bg)"></i>SEO / schema</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <div class="part rpart">Part A · Research and gap analysis</div>
+
+    <!-- A1 -->
+    <section class="sec research" id="a-serp">
+      <div class="sid"><span>A1 · Search landscape</span><span>Queries: crewhu vs simplesat · simplesat vs crewhu · crewhu alternative · simplesat alternative</span></div>
+      <h2 class="rh">Simplesat owns the query with its own page</h2>
+      <p>Simplesat's <b>"Best Crewhu Alternative for MSPs"</b> page (<code>simplesat.io/alternatives/crewhu-alternative</code>) is the top result for "crewhu vs simplesat". Crewhu has no page of its own, so the only head-to-head content in the results was written by the competitor.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Result</th><th>Type</th><th>What it says / why it ranks</th></tr></thead>
+        <tbody>
+          <tr><td class="rk">simplesat.io/alternatives/crewhu-alternative</td><td>Competitor "vs" page</td><td>Frames Crewhu as an engagement program priced per active employee, and Simplesat as the feedback loop across any PSA or helpdesk, with public pricing and unlimited agents.</td></tr>
+          <tr><td class="rk">simplesat.io customer story: ITC Service</td><td>Competitor case study</td><td>An IT services firm considered Crewhu and SmileBack, found them too costly for its needs, and only wanted feedback, not recognition.</td></tr>
+          <tr><td class="rk">crewhu.com/video-library</td><td>Crewhu (incidental)</td><td>Ranks only through the switcher-video captions. It isn't a comparison page.</td></tr>
+          <tr><td class="rk">G2 / Capterra / GetApp alternatives pages</td><td>Directories</td><td>Crewhu's alternatives lists name HR recognition tools (Bonusly, Nectar, 15Five). Simplesat's lists name survey tools (Nicereply, Survicate, Typeform). <b>Neither directory frames this as an MSP decision.</b></td></tr>
+          <tr><td class="rk">famewall.io "Best testimonial tools for MSPs"</td><td>Third-party roundup</td><td>Prices a 10-person MSP at Simplesat Starter $149/mo vs Crewhu Recognize $279/mo + $600 setup. It also says Crewhu is "a lot if testimonials are all you want".</td></tr>
+          <tr><td class="rk">msp-navigator.com/vendors/crewhu</td><td>MSP vendor directory</td><td>Third-party profile focused on MSPs. It's a source the AI Overview can cite.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="src">Search environment note: Google, simplesat.io, G2 and Capterra were blocked here, so this comes from search-tool results and snippets. Check it against a live screenshot of the results and AI Overview before writing.</p>
+    </section>
+
+    <!-- A2 -->
+    <section class="sec research" id="a-aio">
+      <div class="sid"><span>A2 · AI Overview pattern</span><span>Built from the sources above</span></div>
+      <h2 class="rh">The AI answer currently repeats Simplesat's framing</h2>
+      <ul>
+        <li><b>Verdict it gives:</b> "Crewhu for MSPs that want recognition and gamification; Simplesat for teams that mainly want survey feedback across several helpdesks <i>at a lower price</i>."</li>
+        <li><b>Where it gets that:</b> Simplesat's own comparison page and customer stories, because there's nothing from Crewhu to cite.</li>
+        <li><b>Wrong price data in circulation:</b> G2 and other directories list Crewhu "starting at $99" or "$99 per user per month". Crewhu's public pricing is $119/mo for 5 users (Listen). The AI picks up whichever number it finds.</li>
+        <li><b>Ratings it quotes:</b> G2 gives Crewhu 4.7 (94 reviews) and Simplesat 4.8 (166). Capterra, which isn't being quoted, gives Crewhu 4.9 (98) and Simplesat 4.8 (61).</li>
+      </ul>
+      <p><b>So what:</b> a fair, well-sourced Crewhu page with a quotable answer box, dated pricing and Capterra ratings gives the AI a second source to cite, and an MSP-specific verdict to repeat.</p>
+    </section>
+
+    <!-- A3 -->
+    <section class="sec research" id="a-facts">
+      <div class="sid"><span>A3 · Product and company facts</span><span>Check every [bracket] before publishing</span></div>
+      <h2 class="rh">Head-to-head fact sheet</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Attribute</th><th>Crewhu</th><th>Simplesat</th></tr></thead>
+        <tbody>
+          <tr><td class="rk">Founded / HQ</td><td>2012–13 · Boca Raton, FL</td><td>2016 · Seattle, WA (also Bangkok office per job listings)</td></tr>
+          <tr><td class="rk">Who it's built for</td><td>MSPs only</td><td>Any support team: SaaS, retail, e-commerce, hospitality, MSPs ("1,000+ brands")</td></tr>
+          <tr><td class="rk">Core job</td><td>Turn client feedback into technician recognition, contests, rewards and reviews</td><td>Collect and analyse CSAT, NPS, CES and 5-star feedback on tickets</td></tr>
+          <tr><td class="rk">Survey types</td><td>CSAT (1-click), NPS, custom surveys</td><td>CSAT, NPS, <b>CES</b>, 5-star, multi-question</td></tr>
+          <tr><td class="rk">PSA / helpdesk</td><td>ConnectWise, Autotask, Kaseya BMS, HaloPSA, Syncro, ServiceNow, Zendesk, Freshdesk + more · write-back to ticket</td><td>ConnectWise (two-way, custom fields), Autotask, HaloPSA, Syncro, Kaseya BMS, plus Zendesk, Freshdesk, HubSpot, Salesforce, Intercom, Gorgias, Gladly, "100+"</td></tr>
+          <tr><td class="rk">Recognition / badges</td><td>✓ peer, manager, core-value, auto badges</td><td>✗ (not offered)</td></tr>
+          <tr><td class="rk">Gamification / contests</td><td>✓ CSAT + PSA, IT Glue, VoIP metrics</td><td>Team-member leaderboard (ConnectWise listing) · no contests</td></tr>
+          <tr><td class="rk">Rewards</td><td>✓ Crewhu Bucks + store</td><td>✗</td></tr>
+          <tr><td class="rk">Reviews / testimonials</td><td>Widget, live testimonial feed, Google review requests</td><td>Publish positive feedback as testimonials · [Google review requests not found, so verify]</td></tr>
+          <tr><td class="rk">AI / analysis</td><td>[confirm any AI features with Crewhu]</td><td>Topic and sentiment tagging, AI summaries (third-party listing); dashboards revamped</td></tr>
+          <tr><td class="rk">Pricing model</td><td>Per active employee · Listen $119 / Recognize $239 / Grow $399 (5 users) + one-time setup $300 / $600 / $1,000</td><td>Per <b>monthly responses</b>; unlimited rated agents · Starter $149/mo for 300 responses → Pro 1,000 → Premium 2,500 → Scale 5,000 → Enterprise [confirm prices] · over-limit responses are held until reset</td></tr>
+          <tr><td class="rk">Trial / guarantee</td><td>Free trial, no card · 60-day money-back on annual</td><td>14-day trial · "Get started free" [confirm]</td></tr>
+          <tr><td class="rk">Ratings</td><td>Capterra 4.9 (98) · G2 4.7 (94)</td><td>Capterra 4.8 (61) · G2 4.8 (166)</td></tr>
+          <tr><td class="rk">Reviewer praise</td><td>Ease of use, recognition, support</td><td>Simple setup, integrations, very responsive support</td></tr>
+          <tr><td class="rk">Reviewer complaints</td><td>Reporting (top tier only), Autotask depth, gift-card costs, app issues</td><td>Dashboards not deep enough, "no longer price competitive" (one reviewer)</td></tr>
+          <tr><td class="rk">Published MSP proof</td><td>ACE IT 99% CSAT and 24% survey conversion · Platinum +17% conversion · GO2 Tech 18→130 Google reviews · XL.net +20% engagement</td><td>Providence Consulting 98.2% CSAT, 36% response (Autotask) · Inspired IT 31% response · Indian River Networks left SmileBack: "half the cost, 25% greater response rate"</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- A4 -->
+    <section class="sec research" id="a-their">
+      <div class="sid"><span>A4 · Competitor messaging</span><span>From Simplesat's crewhu-alternative page (via search snippets)</span></div>
+      <h2 class="rh">What Simplesat says about Crewhu, and how to answer it</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Simplesat's claim</th><th>Accurate?</th><th>How the Crewhu page answers it (no attacks, only facts)</th></tr></thead>
+        <tbody>
+          <tr><td>Crewhu is "best for MSPs that want the engagement program itself, with client feedback feeding it"</td><td><span class="pill hi">Fair</span></td><td>Agree and own it. That's the positioning. Show what the engagement program does to CSAT, retention and reviews.</td></tr>
+          <tr><td>Crewhu is "priced on active employees" vs Simplesat's public pricing and unlimited agents</td><td><span class="pill md">Half true</span></td><td>Crewhu's pricing is public too. Show the per-response vs per-employee model side by side with MSP-sized scenarios (Block 08).</td></tr>
+          <tr><td>Crewhu's helpdesk connection is "REST API or snippet"</td><td><span class="pill vf">Verify</span></td><td>If the page still says this, list Crewhu's native PSA integrations with write-back, linked to docs. Let the integrations table speak.</td></tr>
+          <tr><td>Simplesat covers more survey types and 100+ helpdesks</td><td><span class="pill hi">True</span></td><td>Concede it in "Where Simplesat is the better choice" (CES, Zendesk, Gorgias, multi-brand).</td></tr>
+          <tr><td>Customers found Crewhu too expensive when they only wanted feedback (ITC Service)</td><td><span class="pill hi">True for that buyer</span></td><td>Agree: if you only want surveys, Crewhu isn't the cheapest. Then show the total cost of surveys + a recognition tool + rewards.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- A5 -->
+    <section class="sec research" id="a-gaps">
+      <div class="sid"><span>A5 · Gaps</span><span>Ranked by impact</span></div>
+      <h2 class="rh">Gaps in the current results that Crewhu can take</h2>
+      <div class="gap">
+        <div><span class="pill hi">High</span><b>No Crewhu-owned comparison</b><p>The only head-to-head is Simplesat's. Brand searchers for "crewhu" + "simplesat" read the competitor's version of Crewhu.</p><p class="use"><b>Use:</b> publish this page, and add "crewhu alternative" as a defensive keyword.</p></div>
+        <div><span class="pill hi">High</span><b>Nobody prices it at MSP volume</b><p>Simplesat charges by responses (Starter = 300/mo). A 12-tech MSP closing ~1,500 tickets at 25% response produces ~375 responses a month, which is over Starter. No ranking page does this math.</p><p class="use"><b>Use:</b> scenario table at 3 MSP sizes, plus a "what's counted" explainer.</p></div>
+        <div><span class="pill hi">High</span><b>Wrong Crewhu price in directories</b><p>"$99 per user/month" appears on G2, Spotsaas and others. The AI repeats it.</p><p class="use"><b>Use:</b> a dated pricing table on the page, plus ask Crewhu to correct its G2/Capterra listings.</p></div>
+        <div><span class="pill hi">High</span><b>"What happens after the survey" is unexplained</b><p>Simplesat stops at reporting and testimonials. Nobody shows the loop from a 5-star survey to a badge, points and a Google review.</p><p class="use"><b>Use:</b> the loop diagram plus GO2 Tech numbers (18 → 130 reviews).</p></div>
+        <div><span class="pill md">Medium</span><b>Response-rate proof is one-sided</b><p>Simplesat publishes 31–36% response rates for MSPs. Crewhu publishes "survey conversion" (24%, +17%) but no response-rate benchmark.</p><p class="use"><b>Use:</b> get Crewhu's median response rate across MSP customers and publish it with method.</p></div>
+        <div><span class="pill md">Medium</span><b>Generalist vs specialist isn't stated</b><p>Simplesat sells to e-commerce, SaaS and hospitality too. MSP buyers aren't told which tool is built around PSA tickets, technicians and MSP KPIs.</p><p class="use"><b>Use:</b> core-difference section titled around "built for MSPs".</p></div>
+        <div><span class="pill md">Medium</span><b>No "use both" option</b><p>Simplesat customers who want recognition have no published path. Crewhu offers Survey Import and an Open API.</p><p class="use"><b>Use:</b> a "Switch or combine" section, if Crewhu confirms Simplesat data can feed recognition.</p></div>
+        <div><span class="pill vf">Verify</span><b>Google review generation</b><p>No source shows Simplesat sending happy clients to Google reviews. If that holds, it's a clear row in Crewhu's favour.</p><p class="use"><b>Use:</b> one table row and one H3, worded "not listed" until confirmed.</p></div>
+      </div>
+    </section>
+
+    <!-- A6 -->
+    <section class="sec research" id="a-adv">
+      <div class="sid"><span>A6 · Honest strengths</span><span>Both columns go on the page in some form</span></div>
+      <h2 class="rh">Where each product wins</h2>
+      <div class="two">
+        <div class="card win"><h3>Crewhu's advantages</h3><ul>
+          <li>Built only for MSPs; every feature assumes PSA tickets and technicians.</li>
+          <li>Feedback triggers recognition, points, contests and rewards automatically. Simplesat has no equivalent.</li>
+          <li>Gamifies metrics beyond CSAT (PSA, IT Glue, VoIP).</li>
+          <li>Google review generation with published results (GO2 Tech +600%).</li>
+          <li>Unlimited 1-click feedback on every plan; no response caps.</li>
+          <li>Higher Capterra rating (4.9 vs 4.8) with more reviews.</li>
+          <li>Implementation consultant on every plan; 60-day money-back on annual.</li>
+        </ul></div>
+        <div class="card lose"><h3>Simplesat's advantages (concede these)</h3><ul>
+          <li>Cheaper entry for surveys only; unlimited agents.</li>
+          <li>CES and 5-star surveys; multi-question logic, custom CSS, multi-brand, SSO.</li>
+          <li>Wider helpdesk coverage outside the MSP stack (Zendesk, Gorgias, Salesforce).</li>
+          <li>More G2 reviews (166 vs 94); strong support reputation.</li>
+          <li>Topic and sentiment tagging on comments.</li>
+          <li>Published MSP response rates of 31–36%.</li>
+        </ul></div>
+      </div>
+    </section>
+
+    <!-- A7 -->
+    <section class="sec research" id="a-strategy">
+      <div class="sid"><span>A7 · Strategy</span><span>How this page differs from Crewhu vs SmileBack</span></div>
+      <h2 class="rh">Page strategy</h2>
+      <ul>
+        <li><b>Archetype:</b> like-for-like on surveys (A) plus scope (B). Unlike SmileBack, there's no ownership/independence section: both companies are independent.</li>
+        <li><b>Main frame:</b> "MSP-specific platform vs. survey tool for any support team". It's true, it's MSP-relevant, and Simplesat can't claim it.</li>
+        <li><b>Main battleground:</b> pricing model. Per response (Simplesat) vs per employee (Crewhu), modelled at real MSP sizes. This is where the competitor page is weakest.</li>
+        <li><b>New sections vs SmileBack:</b> Response rates (Block 06) and Switch or combine (Block 10).</li>
+        <li><b>Tone:</b> concede Simplesat's survey depth and price for surveys only. Fairness is what gets the page cited over Simplesat's own.</li>
+        <li><b>Defend the brand:</b> target "crewhu alternative" and "crewhu pricing" secondarily, so Crewhu's own page competes on its brand terms.</li>
+      </ul>
+    </section>
+
+    <div class="part">Part B · Page wireframe</div>
+
+    <!-- GLOBAL RULES -->
+    <section class="rules-sec" aria-label="Writing rules">
+      <div class="rules">
+        <div><b>Be fair, cite everything</b><p>Every claim about Simplesat links to its own page or a third-party source. Write "not offered", never "lacks" or "fails".</p></div>
+        <div><b>Date the facts</b><p>Simplesat changed its plans in 2026. Show "Last verified: [date]" and recheck pricing every quarter.</p></div>
+        <div><b>Write for quoting</b><p>Open each H2 with a 1–2 sentence direct answer. AI Overviews and featured snippets lift these lines.</p></div>
+        <div><b>Voice</b><p>Plain, confident, MSP-insider. Keep "BADASS" out of this page: buyers comparing vendors want a neutral tone.</p></div>
+        <div><b>Length</b><p>2,000–2,800 words in total. The pricing scenarios and tables carry the detail.</p></div>
+        <div><b>Names</b><p>Write "Simplesat" (not "SimpleSat") as the company does. No competitor logos without legal sign-off.</p></div>
+      </div>
+    </section>
+
+    <!-- SETUP -->
+    <section class="sec" id="setup">
+      <div class="sid"><span>Block 00 · Page setup</span><span>Not visible on page</span></div>
+      <div class="seo">
+        <h4>SEO &amp; schema</h4>
+        <dl>
+          <dt>URL</dt><dd><code>/compare/crewhu-vs-simplesat</code></dd>
+          <dt>Title tag</dt><dd>Crewhu vs Simplesat: CSAT &amp; Recognition for MSPs (2026). Max ~60 characters.</dd>
+          <dt>Meta description</dt><dd>Simplesat collects CSAT for any support team. Crewhu is built for MSPs and turns feedback into recognition, rewards and reviews. Compare pricing and fit. (140–155 characters)</dd>
+          <dt>Primary keywords</dt><dd>crewhu vs simplesat · simplesat vs crewhu · simplesat alternative · simplesat for msp</dd>
+          <dt>Secondary keywords</dt><dd>simplesat pricing · crewhu pricing · crewhu alternative (defensive) · simplesat connectwise · simplesat autotask · msp csat software</dd>
+          <dt>Schema</dt><dd><code>WebPage</code> + <code>BreadcrumbList</code> + <code>FAQPage</code> + <code>VideoObject</code> (proof videos) + Crewhu <code>Organization</code>/<code>SoftwareApplication</code>. Don't mark up Simplesat as a product.</dd>
+          <dt>OG image</dt><dd>1200×630: "Crewhu vs Simplesat" text with the Crewhu logo only.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- HERO -->
+    <section class="sec hero" id="hero">
+      <div class="sid"><span>Block 01 · Above the fold</span><span>~90 words</span></div>
+      <div class="wire"><b>Breadcrumb:</b> Home › Compare › Crewhu vs Simplesat</div>
+      <div class="hd"><span class="tag">H1</span><div class="h1">Crewhu vs. Simplesat: A Survey Tool for Any Helpdesk, or a CSAT Platform Built for MSPs?</div></div>
+      <div class="wire"><b>Subhead (1 line):</b> Both collect CSAT from your PSA tickets. Here's what each does next, what each costs at MSP volume, and when Simplesat is the better pick.</div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Copy</dt><dd>Keep the H1, or test: "Crewhu vs. Simplesat: Which CSAT Tool Fits Your MSP?"</dd>
+          <dt>Guideline</dt><dd>Subhead under 25 words. It promises three things the competitor's page doesn't give: what happens after the survey, cost at MSP volume, and a fair verdict.</dd>
+        </dl>
+      </div>
+      <div class="wire"><b>Answer box (shaded panel, 40–60 words):</b></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:96%"></span><span style="width:92%"></span><span style="width:88%"></span><span style="width:54%"></span></div>
+      <div class="note">
+        <h4>Answer box: the most important copy on the page</h4>
+        <dl>
+          <dt>Draft</dt><dd><i>Simplesat is a survey tool for any support team, with CSAT, NPS and CES surveys priced by monthly responses. Crewhu is built only for MSPs: it collects the same one-click CSAT from your PSA, then turns each response into technician recognition, contests, rewards and Google reviews. Pick Simplesat for surveys alone; pick Crewhu to make feedback drive your team.</i></dd>
+          <dt>Rules</dt><dd>Name both products in sentence one. Mention the pricing basis (responses vs employees), because that's the question buyers bring. End with "pick X if / pick Y if".</dd>
+          <dt>Why</dt><dd>Today the AI answer is built from Simplesat's page. This box gives it a Crewhu-sourced line with the MSP angle.</dd>
+        </dl>
+      </div>
+      <div class="wire"><b>Byline row:</b> Last verified [DD Mon YYYY] · Written by [Name, role, MSP background] · <u>Sources</u> (anchor link to Block 13)</div>
+      <div class="ph cta">
+        <span class="lbl">CTA-01 · Hero buttons</span>
+        <div class="btns"><span class="btn solid">See Crewhu with your PSA data</span><span class="btn">Compare costs for your MSP</span></div>
+        <span class="spec"><b>Primary:</b> demo booking. <b>Secondary:</b> jumps to the pricing scenarios in Block 08 (or an ROI calculator if built).</span>
+      </div>
+      <div class="ph img">
+        <span class="lbl">IMG-01 · Hero visual</span>
+        <div class="box">Ticket → 5-star CSAT → badge + Crewhu Bucks → leaderboard, shown as one Crewhu screen</div>
+        <span class="spec"><b>Size:</b> 1600×700, WebP, under 150 KB · <b>Alt:</b> "A 5-star CSAT response in Crewhu automatically awards the technician a badge and points" · <b>Don't:</b> show Simplesat's UI or logo</span>
+      </div>
+    </section>
+
+    <!-- GLANCE -->
+    <section class="sec" id="glance">
+      <div class="sid"><span>Block 02</span><span>~40 words + table</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Crewhu vs. Simplesat at a glance</h2></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>One or two sentences introducing the table. Say plainly that both tools send one-click surveys from PSA tickets.</dd><dt>Guideline</dt><dd>Keep each cell under 12 words. Use ✓ / ✗ / "Not listed". Give Simplesat its wins in the table (CES, helpdesk breadth); a table with only Crewhu ticks won't be trusted.</dd></dl></div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-01 · Comparison table (HTML table, not an image)</span>
+        <div class="tw"><table>
+          <thead><tr><th>Row</th><th>Crewhu</th><th>Simplesat</th><th>Source to cite</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">Scope</td><td>CSAT + recognition + gamification + rewards, built for MSPs</td><td>CSAT/NPS/CES surveys for any support team</td><td class="f">Both vendor sites</td></tr>
+            <tr><td class="rk">Surveys</td><td>One-click CSAT, NPS, custom</td><td>CSAT, NPS, CES, 5-star, multi-question</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">PSA integrations</td><td>ConnectWise, Autotask, Kaseya BMS, HaloPSA, Syncro +</td><td>ConnectWise, Autotask, HaloPSA, Syncro, Kaseya BMS</td><td class="f">Integration docs [verify both]</td></tr>
+            <tr><td class="rk">Other helpdesks</td><td>Zendesk, Freshdesk, ServiceNow [verify]</td><td>Zendesk, Freshdesk, HubSpot, Salesforce, Intercom, Gorgias + more</td><td class="f">Integrations pages</td></tr>
+            <tr><td class="rk">Employee recognition</td><td>✓ Peer, manager, core-value, auto badges</td><td>✗</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Gamification / contests</td><td>✓ CSAT + PSA, documentation, VoIP metrics</td><td>Leaderboard only [verify]</td><td class="f">Feature pages, CW Marketplace</td></tr>
+            <tr><td class="rk">Rewards store</td><td>✓ Crewhu Bucks + store</td><td>✗</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Google review requests</td><td>✓</td><td>[Not listed · verify]</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Testimonial widget</td><td>✓ Live feed + CSAT widget</td><td>✓ Publish feedback as testimonials</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Pricing</td><td>Per active employee · from $[119]/mo (5 users)</td><td>Per monthly responses · from $[149]/mo (300 responses)</td><td class="f">Pricing pages [recheck]</td></tr>
+            <tr><td class="rk">Ratings</td><td>Capterra [4.9] ([98]) · G2 [4.7] ([94])</td><td>Capterra [4.8] ([61]) · G2 [4.8] ([166])</td><td class="f">Capterra, G2 [recheck]</td></tr>
+            <tr><td class="rk">Best for</td><td>MSPs that want CSAT to drive technician performance</td><td>Teams that want flexible surveys only</td><td class="f">Our verdict</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- CORE DIFFERENCE -->
+    <section class="sec" id="difference">
+      <div class="sid"><span>Block 03</span><span>150–200 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>The core difference: built for MSPs vs. built for every support team</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:94%"></span><span style="width:97%"></span><span style="width:70%"></span></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Opening line</dt><dd>"Simplesat is designed to measure satisfaction for any support team, from e-commerce to SaaS. Crewhu is designed for one: the MSP service desk, where the person who closed the ticket is the person you want to motivate."</dd>
+          <dt>Cover</dt><dd>
+            <ul>
+              <li>Both send one-click surveys when a PSA ticket closes and write the result back. Say so plainly.</li>
+              <li>Simplesat then gives you dashboards, tags and testimonials.</li>
+              <li>Crewhu also routes the response to the technician as recognition, points and contest progress, and to the client as a Google review request.</li>
+              <li>Why it matters for MSPs: technician turnover and morale drive CSAT; Simplesat measures it, Crewhu acts on it.</li>
+            </ul>
+          </dd>
+          <dt>Proof point</dt><dd>XL.net: CSAT moved from an estimated "low 80s" to 95% with +20% engagement after combining feedback with recognition.</dd>
+        </dl>
+      </div>
+      <div class="ph img sq">
+        <span class="lbl">IMG-02 · Diagram: the feedback loop</span>
+        <div class="box">Row 1 "Both tools": Ticket closed → One-click survey → Score + write-back → Dashboard ⟶ Row 2 "Crewhu adds": Badge + Crewhu Bucks → Contest → Review request → Website widget</div>
+        <span class="spec"><b>Format:</b> SVG or inline HTML · Reuse the SmileBack page diagram with the labels changed · <b>Alt:</b> "Diagram: both tools collect CSAT from PSA tickets; Crewhu then turns each response into recognition, rewards and reviews"</span>
+      </div>
+    </section>
+
+    <!-- SIMPLESAT WINS -->
+    <section class="sec" id="simplesat-wins">
+      <div class="sid"><span>Block 04 · Credibility section</span><span>120–160 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>When Simplesat is the better choice</h2></div>
+      <div class="wire"><b>Bullet list (4–5 items)</b>, each with a short explanation</div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Bullets</dt><dd>
+            <ul>
+              <li>You only want survey data and won't run recognition or contests.</li>
+              <li>You need Customer Effort Score (CES) or multi-question surveys.</li>
+              <li>Your support runs on Zendesk, Gorgias, Intercom or Salesforce rather than an MSP PSA.</li>
+              <li>You serve several brands and need multi-brand surveys and custom CSS.</li>
+              <li>A small team with low ticket volume: the Starter plan is cheaper for surveys alone.</li>
+            </ul>
+          </dd>
+          <dt>Guideline</dt><dd>Don't add "but…" to any bullet. These match what Simplesat says about itself, which is why the section is credible.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- CREWHU FURTHER -->
+    <section class="sec" id="crewhu-further">
+      <div class="sid"><span>Block 05</span><span>~80 words per H3 · 400–450 total</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Where Crewhu goes further</h2></div>
+      <div class="note"><h4>Pattern for every H3</h4><dl><dt>Structure</dt><dd>One sentence on what it does → one sentence on why an MSP cares → one proof point with a number → a screenshot. Link each H3 to its product page. Where Simplesat has no equivalent, say "Simplesat doesn't offer this as of [date]" once, in the table, not in every H3.</dd></dl></div>
+      <div class="sub">
+        <div class="hd" id="h3-recognition"><span class="tag">H3</span><h3>Recognition that starts with a client's rating</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Positive CSAT automatically awards the technician a badge; peers and managers add core-value badges in Slack or Teams. Succurri: "now they were getting their cup filled on a daily basis."</dd><dt>Link</dt><dd><code>/recognize-your-team</code></dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-03 · Screenshot</span><div class="box">Recognition feed with an auto badge from a CSAT response</div><span class="spec"><b>Size:</b> 1200×525 · Blur client names · <b>Alt:</b> "Crewhu recognition feed showing a badge triggered by a 5-star client rating"</span></div>
+
+        <div class="hd" id="h3-gamify"><span class="tag">H3</span><h3>Contests on the metrics MSPs run on</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Contests on CSAT plus PSA metrics (tickets closed, SLA), IT Glue documentation and VoIP. Contrast fairly: Simplesat shows a leaderboard of ratings; Crewhu runs contests on any metric. ACE IT's weekly ticket-resolution contest is the example.</dd><dt>Link</dt><dd><code>/gamify-your-metrics</code></dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-04 · Screenshot</span><div class="box">Contest leaderboard</div><span class="spec"><b>Alt:</b> "Crewhu contest leaderboard ranking technicians by tickets resolved this week"</span></div>
+
+        <div class="hd" id="h3-rewards"><span class="tag">H3</span><h3>Rewards technicians redeem</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Crewhu Bucks (100 = $1), a custom store, budgets per profile. Mention gift-card fees openly if Crewhu confirms how they work (a G2 reviewer raised it).</dd><dt>Link</dt><dd><code>/reward-a-job-well-done</code></dd></dl></div>
+
+        <div class="hd" id="h3-reviews"><span class="tag">H3</span><h3>From a happy survey to a Google review</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>Both tools can publish testimonials. Crewhu also asks happy clients for Google reviews: GO2 Tech went from 18 to 130 (+600%), converting ~10% of positive responses.</dd><dt>Info needed</dt><dd>Confirm Simplesat has no Google review request feature before implying it.</dd></dl></div>
+        <div class="ph img"><span class="lbl">IMG-05 · Stat graphic</span><div class="box">"18 → 130 Google reviews" stat card</div><span class="spec">Number written as HTML text, not inside the image.</span></div>
+
+        <div class="hd" id="h3-onboarding"><span class="tag">H3</span><h3>Implementation with a consultant on every plan</h3></div>
+        <div class="note"><h4>Writer notes</h4><dl><dt>Copy</dt><dd>1, 2 or 5 sessions by plan. Be upfront about the one-time fee; Simplesat has none and its page will say so.</dd><dt>Info needed</dt><dd>Typical time to go live.</dd></dl></div>
+      </div>
+    </section>
+
+    <!-- RESPONSE RATES -->
+    <section class="sec" id="responses">
+      <div class="sid"><span>Block 06 · New for this page</span><span>100–150 words + table</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Response rates: what each tool's MSP customers report</h2></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Why this block</dt><dd>Response rate is Simplesat's headline proof (31–36% at MSPs). Leaving it out makes the page look evasive; answering it with Crewhu data takes away the competitor's strongest point.</dd>
+          <dt>Copy</dt><dd>Explain that both use one-click surveys in the ticket email, so response rates depend mostly on email placement and client base. Then show the published numbers from both sides.</dd>
+          <dt>Info needed</dt><dd><b>Crewhu's median response rate across MSP customers</b> (with sample size and period). Without it, cut the Crewhu column and keep the "survey conversion" stats only.</dd>
+        </dl>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-02 · Published results</span>
+        <div class="tw"><table>
+          <thead><tr><th>Vendor</th><th>MSP</th><th>Result</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">Crewhu</td><td>[Crewhu benchmark]</td><td>[median response rate, n = X MSPs]</td><td class="f">[Crewhu data]</td></tr>
+            <tr><td class="rk">Crewhu</td><td>ACE IT Solutions</td><td>99% CSAT · 24% survey conversion</td><td class="f">Crewhu case study</td></tr>
+            <tr><td class="rk">Crewhu</td><td>Platinum Systems</td><td>+17% survey conversion in 10 months (after SmileBack)</td><td class="f">Crewhu video</td></tr>
+            <tr><td class="rk">Simplesat</td><td>Providence Consulting</td><td>98.2% CSAT · 36% response rate</td><td class="f">Simplesat customer story</td></tr>
+            <tr><td class="rk">Simplesat</td><td>Inspired IT</td><td>31% response rate</td><td class="f">Simplesat customer story</td></tr>
+          </tbody>
+        </table></div>
+        <span class="spec">Including the competitor's numbers is deliberate: it makes the table citable and shows confidence.</span>
+      </div>
+    </section>
+
+    <!-- PSA -->
+    <section class="sec" id="psa">
+      <div class="sid"><span>Block 07</span><span>100–150 words + table</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>PSA integrations compared</h2></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Opening line</dt><dd>"Both tools connect natively to the major MSP PSAs and write survey results back to the ticket."</dd>
+          <dt>Guideline</dt><dd>This block quietly corrects the "REST API or snippet" description on Simplesat's page. Don't mention their page; just list Crewhu's native integrations with doc links.</dd>
+          <dt>Add</dt><dd>One row on what Crewhu pulls beyond surveys (ticket counts, SLA, IT Glue, VoIP) for contests. That's the integration depth Simplesat doesn't need.</dd>
+        </dl>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-03 · PSA matrix</span>
+        <div class="tw"><table>
+          <thead><tr><th>Capability</th><th>Crewhu</th><th>Simplesat</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">ConnectWise PSA</td><td>✓ [write-back]</td><td>✓ two-way, custom fields</td><td class="f">CW Marketplace, docs</td></tr>
+            <tr><td class="rk">Autotask</td><td>✓</td><td>✓ write-back</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">HaloPSA</td><td>[✓ verify]</td><td>✓</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">Kaseya BMS</td><td>✓</td><td>✓ (help-center guide)</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">Syncro</td><td>✓</td><td>✓ (help-center guide)</td><td class="f">[verify]</td></tr>
+            <tr><td class="rk">Non-survey PSA metrics for contests</td><td>✓ tickets, SLA, utilisation</td><td>Not listed</td><td class="f">Feature pages</td></tr>
+            <tr><td class="rk">Documentation / VoIP metrics</td><td>✓ IT Glue, VoIP providers</td><td>Not listed</td><td class="f">Integrations pages</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="sec" id="pricing">
+      <div class="sid"><span>Block 08 · Main battleground</span><span>200–250 words + 2 tables</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Pricing: per response vs. per employee</h2></div>
+      <div class="wire lines" aria-hidden="true"><span style="width:92%"></span><span style="width:76%"></span></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Opening line</dt><dd>"Simplesat charges by how many survey responses you collect each month; Crewhu charges by how many active employees use it. Which costs less depends on your ticket volume and whether you want recognition."</dd>
+          <dt>Cover</dt><dd>
+            <ul>
+              <li>Simplesat: unlimited rated agents; responses over the plan's allowance are held until the next cycle or an upgrade.</li>
+              <li>Crewhu: unlimited 1-click feedback; recognition, contests and rewards included from Recognize up.</li>
+              <li>Crewhu's one-time implementation fee and 60-day money-back guarantee on annual plans.</li>
+            </ul>
+          </dd>
+          <dt>Be honest</dt><dd>For surveys only at low volume, Simplesat is cheaper. Say so first.</dd>
+        </dl>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-04 · Plan-by-plan pricing</span>
+        <div class="tw"><table>
+          <thead><tr><th>Vendor</th><th>Plan</th><th>Price / mo</th><th>What's counted</th><th>Includes</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">Crewhu</td><td>Listen / Recognize / Grow</td><td>$[119] / $[239] / $[399]</td><td>Active employees (5-user base)</td><td class="f">[top 3 features per plan]</td></tr>
+            <tr><td class="rk">Crewhu</td><td>Implementation (one-time)</td><td>$[300] / $[600] / $[1,000]</td><td>Per plan</td><td class="f">1 / 2 / 5 sessions</td></tr>
+            <tr><td class="rk">Simplesat</td><td>Starter / Pro / Premium / Scale</td><td>$[149] / $[x] / $[x] / $[x]</td><td>Monthly responses: [300] / [1,000] / [2,500] / [5,000]</td><td class="f">Unlimited agents and surveys</td></tr>
+            <tr><td class="rk">Simplesat</td><td>Enterprise</td><td>Quote</td><td>Custom</td><td class="f">SSO, custom terms [verify]</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-05 · Scenarios at MSP sizes</span>
+        <div class="tw"><table>
+          <thead><tr><th>MSP profile</th><th>Est. responses / mo</th><th>Simplesat plan + cost</th><th>Crewhu plan + cost</th><th>Recognition + rewards included?</th></tr></thead>
+          <tbody>
+            <tr><td class="rk">10 staff · 6 techs · ~700 tickets</td><td>~[175]</td><td>Starter $[149]</td><td>[Listen / Recognize] $[x]</td><td>Simplesat ✗ · Crewhu ✓ (Recognize)</td></tr>
+            <tr><td class="rk">25 staff · 15 techs · ~1,800 tickets</td><td>~[450]</td><td>Pro $[x]</td><td>[Recognize] $[x]</td><td>Simplesat ✗ · Crewhu ✓</td></tr>
+            <tr><td class="rk">60 staff · 35 techs · ~4,500 tickets</td><td>~[1,125]</td><td>Premium $[x]</td><td>[Grow] $[x]</td><td>Simplesat ✗ · Crewhu ✓</td></tr>
+          </tbody>
+        </table></div>
+        <span class="spec"><b>Method line under the table:</b> "Assumes a 25% response rate on closed tickets; prices from each vendor's pricing page on [date]." · <b>Approval gate:</b> Crewhu signs off on its figures. If Simplesat + a recognition tool (e.g. Bonusly) is cheaper in every row, add that column honestly and lead with value per dollar instead.</span>
+      </div>
+      <div class="ph cta"><span class="lbl">CTA-02 · Inline</span><div class="btns"><span class="btn">Get a quote for your team size</span></div><span class="spec">Booking form tagged "compare-simplesat-pricing"</span></div>
+    </section>
+
+    <!-- PROOF -->
+    <section class="sec" id="proof">
+      <div class="sid"><span>Block 09 · Proof</span><span>~120 words + 1–2 videos or quotes</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>What MSPs say after choosing Crewhu</h2></div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Copy</dt><dd>2–3 sentences per customer: what they used before, why they chose Crewhu, the number.</dd>
+          <dt>Info needed</dt><dd><b>Ask Crewhu for any customer who moved from Simplesat</b> (or evaluated both). That would be the strongest proof on the page. Until then, use ACE IT, XL.net or Platinum Systems.</dd>
+        </dl>
+      </div>
+      <div class="ph img sq">
+        <span class="lbl">VID-01 · [Simplesat switcher, if available] or Platinum Systems</span>
+        <div class="box">Video thumbnail + play button · stat overlay in HTML</div>
+        <span class="spec">Self-hosted (HubSpot/Mux) with <code>VideoObject</code> schema · Transcript excerpt underneath as text</span>
+      </div>
+      <div class="wire"><b>Review quote cards (2–3):</b> Capterra quotes about CSAT + recognition together, each with role, company size and link</div>
+    </section>
+
+    <!-- MIGRATE / COMBINE -->
+    <section class="sec" id="migrate">
+      <div class="sid"><span>Block 10 · New for this page</span><span>120–180 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Using Simplesat today? Switch, or add Crewhu on top</h2></div>
+      <div class="wire"><b>Two cards side by side:</b> "Switch to Crewhu" (numbered steps) · "Keep Simplesat, add recognition" (short paragraph)</div>
+      <div class="note">
+        <h4>Writer notes</h4>
+        <dl>
+          <dt>Switch steps</dt><dd>1 Connect your PSA → 2 Import survey history → 3 Map technicians → 4 Choose badges, metrics and rewards → 5 Go live with your consultant.</dd>
+          <dt>Combine option</dt><dd>If Crewhu confirms it: keep Simplesat surveys and feed results into Crewhu (Survey Import or Open API) to drive recognition. Lowers the barrier for teams happy with their surveys.</dd>
+          <dt>Info needed</dt><dd>Can Survey Import read Simplesat exports? Is a live Simplesat → Crewhu feed possible? If not, drop the combine card.</dd>
+        </dl>
+      </div>
+      <div class="ph cta"><span class="lbl">CTA-03 · Inline</span><div class="btns"><span class="btn">Plan your switch</span><span class="btn">Ask about running both</span></div><span class="spec">Same booking form, tagged "migration-simplesat" / "combine-simplesat"</span></div>
+    </section>
+
+    <!-- VERDICT -->
+    <section class="sec" id="verdict">
+      <div class="sid"><span>Block 11</span><span>~120 words</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Verdict: which should your MSP choose?</h2></div>
+      <div class="ph tbl">
+        <span class="lbl">TBL-06 · Two-column verdict cards</span>
+        <div class="tw"><table>
+          <thead><tr><th>Choose Simplesat if…</th><th>Choose Crewhu if…</th></tr></thead>
+          <tbody>
+            <tr><td>[3 bullets from Block 04: surveys only, CES / non-PSA helpdesks, low volume on a tight budget]</td><td>[4 bullets: feedback-driven recognition, contests on PSA metrics, Google reviews, unlimited feedback without response caps]</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Closing line</dt><dd>One sentence restating the answer box in different words. AI Overviews often quote verdict sections.</dd></dl></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sec" id="faq">
+      <div class="sid"><span>Block 12</span><span>2–3 sentences max per answer</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Frequently asked questions</h2></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Format</dt><dd>Each question is an <b>H3</b>. Answer the question directly in the first sentence, then add context. Mark it all up with <code>FAQPage</code>.</dd><dt>Note</dt><dd>Add 2–3 sentences max per answer.</dd><dt>Source</dt><dd>Check Google's "People also ask" and AI Overview follow-ups for these queries and swap questions in if they differ.</dd></dl></div>
+      <div class="faq">
+        <div><b><span class="tag">H3</span>Is Simplesat or Crewhu better for MSPs?</b></div>
+        <div><b><span class="tag">H3</span>How much does Simplesat cost compared with Crewhu?</b></div>
+        <div><b><span class="tag">H3</span>What happens if I go over Simplesat's monthly response limit?</b></div>
+        <div><b><span class="tag">H3</span>Does Simplesat have employee recognition or rewards?</b></div>
+        <div><b><span class="tag">H3</span>Does Crewhu support CES surveys?</b></div>
+        <div><b><span class="tag">H3</span>Do Crewhu and Simplesat both integrate with ConnectWise and Autotask?</b></div>
+        <div><b><span class="tag">H3</span>Can I use Simplesat and Crewhu together?</b></div>
+        <div><b><span class="tag">H3</span>Can I import my Simplesat survey history into Crewhu?</b></div>
+        <div><b><span class="tag">H3</span>What's the best Simplesat alternative for MSPs?</b></div>
+      </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="sec" id="sources">
+      <div class="sid"><span>Block 13 · Small print</span><span>List</span></div>
+      <div class="hd"><span class="tag">H2</span><h2>Sources and how we compared</h2></div>
+      <div class="note"><h4>Writer notes</h4><dl><dt>Include</dt><dd>Every external figure with its link and date checked: Simplesat pricing page and help center (billing), Simplesat customer stories, Capterra, G2, ConnectWise Marketplace. Add: "We're Crewhu, so we're biased. Here's how we kept this fair."</dd><dt>Format</dt><dd>Small type, numbered list.</dd></dl></div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="sec" id="final-cta">
+      <div class="sid"><span>Block 14 · Full-width band</span><span>~30 words</span></div>
+      <div class="ph cta">
+        <span class="lbl">CTA-04 · Final band</span>
+        <div class="hd"><span class="tag">H2</span><h2>Turn every CSAT response into a reason your techs stay</h2></div>
+        <div class="btns"><span class="btn solid">Book a demo</span><span class="btn">Compare costs for your MSP</span><span class="btn">See all comparisons</span></div>
+        <span class="spec">This is the last H2 on the page. "See all comparisons" goes to the <code>/compare/</code> hub.</span>
+      </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section class="sec research" id="refs">
+      <div class="sid"><span>Research sources</span><span>Not part of the page</span></div>
+      <p class="src">
+        <a href="https://www.simplesat.io/alternatives/crewhu-alternative">Simplesat: Crewhu alternative</a> ·
+        <a href="https://www.simplesat.io/success-stories/customer-story-itc-service-ltd/">Simplesat: ITC Service story</a> ·
+        <a href="https://www.simplesat.io/customer-story-indian-river-networks/">Simplesat: Indian River Networks</a> ·
+        <a href="https://www.simplesat.io/customer-stories/inspired-it">Simplesat: Inspired IT</a> ·
+        <a href="https://www.simplesat.io/pricing">Simplesat pricing</a> ·
+        <a href="https://help.simplesat.io/en/articles/1754490-billing-plans">Simplesat billing &amp; plans</a> ·
+        <a href="https://help.simplesat.io/en/collections/565592-integrations">Simplesat integrations (help)</a> ·
+        <a href="https://marketplace.connectwise.com/simplesat">ConnectWise Marketplace: Simplesat</a> ·
+        <a href="https://www.simplesat.io/release-notes">Simplesat release notes</a> ·
+        <a href="https://www.capterra.com/p/177336/Simplesat/reviews/">Capterra: Simplesat</a> ·
+        <a href="https://www.g2.com/products/simplesat/reviews">G2: Simplesat</a> ·
+        <a href="https://www.g2.com/products/crewhu/reviews">G2: Crewhu</a> ·
+        <a href="https://www.capterra.com/p/140426/CrewHu/reviews/">Capterra: Crewhu</a> ·
+        <a href="https://toolradar.com/tools/simplesat">Toolradar: Simplesat</a> ·
+        <a href="https://www.crunchbase.com/organization/simplesat">Crunchbase: Simplesat</a> ·
+        <a href="https://tracxn.com/d/companies/simplesat/__F_tOR2ulbkzWlFGyBIxwAxMD2MMLnyJ_SaEDQw6G3g8">Tracxn: Simplesat</a> ·
+        <a href="https://famewall.io/blog/best-testimonial-tools-for-msps/">Famewall: testimonial tools for MSPs</a> ·
+        <a href="https://www.msp-navigator.com/vendors/crewhu">MSP Navigator: Crewhu</a> ·
+        <a href="https://www.casestudies.com/company/simplesat/case-study/indian-river-networks-raises-client-engagement-25-with-simplesat">CaseStudies.com: Indian River Networks</a> ·
+        <a href="https://www.crewhu.com/video-library">Crewhu video library</a>
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var bNotes=document.getElementById('btn-notes'), bClean=document.getElementById('btn-clean');
+  function set(clean){
+    document.body.classList.toggle('clean',clean);
+    bNotes.setAttribute('aria-pressed',String(!clean));
+    bClean.setAttribute('aria-pressed',String(clean));
+    try{localStorage.setItem('wf-clean',clean?'1':'0')}catch(e){}
+  }
+  bNotes.addEventListener('click',function(){set(false)});
+  bClean.addEventListener('click',function(){set(true)});
+  try{if(localStorage.getItem('wf-clean')==='1')set(true)}catch(e){}
+})();
+</script>
