@@ -38,10 +38,10 @@
 ### 1.1 The homepage loads about 27 MB of media, all eagerly
 | Asset | Size | Loading |
 |---|---|---|
-| `Homepage-Animation-2-Compressed.gif` (Lead Converter conveyor) | **11.95 MB** | Eager, in the HTML **twice** (desktop and mobile copies) |
-| `Homepage-Animation-3_Compressed.gif` (skyline / telescope) | **7.23 MB** | Eager, in the HTML twice |
-| `durhamlane-Website-Banner.mp4` (hero background video) | **7.04 MB** | `autoplay muted loop` with no `poster` and no `preload="none"` |
-| `Technology_Icon-Animated-Test-3.gif`, `Icon_Data-Pacific-Blue.gif`, `People_Icon-Animated.gif` | 0.93 + 0.40 + 0.09 MB | Eager |
+| Lead Converter conveyor GIF: https://durhamlane.com/app/uploads/2024/11/Homepage-Animation-2-Compressed.gif | **11.95 MB** | Eager, in the HTML **twice** (desktop and mobile copies) |
+| Skyline / telescope GIF: https://durhamlane.com/app/uploads/2024/11/Homepage-Animation-3_Compressed.gif | **7.23 MB** | Eager, in the HTML twice |
+| **Hero background video:** https://durhamlane.com/app/uploads/2025/05/durhamlane-Website-Banner.mp4 | **7.04 MB** | `autoplay muted loop` with no `poster` and no `preload="none"` |
+| Icon GIFs: https://durhamlane.com/app/uploads/2024/08/Technology_Icon-Animated-Test-3.gif, https://durhamlane.com/app/uploads/2024/08/Icon_Data-Pacific-Blue.gif, https://durhamlane.com/app/uploads/2024/08/People_Icon-Animated.gif | 0.93 + 0.40 + 0.09 MB | Eager |
 
 In a throttled mobile test the homepage **never fired its `load` event within 90 seconds**. The service and blog pages loaded in 9–10 s. 59 of the homepage's 84 images have no width/height attributes, and only 9 are lazy-loaded. Measured CLS was low (0.002), so layout shift isn't the problem. The problem is weight and bandwidth contention on mobile, which pushes back LCP and interactivity on the page that takes 51% of all clicks.
 
@@ -56,12 +56,15 @@ In a throttled mobile test the homepage **never fired its `load` event within 90
 The podcast was renamed from "The Insiders" to "Inside the Funnel". The redirect rule adds a stray `/s/` segment:
 
 ```
-/podcast/the-insiders/<slug>/                         301 →
-/podcast/inside-the-funnel/s/<slug>/                  301 →
-/podcast/inside-the-funnel/<slug>/                    200
+https://durhamlane.com/podcast/the-insiders/<slug>/              301 →
+https://durhamlane.com/podcast/inside-the-funnel/s/<slug>/       301 →   ← the chain happens here (stray /s/)
+https://durhamlane.com/podcast/inside-the-funnel/<slug>/         200
 ```
 
-- **49 legacy URLs** with GSC impressions go through this 2-hop chain.
+Example: https://durhamlane.com/podcast/the-insiders/managing-the-risk-of-buyers-remorse/ → https://durhamlane.com/podcast/inside-the-funnel/s/managing-the-risk-of-buyers-remorse/ → https://durhamlane.com/podcast/inside-the-funnel/managing-the-risk-of-buyers-remorse/
+
+- **48 legacy podcast URLs** with GSC impressions go through this 2-hop chain. The workbook's **Redirect Fixes** tab lists every source, intermediate and final URL in full.
+- One non-podcast chain does the same thing: https://durhamlane.com/sales-recruitment/ → https://durhamlane.com/services/ → https://durhamlane.com/proactive-outbound-sales-development-teams/ (698 impressions).
 - The old **hub** `/podcast/the-insiders/` and its `/page/2/` and `/page/3/` redirect to a **single episode** (`/selling-smarter-in-a-world-of-smarter-buyers/`) instead of the hub `/podcast/inside-the-funnel/`.
 - The podcast hub's paginated pages still carry the old name in their title: "The Insiders Podcast | B2B …".
 
@@ -218,7 +221,7 @@ These are about 1.1–1.5K words and get few internal links. **Fix:** give each 
 | # | Action | Effort | Expected impact |
 |---|---|---|---|
 | 1 | **Replace the 2 giant homepage GIFs with MP4/WebP, output each block once, and add a poster/preload to the hero video** | ½–1 day dev | Cuts ~25 MB from the page that gets 51% of clicks. Better mobile LCP/INP and conversion rate. |
-| 2 | **Fix the podcast redirect regex** (one hop, hub → hub) | 30 min | Consolidates link equity for 49 legacy URLs. Stops the hub from pointing at one episode. |
+| 2 | **Fix the podcast redirect regex** (one hop, hub → hub) | 30 min | Consolidates link equity for 48 legacy podcast URLs. Stops the hub from pointing at one episode. |
 | 3 | **Podcast title template** `%%title%% \| Inside the Funnel Podcast`, and add H1s to the 3 episodes missing them | 15 min | 33 duplicate titles become unique. The episodes can rank for guest and topic names. |
 | 4 | **Bring back `/sales-outsourcing/` as a service page** and repoint its 15 internal links | 2–3 days content | Targets 15K impressions a month of commercial queries at pos ~8.6 that currently get 0.19% CTR |
 | 5 | **Merge the duplicate pairs**: SDR cost (same title), sales career (2 posts), mis-hire (2 posts), how-to-buy (2 posts), demand gen reports (5 posts) | 1–2 days | Ends cannibalisation and concentrates links on one URL per intent |
