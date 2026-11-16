@@ -29,11 +29,43 @@
 </header>
 
 <main>
-  <section class="band-ink page-hero">
-    <div class="wrap">
-      <p class="eyebrow">Kako radi</p>
-      <h1>Jedno pravilo za osoblje. Nula podešavanja.</h1>
-      <p class="lead">FlipMe radi bez aplikacije, bez Wi-Fi mreže i bez uparivanja. Lampa sama zna kada je okrenuta, a svetlo je jedini signal koji vašem timu treba.</p>
+  <section class="band-ink hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Kako radi</p>
+        <h1>Jedno pravilo za osoblje. Nula podešavanja.</h1>
+        <p class="lead">FlipMe radi bez aplikacije, bez Wi-Fi mreže i bez uparivanja. Lampa sama zna kada je okrenuta, a svetlo je jedini signal koji vašem timu treba.</p>
+        <p class="lead" style="color:var(--on-ink)">Probajte sami: okrenite lampu.</p>
+      </div>
+      <div class="stage" aria-label="Interaktivni prikaz lampe">
+        <span class="stage-chip"><span class="dot"></span><span class="stage-chip-text">Sto 7 · sve je u redu</span></span>
+        <button class="lamp-btn" type="button" aria-pressed="false" aria-label="Okreni lampu">
+          <span class="lamp-glow" aria-hidden="true"></span>
+          <svg class="lamp-svg" viewBox="0 0 120 200" aria-hidden="true">
+            <defs>
+              <linearGradient id="steel" x1="0" x2="1">
+                <stop offset="0" stop-color="#5f6878"/>
+                <stop offset=".35" stop-color="#e4e8ee"/>
+                <stop offset=".6" stop-color="#a7afbc"/>
+                <stop offset="1" stop-color="#535c6b"/>
+              </linearGradient>
+              <linearGradient id="sheen" x1="0" x2="1">
+                <stop offset="0" stop-color="#000" stop-opacity=".28"/>
+                <stop offset=".3" stop-color="#fff" stop-opacity=".42"/>
+                <stop offset=".55" stop-color="#fff" stop-opacity=".12"/>
+                <stop offset="1" stop-color="#000" stop-opacity=".3"/>
+              </linearGradient>
+            </defs>
+            <rect x="22" y="12" width="76" height="32" rx="6" fill="url(#steel)"/>
+            <text x="60" y="32.5" text-anchor="middle" font-family="Figtree, sans-serif" font-size="8.5" font-weight="700" letter-spacing="2" fill="#4a5262">STO 7</text>
+            <rect class="lamp-body" x="26" y="44" width="68" height="132"/>
+            <rect x="26" y="44" width="68" height="132" fill="url(#sheen)"/>
+            <rect x="24" y="176" width="72" height="12" rx="3" fill="url(#steel)"/>
+          </svg>
+        </button>
+        <div class="stage-table" aria-hidden="true"></div>
+        <p class="stage-hint">Klikni na lampu i okreni je</p>
+      </div>
     </div>
   </section>
 
@@ -147,6 +179,9 @@
         <p class="eyebrow">Tehničke karakteristike</p>
         <h2>Mala lampa, napravljena za ugostiteljstvo.</h2>
         <p class="lead">Telo od nerđajućeg čelika i mat difuzora lako se briše posle svake smene. Lampa je stabilna na stolu i ne zauzima mesto tanjirima.</p>
+        <figure class="product-shot">
+          <img src="assets/img/flipme-lampa.webp" width="310" height="320" loading="lazy" alt="FlipMe lampa od nerđajućeg čelika sa mat telom koje svetli toplo belo">
+        </figure>
       </div>
       <div class="table-scroll">
         <table class="spec-table">
