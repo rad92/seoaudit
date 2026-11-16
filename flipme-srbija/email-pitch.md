@@ -14,7 +14,7 @@ Text in [uglastim zagradama] je za popunjavanje pre slanja.
 
 Poštovani [Ime],
 
-pišem Vam jer sam [bio/bila] u [Naziv restorana] i video koliko je sala puna petkom uveče. U takvoj gužvi i najbolji konobar ne može da vidi svaki sto, a gost koji čeka obično poruči manje: odustane od druge ture, dezerta ili kafe.
+pišem Vam jer sam [bio/bila] u [Naziv restorana] i [video/videla] koliko je sala puna petkom uveče. U takvoj gužvi i najbolji konobar ne može da vidi svaki sto, a gost koji čeka obično poruči manje: odustane od druge ture, dezerta ili kafe.
 
 Zato Vam predstavljam **FlipMe**, stonu lampu za poziv konobara:
 
