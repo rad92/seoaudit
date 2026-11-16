@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kontakt · Okreni.rs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Zatražite ponudu za FlipMe lampe za poziv konobara. Pošaljite broj stolova i grad, a ponudu u dinarima dobijate u roku od jednog radnog dana.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='9' y='3' width='14' height='5' rx='1.5' fill='%23101a2e'/%3E%3Crect x='10' y='8' width='12' height='18' fill='%23f3a53c'/%3E%3Crect x='9' y='26' width='14' height='3' rx='1' fill='%23101a2e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Okreni<span class="brand-tld">.rs</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Meni</button>
+    <nav id="site-nav" class="site-nav" aria-label="Glavna navigacija">
+      <a href="index.html">Početna</a>
+      <a href="kako-radi.html">Kako radi</a>
+      <a href="o-nama.html">O nama</a>
+      <a href="kontakt.html" aria-current="page">Kontakt</a>
+      <a class="btn btn-cta nav-cta" href="kontakt.html#ponuda">Uzmi ponudu</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="band-ink page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Kontakt</p>
+      <h1>Uzmite ponudu za svoj objekat.</h1>
+      <p class="lead">Popunite formular za manje od minuta. Javljamo se u roku od jednog radnog dana sa ponudom u dinarima i predlogom seta za vaše stolove.</p>
+    </div>
+  </section>
+
+  <section class="band" id="ponuda">
+    <div class="wrap contact-grid">
+      <div class="form-card">
+        <div class="section-head" style="margin-bottom:0">
+          <h2>Upit za ponudu</h2>
+          <p style="color:var(--muted)">Polja označena kao opciona možete preskočiti.</p>
+        </div>
+
+        <!-- Set data-endpoint to your form service URL (e.g. https://formspree.io/f/xxxx) to receive submissions directly. -->
+        <form id="quote-form" data-endpoint="" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-ime">Ime i prezime</label>
+              <input id="f-ime" name="ime" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-objekat">Naziv objekta</label>
+              <input id="f-objekat" name="objekat" type="text" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label for="f-tip">Tip objekta</label>
+              <select id="f-tip" name="tip" required>
+                <option value="">Izaberite</option>
+                <option>Restoran</option>
+                <option>Kafić ili bar</option>
+                <option>Kafana</option>
+                <option>Hotelski restoran</option>
+                <option>Bašta, splav ili beach bar</option>
+                <option>Lanac ili više lokala</option>
+                <option>Drugo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-grad">Grad</label>
+              <input id="f-grad" name="grad" type="text" autocomplete="address-level2" required>
+            </div>
+            <div class="field">
+              <label for="f-stolovi">Broj stolova</label>
+              <select id="f-stolovi" name="stolovi" required>
+                <option value="">Izaberite</option>
+                <option>Do 15</option>
+                <option>16–25</option>
+                <option>26–50</option>
+                <option>Više od 50</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-telefon">Telefon</label>
+              <input id="f-telefon" name="telefon" type="tel" autocomplete="tel" placeholder="+381 6x xxx xxxx" required>
+            </div>
+            <div class="field full">
+              <label for="f-email">E-pošta</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field full">
+              <label for="f-poruka">Poruka <span class="opt">(opciono)</span></label>
+              <textarea id="f-poruka" name="poruka" placeholder="Npr. imamo salu i baštu, želimo logotip na lampama, zanima nas proba pre kupovine…"></textarea>
+            </div>
+            <label class="check full" for="f-demo">
+              <input id="f-demo" name="demo" type="checkbox" value="da" checked>
+              Želim besplatnu demonstraciju lampi u svom objektu.
+            </label>
+          </div>
+          <div class="form-foot" style="margin-top:22px">
+            <small>Vaše podatke koristimo samo za slanje ponude i ne delimo ih sa trećim licima.</small>
+            <button class="btn btn-cta" type="submit">Uzmi ponudu</button>
+          </div>
+        </form>
+
+        <div id="form-done" class="form-done" tabindex="-1" hidden>
+          <h3 class="done-title">Vaš upit je spreman.</h3>
+          <p class="done-text"></p>
+          <pre id="form-summary"></pre>
+          <div class="btn-row">
+            <button id="copy-summary" class="btn btn-dark" type="button">Kopiraj tekst upita</button>
+          </div>
+          <p>E-pošta: <strong style="user-select:all">ponuda@okreni.rs</strong></p>
+        </div>
+      </div>
+
+      <aside class="contact-side">
+        <div class="contact-card">
+          <h3>Direktan kontakt</h3>
+          <dl>
+            <div><dt>E-pošta</dt><dd>ponuda@okreni.rs</dd></div>
+            <div><dt>Telefon i Viber</dt><dd>+381 11 000 0000</dd></div>
+            <div><dt>Radno vreme</dt><dd>Ponedeljak–petak, 9–17 h</dd></div>
+            <div><dt>Adresa</dt><dd>Beograd, Srbija</dd></div>
+          </dl>
+        </div>
+        <div class="form-card" style="gap:16px">
+          <h3>Šta se dešava posle upita</h3>
+          <ol class="next-steps">
+            <li><div><strong>Javljamo se za jedan radni dan.</strong> <span>Proverimo broj stolova i raspored sale.</span></div></li>
+            <li><div><strong>Šaljemo ponudu.</strong> <span>Cena u dinarima sa PDV-om, isporukom i rokom.</span></div></li>
+            <li><div><strong>Proba u vašem lokalu.</strong> <span>Lampe rade tokom prave smene pre nego što se odlučite.</span></div></li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Okreni<span class="brand-tld">.rs</span></a>
+        <p>FlipMe lampe za poziv konobara, za restorane, kafiće i hotele u Srbiji.</p>
+      </div>
+      <div>
+        <h4>Stranice</h4>
+        <a href="kako-radi.html">Kako radi</a>
+        <a href="o-nama.html">O nama</a>
+        <a href="kontakt.html">Kontakt</a>
+        <a href="kontakt.html#ponuda">Uzmi ponudu</a>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <span>ponuda@okreni.rs</span>
+        <span>+381 11 000 0000</span>
+        <span>Pon–Pet, 9–17 h</span>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <span>© 2026 Okreni.rs. Sva prava zadržana.</span>
+      <span>FlipMe je naziv proizvoda i zaštitni znak njegovog proizvođača. Okreni.rs je nezavisni prodavac za tržište Srbije.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta"><a class="btn btn-cta" href="kontakt.html#ponuda">Uzmi ponudu</a></div>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
