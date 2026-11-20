@@ -119,7 +119,7 @@ Total about 2,300–2,600 words. **Bold** = new.
 11. CTA + gated guide link (as is)
 
 **Retitle it.** "3 Reasons B2B Brands Turn to Sales Outsourcing" no longer describes the page. Suggested title:
-**"Sales Outsourcing: Benefits, Myths & What to Expect (UK)"** (57 characters)
+**"Sales Outsourcing: Benefits, Myths & What to Expect (UK)"** (56 characters)
 Suggested H1: "Sales Outsourcing: Why B2B Brands Use It and What to Expect"
 
 ### Fixes on the kept page while you're editing
