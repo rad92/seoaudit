@@ -157,7 +157,7 @@ Blog posts, case studies and podcasts are already correct (Home › Blog › Pos
 
 ## 4. Notes on the updated homepage block
 
-- **Address:** the new address (Generator Studios, Trafalgar Street, Newcastle upon Tyne NE1 2LA) matches the live contact page. Update it everywhere else too: Yoast's Organization settings, the footer, Google Business Profile, LinkedIn, Companies House (registered office, if it changed) and directories such as Clutch and Cybo. The old Deltic House / Wallsend address is still listed in those places.
+- **Address:** the new address (Generator Studios, Trafalgar Street, Newcastle upon Tyne NE1 2LA) matches the live contact page. Update it everywhere else too: Yoast's Organization settings, the footer, Google Business Profile, LinkedIn, Companies House (registered office, if it changed) and directories such as Clutch and Cybo. The old Deltic House, Wallsend address was still in the homepage's hand-coded schema when I checked on 11 Nov, and it's still on Cybo's directory listings.
 - **Phone format:** `"+441914813800"` on the organization and `"+44 191 481 3800"` in contactPoint are both valid, but use one format throughout.
 - **G2 in `sameAs`:** only include it if https://www.g2.com/products/durhamlane/reviews is a live, claimed profile. I couldn't open G2 from this environment to check. Clutch, Sortlist and Companies House are worth adding once confirmed.
 - Breadcrumb correctly removed from the homepage.
