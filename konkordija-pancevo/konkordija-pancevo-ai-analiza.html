@@ -1,0 +1,337 @@
+<title>Konkordija Pančevo AI analiza</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm reading column, report-style; score card and price cards are the only "objects". */
+:root{
+  --bg:#f4f6f5; --surface:#ffffff; --ink:#17201d; --muted:#56625e; --line:#dbe1de;
+  --accent:#2c5a4b; --accent-soft:#e3eeea; --brass:#8f7232;
+  --crit:#a83636; --crit-soft:#f7e6e6; --warn:#9a6415; --warn-soft:#f8eedd; --ok:#2e7a4d; --ok-soft:#e2f1e8;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,3.4vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.head{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* score */
+.score{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.score .big{font-family:var(--f-display);font-size:4.4rem;line-height:1;color:var(--crit)}
+.score .big small{font-size:1.4rem;color:var(--muted)}
+.score .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.bar i{height:10px;border-radius:2px;background:var(--line)}
+.bar i.h{background:var(--warn)}
+@media (max-width:560px){.score{grid-template-columns:1fr;gap:16px}}
+
+/* lists */
+.strengths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.strengths li{border-top:2px solid var(--accent);padding-top:10px}
+.strengths b{display:block}
+@media (max-width:620px){.strengths{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+tr.me td{background:var(--accent-soft);font-weight:600}
+td.r{text-align:right;white-space:nowrap}
+
+/* findings */
+.find{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.f{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.f b{font-weight:600}
+.f p{font-size:.94rem;color:var(--muted)}
+.chip{align-self:start;justify-self:start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.c{background:var(--crit-soft);color:var(--crit)} .w{background:var(--warn-soft);color:var(--warn)} .o{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:560px){.f{grid-template-columns:1fr;gap:8px}}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:.93rem}
+.checks li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:6px 0}
+.checks span:last-child{font-family:var(--f-mono);white-space:nowrap}
+@media (max-width:620px){.checks{grid-template-columns:1fr}}
+
+/* questions */
+.qs{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.qs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qs q{font-family:var(--f-display);font-size:1.08rem;quotes:"„" "”"}
+.qs span{font-size:.92rem;color:var(--muted)}
+@media (max-width:620px){.qs li{grid-template-columns:1fr;gap:4px}}
+
+/* pricing */
+.cards{display:grid;gap:16px}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.cards.two,.cards.three{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.rec{border:2px solid var(--accent)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.price{font-family:var(--f-display);font-size:2.3rem;line-height:1}
+.price small{font-family:var(--f-body);font-size:.9rem;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:.92rem;display:flex;flex-direction:column;gap:5px}
+.card .for{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+
+.callout{background:var(--accent-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.callout.brass{background:transparent;border:1px solid var(--brass)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:var(--muted)}
+a{color:var(--accent)}
+.foot{border-top:1px solid var(--line);padding-top:20px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+/* print / PDF */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;color-scheme:light}
+  body{padding:0;font-size:10.5pt}
+  .wrap{gap:30px}
+  .card,.score,.f,.qs li,tr,.callout,.strengths li,h2,h3{break-inside:avoid}
+  h2,h3,.eyebrow{break-after:avoid}
+  .pb{break-before:page}
+}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Analiza AI vidljivosti</div>
+  <h1>Konkordija Pančevo: kako vas danas vide ChatGPT i Google AI</h1>
+  <div class="meta">
+    <span>Za: <b>Pogrebno preduzeće „Konkordija”, Pančevo</b></span>
+    <span>Pripremio: <b>AI Vidljivost</b></span>
+    <span>Datum: <b class="num">21. novembar 2026.</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="score">
+    <div class="big num" style="color:var(--warn)">40<small>/100</small></div>
+    <div class="txt">
+      <div class="bar" aria-label="40 od 100 poena"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p><b>Ocena spremnosti za AI pretragu.</b> Konkordija ima dobru osnovu: sajt koji radi na telefonu, prvo mesto u Google pretrazi za „pogrebno preduzeće Pančevo” i odličan sadržaj o PIO refundaciji i međunarodnom prevozu. Ali ocena 3,8 na Google mapama i nejasni podaci o firmi vuku vas nazad, a upravo na to AI najviše gleda kada preporučuje.</p>
+    </div>
+  </div>
+  <p class="src">Ocena je zbir 10 provera navedenih u odeljku „Kako smo računali ocenu” (svaka nosi do 10 poena).</p>
+</section>
+
+<section>
+  <div class="eyebrow">Šta je dobro</div>
+  <h2>Vaše prednosti</h2>
+  <ul class="strengths">
+    <li><b>Prvi u Google pretrazi</b><span class="muted">Na pretragu „pogrebno preduzeće Pančevo” vaš sajt je na prvom mestu. To je velika prednost koju treba pretvoriti i u AI preporuke.</span></li>
+    <li><b>Sadržaj koji AI voli</b><span class="muted">Imate jasno objašnjenu PIO refundaciju sa iznosom i dokumentima, i spisak papira za prevoz iz inostranstva i avionom. To su tačni odgovori koje ljudi traže.</span></li>
+    <li><b>Od 1990. godine, dve prodavnice</b><span class="muted">Miloša Obrenovića 25a i Miloša Trebinjca 28, rad 0–24, tri atestirana vozila i preko 40 modela kovčega.</span></li>
+    <li><b>Sajt radi na telefonu</b><span class="muted">Sajt je na WordPress-u i prilagođen je mobilnim telefonima, pa nije potreban novi sajt, već dorada postojećeg.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Google mape danas</div>
+  <h2>Ko se pojavljuje kad neko traži „pogrebne usluge Pančevo”</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Firma</th><th>Adresa</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr><td>1</td><td>Pogrebno Anđelović</td><td>Miloša Trebinjca 34</td><td class="r">4,9</td><td class="r">73</td></tr>
+      <tr><td>2</td><td>Pogrebno Suza</td><td>Miloša Trebinjca 28</td><td class="r">4,3</td><td class="r">12</td></tr>
+      <tr><td>3</td><td>Pogrebno In Memoriam</td><td>Žarka Zrenjanina 80</td><td class="r">5,0</td><td class="r">2</td></tr>
+      <tr class="me"><td>4</td><td>Pogrebno Konkordija</td><td>Miloša Trebinjca 28a</td><td class="r">3,8</td><td class="r">13</td></tr>
+      <tr class="me"><td>5</td><td>Pogrebno preduzeće Konkordija</td><td>Miloša Obrenovića 25a</td><td class="r">4,0</td><td class="r">2</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Snimak Google mapa od 21. 11. 2026. Redosled zavisi i od lokacije osobe koja pretražuje.</p>
+  <div class="callout">
+    <b>Šta ovo znači</b>
+    <p>Na sajtu ste prvi, a na mapama četvrti i peti. Glavni konkurent Anđelović, dva broja dalje u istoj ulici, ima 73 recenzije i ocenu 4,9. Vi imate ukupno 15 recenzija u dva odvojena profila. AI alati vrlo često preporučuju firmu sa najviše dobrih recenzija, pa je ovo trenutno najveća prepreka da vas ChatGPT i Google AI preporuče.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Nalazi</div>
+  <h2>Šta sprečava AI da vas preporuči</h2>
+  <div class="find">
+    <div class="f"><span class="chip c">Kritično</span><div><b>Ocena 3,8 i malo recenzija</b><p>Glavni profil ima 13 recenzija i ocenu 3,8, a drugi profil 2 recenzije i 4,0. Konkurent ima 73 recenzije i 4,9. Nedavna negativna recenzija opisuje neprijatan prvi kontakt sa porodicom ispred bolnice i nema odgovor firme. Nijedna recenzija koju smo videli nema odgovor firme.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Mešanje sa drugim firmama koje se zovu Konkordija</b><p>Postoje pogrebna preduzeća „Konkordija” u Novom Sadu i u Beogradu, sa svojim sajtovima. U imeniku Navidiku ste upisani kao „Konkordija 013”, što liči na novosadsku „Konkordija 021”. AI alati lako pomešaju ovakve firme i porodici daju pogrešan grad ili broj.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nejasna adresa u Miloša Trebinjca</b><p>Na sajtu piše Miloša Trebinjca 28, a na Google mapama 28a. Na broju 28 je na Google-u upisano Pogrebno Suza. Za AI i za porodicu koja traži adresu ovo je zbunjujuće.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Strukturirani podaci su prazni</b><p>Sajt ima osnovne schema oznake, ali bez imena firme, adrese, telefona, radnog vremena i vrste delatnosti (FuneralHome). Upravo iz tih podataka AI čita ko ste i gde ste.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nema okvirnih cena ni odgovora na česta pitanja</b><p>Katalog prikazuje 41 model, ali bez cena. Nema stranice sa pitanjima porodica (koliko košta sahrana, kremacija, koliko traje organizacija). Pitanje „koliko košta sahrana u Pančevu” je među najčešćim koje ljudi postavljaju AI-u.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nemate podatke o posetama sajtu</b><p>Na sajtu nije postavljena Google Analytics, pa ne znate koliko ljudi dolazi, odakle i šta traže.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Tehnički detalji na sajtu</b><p>Na početnoj strani je 15 praznih slika (privremene slike koje nisu zamenjene pravim fotografijama). Glavni naslov (H1) je „Transport pokojnika”, a ne naziv firme. Stranica „Katalog” ima nedovršen naslov „Katalog |”.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Zastareli i neprecizni tekstovi</b><p>Na sajtu piše „već 30 godina”, a od 1990. je prošlo 36. Ima više slovnih grešaka (na primer „profesiomalmo”, „imostranstvu”, „neopodno”), a neki linkovi ka Ministarstvu spoljnih poslova vode na spisak iz 2015. Iznos PIO refundacije se menja svaka tri meseca, pa ga treba redovno ažurirati.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Pitanja koja ljudi postavljaju AI-u</div>
+  <h2>Gde Konkordija treba da bude odgovor</h2>
+  <p class="muted">Ovo su pitanja koja porodice postavljaju ChatGPT-u i Google-u. Za neka već imate dobar sadržaj, a za druga treba dodati stranicu.</p>
+  <ul class="qs">
+    <li><q>Koje pogrebno preduzeće u Pančevu radi 0–24?</q><span>Schema podaci, sređen Google profil i jedinstvena adresa</span></li>
+    <li><q>Koliko košta sahrana u Pančevu?</q><span>Stranica sa okvirnim cenama paketa („od … dinara”)</span></li>
+    <li><q>Koliko iznosi PIO refundacija troškova sahrane?</q><span>Već imate. Treba je izdvojiti na posebnu stranicu i redovno ažurirati iznos.</span></li>
+    <li><q>Prevoz pokojnika iz Nemačke ili Austrije u Srbiju</q><span>Već imate spisak dokumenata. Treba dodati stranicu na nemačkom i engleskom.</span></li>
+    <li><q>Šta treba uraditi kada neko premine u Pančevu?</q><span>Vodič korak po korak: dokumenta, groblja, rokovi</span></li>
+    <li><q>Kremacija u Pančevu, cena i postupak</q><span>Posebna stranica o kremaciji</span></li>
+  </ul>
+  <div class="callout brass">
+    <b>Uradite test sami, za dva minuta</b>
+    <p>Otvorite ChatGPT i upišite: <i>„Preporuči mi pogrebno preduzeće u Pančevu.”</i> Zatim pitajte: <i>„Šta znaš o pogrebnom preduzeću Konkordija?”</i> Proverite da li vas preporučuje i da li vas meša sa Konkordijom iz Novog Sada.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Zašto sada</div>
+  <h2>Šta pokazuju istraživanja</h2>
+  <div class="cards two">
+    <div class="card"><div class="price num">+120%</div><p>više klikova za sajtove koje Google AI navodi kao izvor, u odnosu na one koje ne navodi.</p><p class="src">Seer Interactive, april 2026. 53 brenda, 5,47 miliona upita, 2,43 milijarde prikaza.</p></div>
+    <div class="card"><div class="price num">4,4×</div><p>vredniji je posetilac koji dolazi preko AI pretrage od posetioca iz klasične pretrage, mereno stopom konverzije.</p><p class="src">Semrush, AI Search &amp; SEO Traffic Study, 2025.</p></div>
+  </div>
+  <p class="muted">Kod pogrebnih usluga porodica obično zove prvu firmu kojoj veruje. Prvo mesto na Google-u već imate. Sledeći korak je da i AI kaže isto.</p>
+</section>
+
+<section class="pb">
+  <div class="eyebrow">Ponuda</div>
+  <h2>Jednokratno postavljanje</h2>
+  <div class="cards two">
+    <div class="card">
+      <div class="tag">Paket A</div>
+      <h3>AI temelj</h3>
+      <div class="price num">490 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sređivanje oba Google profila: isti naziv, tačna adresa, usluge, fotografije, pitanja i odgovori</li>
+        <li>Obzirni odgovori na sve postojeće recenzije, uključujući negativne</li>
+        <li>Sistem za recenzije: zahvalnica sa QR kodom i poruka porodici</li>
+        <li>Upis u Bing Places i Apple Maps (ChatGPT pretraga se oslanja i na Bing)</li>
+        <li>Ujednačavanje naziva, adresa i telefona u 10 imenika</li>
+        <li>Pune schema oznake (FuneralHome) za obe prodavnice</li>
+        <li>Ispravka naslova, H1 i praznih slika na sajtu, postavljanje Google Analytics 4</li>
+        <li>Početni izveštaj: 10 pitanja provereno u ChatGPT-u, Gemini-ju, Perplexity-ju i Google AI-u</li>
+      </ul>
+      <p class="for">Rok: 3 nedelje. Rešava ocenu, podatke i tehničke greške.</p>
+    </div>
+    <div class="card rec">
+      <div class="tag">Paket B · preporuka</div>
+      <h3>AI temelj + dorada sajta</h3>
+      <div class="price num">890 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sve iz paketa A</li>
+        <li>Stranica sa okvirnim cenama paketa sahrane</li>
+        <li>Posebna stranica o PIO refundaciji, sa datumom poslednje provere iznosa</li>
+        <li>Vodič „Šta raditi kada neko premine u Pančevu” i 10 odgovora na česta pitanja</li>
+        <li>Stranica o kremaciji</li>
+        <li>Stranica o međunarodnom prevozu na nemačkom i engleskom, za dijasporu</li>
+        <li>Ispravka slovnih grešaka i zastarelih podataka i linkova</li>
+      </ul>
+      <p class="for">Rok: 4 do 5 nedelja. Zadržava postojeći sajt i prvo mesto u pretrazi.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Mesečno održavanje AI vidljivosti</h2>
+  <p class="muted">AI alati stalno menjaju izvore, a recenzije se skupljaju postepeno. Zato predlažemo saradnju od najmanje 6 meseci, uz otkaz sa 30 dana obaveštenja posle toga.</p>
+  <div class="cards three">
+    <div class="card">
+      <h3>Održavanje</h3>
+      <div class="price num">120 €<small> / mesec</small></div>
+      <ul>
+        <li>4 objave mesečno na Google profilima</li>
+        <li>Obzirni odgovori na sve nove recenzije</li>
+        <li>Mesečno merenje AI vidljivosti (10 pitanja, 4 AI alata)</li>
+        <li>Ažuriranje iznosa PIO refundacije</li>
+      </ul>
+    </div>
+    <div class="card rec">
+      <div class="tag">Preporuka</div>
+      <h3>Rast</h3>
+      <div class="price num">220 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Održavanje”</li>
+        <li>2 nova teksta mesečno koji odgovaraju na pitanja porodica</li>
+        <li>Novi upisi i pominjanja na lokalnim portalima</li>
+        <li>Praćenje 3 glavna konkurenta i broja recenzija</li>
+        <li>Sastanak jednom u tri meseca</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Lider</h3>
+      <div class="price num">390 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Rast”</li>
+        <li>4 teksta mesečno, uključujući nemački za dijasporu</li>
+        <li>Priprema priče o 36 godina rada za lokalne medije</li>
+        <li>Mesečni sastanak i izveštaj</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Sve cene su bez PDV-a. Zakup plaćenih objava u medijima nije uključen.</p>
+</section>
+
+<section>
+  <div class="callout">
+    <b>Naš predlog za Konkordiju: paket B + „Rast” na 6 meseci</b>
+    <p class="num">Jednokratno 890 €, zatim 220 € mesečno. Ukupno za prvih 6 meseci: <b>2.210 €</b>. Ako ovaj rad dovede samo jednu porodicu više mesečno, ulaganje se isplati.</p>
+  </div>
+  <p class="muted"><b>Šta garantujemo:</b> sve navedene stavke u dogovorenom roku i mesečni izveštaj sa jasnim brojkama, pre i posle. Ne garantujemo da će vas ChatGPT preporučiti, jer to niko pošteno ne može. AI sam bira izvore. Ali radimo upravo na onim stvarima na osnovu kojih ih bira.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Sledeći koraci</div>
+  <ol class="steps">
+    <li>Kratak sastanak (30 minuta) na kome uživo pokazujemo šta ChatGPT danas kaže o Konkordiji.</li>
+    <li>Potvrda tačnih adresa obe prodavnice i pristup Google profilima.</li>
+    <li>Početak rada u roku od 7 dana od potvrde ponude.</li>
+  </ol>
+</section>
+
+<section>
+  <h3>Kako smo računali ocenu</h3>
+  <ul class="checks num">
+    <li><span>Prikaz na mobilnom telefonu</span><span>10/10</span></li>
+    <li><span>Strukturirani podaci (schema)</span><span>5/10</span></li>
+    <li><span>Google profil</span><span>5/10</span></li>
+    <li><span>Recenzije (ocena i broj)</span><span>0/10</span></li>
+    <li><span>Isti kontakt podaci svuda</span><span>5/10</span></li>
+    <li><span>Tehnička ispravnost sajta</span><span>5/10</span></li>
+    <li><span>Sadržaj koji odgovara na pitanja</span><span>5/10</span></li>
+    <li><span>Jasno razlikovanje od drugih „Konkordija”</span><span>0/10</span></li>
+    <li><span>Poverenje i ažurnost</span><span>5/10</span></li>
+    <li><span>Merenje poseta (analitika)</span><span>0/10</span></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <span>Ponuda važi 30 dana. AI Vidljivost.</span>
+</footer>
+
+</div>
