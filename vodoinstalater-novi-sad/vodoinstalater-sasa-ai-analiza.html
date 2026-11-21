@@ -1,0 +1,335 @@
+<title>Vodoinstalater Saša AI analiza</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm reading column, report-style; score card and price cards are the only "objects". */
+:root{
+  --bg:#f4f6f5; --surface:#ffffff; --ink:#17201d; --muted:#56625e; --line:#dbe1de;
+  --accent:#2c5a4b; --accent-soft:#e3eeea; --brass:#8f7232;
+  --crit:#a83636; --crit-soft:#f7e6e6; --warn:#9a6415; --warn-soft:#f8eedd; --ok:#2e7a4d; --ok-soft:#e2f1e8;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,3.4vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.head{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* score */
+.score{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.score .big{font-family:var(--f-display);font-size:4.4rem;line-height:1;color:var(--crit)}
+.score .big small{font-size:1.4rem;color:var(--muted)}
+.score .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.bar i{height:10px;border-radius:2px;background:var(--line)}
+.bar i.h{background:var(--warn)}
+@media (max-width:560px){.score{grid-template-columns:1fr;gap:16px}}
+
+/* lists */
+.strengths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.strengths li{border-top:2px solid var(--accent);padding-top:10px}
+.strengths b{display:block}
+@media (max-width:620px){.strengths{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+tr.me td{background:var(--accent-soft);font-weight:600}
+td.r{text-align:right;white-space:nowrap}
+
+/* findings */
+.find{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.f{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.f b{font-weight:600}
+.f p{font-size:.94rem;color:var(--muted)}
+.chip{align-self:start;justify-self:start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.c{background:var(--crit-soft);color:var(--crit)} .w{background:var(--warn-soft);color:var(--warn)} .o{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:560px){.f{grid-template-columns:1fr;gap:8px}}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:.93rem}
+.checks li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:6px 0}
+.checks span:last-child{font-family:var(--f-mono);white-space:nowrap}
+@media (max-width:620px){.checks{grid-template-columns:1fr}}
+
+/* questions */
+.qs{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.qs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qs q{font-family:var(--f-display);font-size:1.08rem;quotes:"„" "”"}
+.qs span{font-size:.92rem;color:var(--muted)}
+@media (max-width:620px){.qs li{grid-template-columns:1fr;gap:4px}}
+
+/* pricing */
+.cards{display:grid;gap:16px}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.cards.two,.cards.three{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.rec{border:2px solid var(--accent)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.price{font-family:var(--f-display);font-size:2.3rem;line-height:1}
+.price small{font-family:var(--f-body);font-size:.9rem;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:.92rem;display:flex;flex-direction:column;gap:5px}
+.card .for{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+
+.callout{background:var(--accent-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.callout.brass{background:transparent;border:1px solid var(--brass)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:var(--muted)}
+a{color:var(--accent)}
+.foot{border-top:1px solid var(--line);padding-top:20px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+/* print / PDF */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;color-scheme:light}
+  body{padding:0;font-size:10.5pt}
+  .wrap{gap:30px}
+  .card,.score,.f,.qs li,tr,.callout,.strengths li,h2,h3{break-inside:avoid}
+  .checks{break-inside:avoid}
+  h2,h3,.eyebrow{break-after:avoid}
+  .pb{break-before:page}
+}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Analiza AI vidljivosti</div>
+  <h1>Vodoinstalater Novi Sad Saša: kako vas danas vide ChatGPT i Google AI</h1>
+  <div class="meta">
+    <span>Za: <b>Vodoinstalater Novi Sad, Saša</b></span>
+    <span>Pripremio: <b>AI Vidljivost</b></span>
+    <span>Datum: <b class="num">21. novembar 2026.</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="score">
+    <div class="big num" style="color:var(--warn)">40<small>/100</small></div>
+    <div class="txt">
+      <div class="bar" aria-label="40 od 100 poena"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p><b>Ocena spremnosti za AI pretragu.</b> Na Google mapama ste prvi za „vodoinstalater Novi Sad”, sa 254 recenzije i ocenom 4,8. To je odličan rezultat. Ali sajt iz 2015. godine i ime koje deli još desetak majstora otežavaju ChatGPT-u i Google AI-u da vas izdvoje. Kada kupac pita AI, a ne Google mape, prvo mesto nije zagarantovano.</p>
+    </div>
+  </div>
+  <p class="src">Ocena je zbir 10 provera navedenih u odeljku „Kako smo računali ocenu” (svaka nosi do 10 poena).</p>
+</section>
+
+<section>
+  <div class="eyebrow">Šta je dobro</div>
+  <h2>Vaše prednosti</h2>
+  <ul class="strengths">
+    <li><b>Prvi na Google mapama</b><span class="muted">Na pretragu „vodoinstalater Novi Sad” vaš profil je prvi od 60 rezultata.</span></li>
+    <li><b>254 recenzije, ocena 4,8</b><span class="muted">Mušterije hvale brzinu, dogovor i kvalitet. Na recenzije odgovarate, što retko ko radi.</span></li>
+    <li><b>Isti podaci svuda</b><span class="muted">Jedan broj telefona (066/9019-985), jedna adresa, rad 0–24. Upravo to AI alati traže.</span></li>
+    <li><b>Jasne prednosti u ponudi</b><span class="muted">Besplatan izlazak na teren, materijal uvek sa sobom i servis bojlera. To su konkretni razlozi zbog kojih AI može da vas preporuči.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Google mape danas</div>
+  <h2>Konkurencija za „vodoinstalater Novi Sad”</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Majstor</th><th>Adresa</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr class="me"><td>1</td><td>Vodoinstalater Novi Sad Saša</td><td>Koste Racina 29</td><td class="r">4,8</td><td class="r">254</td></tr>
+      <tr><td>2</td><td>Vodoinstalater Novi Sad Zoki</td><td>Bulevar oslobođenja 4</td><td class="r">4,9</td><td class="r">496</td></tr>
+      <tr><td>3</td><td>Vodoinstalater Novi Sad – Miško</td><td>Janka Veselinovića 38</td><td class="r">4,7</td><td class="r">139</td></tr>
+      <tr><td>4</td><td>Vodoinstalater Novi Sad Duki</td><td>Bulevar oslobođenja 6</td><td class="r">4,9</td><td class="r">206</td></tr>
+      <tr><td>8</td><td>Odgušenje Kanalizacije Novi Sad</td><td>Kaće Dejanović 18</td><td class="r">5,0</td><td class="r">179</td></tr>
+      <tr><td>10</td><td>Vodoinstalater</td><td>Teodora Mandića 36</td><td class="r">5,0</td><td class="r">168</td></tr>
+      <tr><td>12</td><td>NS Pro FIX Vodoinstalater</td><td>Šajkaška 3</td><td class="r">5,0</td><td class="r">126</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Snimak Google mapa od 21. 11. 2026. Prikazani su samo majstori sa više od 100 recenzija. Redosled zavisi i od lokacije osobe koja pretražuje.</p>
+  <div class="callout">
+    <b>Šta ovo znači</b>
+    <p>Ovo je jedno od najkonkurentnijih tržišta u Novom Sadu: sedam vodoinstalatera, uključujući vas, ima više od 100 recenzija. Zoki ima skoro duplo više recenzija od vas i višu ocenu. ChatGPT obično ne nabraja 60 majstora, nego preporuči nekoliko. Na mapama vas je lako naći, ali u AI odgovoru se bira između nekoliko jakih firmi, i tu odlučuje ko ima jasniji i bogatiji sadržaj.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Nalazi</div>
+  <h2>Šta vas može koštati prvog mesta u AI odgovorima</h2>
+  <div class="find">
+    <div class="f"><span class="chip c">Kritično</span><div><b>Ime koje koristi još desetak majstora</b><p>Na Google mapama postoje „Vodoinstalater Novi Sad Zoki”, „– Miško”, „Duki”, „– Mirko”, „SOS”, „Jokić” i još bar pet profila koji se zovu samo „Vodoinstalater Novi Sad”. Za ChatGPT je to opis, a ne ime firme, pa lako pomeša koji je koji. Potrebno je da se svuda dosledno koristi „Vodoinstalater Saša Novi Sad” uz jasan opis ko ste.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Sajt skoro nema teksta koji AI može da citira</b><p>Stranica „Usluge” ima oko 60 reči. Nema cena (ni okvirnih), nema odgovora na česta pitanja, nema spiska delova grada u kojima radite. Kupci pitaju AI „koliko košta odgušenje odvoda” ili „vodoinstalater na Limanu noću”, a na vašem sajtu AI nema šta da pročita.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Nema strukturiranih podataka</b><p>Na sajtu nema „schema” oznaka (Plumber, LocalBusiness) koje AI-u jasno kažu: ime, telefon, adresu, rad 0–24 i usluge.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Sajt je označen kao engleski</b><p>Jezik sajta je podešen na engleski („en”), iako je ceo sadržaj na srpskom. Pretraživači i AI zato mogu pogrešno da procene kome je sajt namenjen.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Zastareli dodaci na sajtu</b><p>Na sajtu su animirani baner napravljen alatom HTML5Maker iz 2015, link ka Google+ mreži (ugašena 2019), Twitter i YouTube dodaci i Google Translate. Sve to usporava sajt na telefonu i ništa ne donosi.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nemate podatke o posetama sajtu</b><p>Na sajtu je stara Google Analytics (Universal Analytics), koja je prestala da prikuplja podatke 1. jula 2023. Ne znate koliko poziva dolazi sa sajta.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Recenzije koje se prve vide su stare</b><p>Među recenzijama koje Google prikazuje prve, najnovije su od pre 4–5 godina. AI i kupci više veruju svežim ocenama. Redovan priliv novih recenzija vas drži ispred konkurencije.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Pitanja koja ljudi postavljaju AI-u</div>
+  <h2>Gde Saša treba da bude odgovor</h2>
+  <ul class="qs">
+    <li><q>Hitan vodoinstalater u Novom Sadu noću</q><span>Jasno istaknut rad 0–24 i brzina dolaska, u schema podacima i na sajtu</span></li>
+    <li><q>Koliko košta odgušenje odvoda u Novom Sadu?</q><span>Stranica sa okvirnim cenama najčešćih intervencija</span></li>
+    <li><q>Servis i zamena bojlera, Novi Sad</q><span>Posebna stranica za bojlere: marke, rokovi, okvirne cene</span></li>
+    <li><q>Vodoinstalater na Limanu (Grbavici, Detelinari…)</q><span>Spisak delova grada i okolnih mesta u kojima radite</span></li>
+    <li><q>Da li vodoinstalater naplaćuje izlazak na teren?</q><span>Vaša prednost „izlazak se ne naplaćuje”, kao odgovor na često pitanje</span></li>
+    <li><q>Kako da zaustavim curenje vode dok ne dođe majstor?</q><span>Kratki saveti na sajtu: AI ih citira i navodi vas kao izvor</span></li>
+  </ul>
+  <div class="callout brass">
+    <b>Uradite test sami, za dva minuta</b>
+    <p>Otvorite ChatGPT i upišite: <i>„Preporuči mi dobrog vodoinstalatera u Novom Sadu koji radi 0–24.”</i> Pogledajte da li ste među prva tri i da li vas AI ne meša sa drugim „Vodoinstalater Novi Sad” profilima.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Zašto sada</div>
+  <h2>Šta pokazuju istraživanja</h2>
+  <div class="cards two">
+    <div class="card"><div class="price num">+120%</div><p>više klikova za sajtove koje Google AI navodi kao izvor, u odnosu na one koje ne navodi.</p><p class="src">Seer Interactive, april 2026. 53 brenda, 5,47 miliona upita, 2,43 milijarde prikaza.</p></div>
+    <div class="card"><div class="price num">4,4×</div><p>vredniji je posetilac koji dolazi preko AI pretrage od posetioca iz klasične pretrage, mereno stopom konverzije.</p><p class="src">Semrush, AI Search &amp; SEO Traffic Study, 2025.</p></div>
+  </div>
+  <p class="muted">Kada curi voda, ljudi zovu prvog majstora kome veruju. Prvo mesto na mapama već imate, a sada ga treba osigurati i u AI odgovorima.</p>
+</section>
+
+<section class="pb">
+  <div class="eyebrow">Ponuda</div>
+  <h2>Jednokratno postavljanje</h2>
+  <div class="cards two">
+    <div class="card">
+      <div class="tag">Paket A</div>
+      <h3>AI temelj</h3>
+      <div class="price num">290 €<small> jednokratno</small></div>
+      <ul>
+        <li>Osvežavanje Google profila: usluge, oblasti rada, nove fotografije, pitanja i odgovori</li>
+        <li>Sistem za nove recenzije: kartica sa QR kodom i poruka za Viber posle intervencije</li>
+        <li>Upis u Bing Places i Apple Maps (ChatGPT pretraga se oslanja i na Bing)</li>
+        <li>Upis u 10 imenika sa istim imenom „Vodoinstalater Saša Novi Sad”</li>
+        <li>Schema oznake (Plumber) i ispravka jezika na postojećem sajtu</li>
+        <li>Postavljanje Google Analytics 4 i praćenje poziva sa sajta</li>
+        <li>Početni izveštaj: 10 pitanja provereno u ChatGPT-u, Gemini-ju, Perplexity-ju i Google AI-u</li>
+      </ul>
+      <p class="for">Rok: 2 nedelje. Za brz početak, uz postojeći sajt.</p>
+    </div>
+    <div class="card rec">
+      <div class="tag">Paket B · preporuka</div>
+      <h3>AI temelj + novi sajt</h3>
+      <div class="price num">790 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sve iz paketa A</li>
+        <li>Novi, brz sajt za telefone, bez zastarelih dodataka, uz zadržavanje istog domena</li>
+        <li>Posebne stranice: bojleri, odgušenje, tuš kabine i WC, curenje vode</li>
+        <li>Okvirne cene najčešćih intervencija</li>
+        <li>Spisak delova grada i mesta u kojima radite</li>
+        <li>10 odgovora na česta pitanja i kratki saveti za hitne situacije</li>
+        <li>Dugme za poziv i Viber na svakoj stranici</li>
+      </ul>
+      <p class="for">Rok: 3 do 4 nedelje. Rešava sve kritične probleme iz nalaza.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Mesečno održavanje AI vidljivosti</h2>
+  <p class="muted">AI alati stalno menjaju izvore, a konkurencija u Novom Sadu je jaka. Zato predlažemo saradnju od najmanje 6 meseci, uz otkaz sa 30 dana obaveštenja posle toga.</p>
+  <div class="cards three">
+    <div class="card">
+      <h3>Održavanje</h3>
+      <div class="price num">90 €<small> / mesec</small></div>
+      <ul>
+        <li>4 objave mesečno na Google profilu (radovi, saveti)</li>
+        <li>Odgovori na sve nove recenzije</li>
+        <li>Mesečno merenje AI vidljivosti (10 pitanja, 4 AI alata)</li>
+      </ul>
+    </div>
+    <div class="card rec">
+      <div class="tag">Preporuka</div>
+      <h3>Rast</h3>
+      <div class="price num">150 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Održavanje”</li>
+        <li>2 nova teksta mesečno (saveti, cene, delovi grada)</li>
+        <li>Praćenje Zokija, Dukija i Miška: recenzije i pozicije</li>
+        <li>Izveštaj o pozivima sa sajta i profila</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Lider</h3>
+      <div class="price num">250 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Rast”</li>
+        <li>4 teksta mesečno, uključujući okolna mesta (Futog, Veternik, Petrovaradin, Sremska Kamenica)</li>
+        <li>Vođenje Facebook stranice (8 objava mesečno)</li>
+        <li>Mesečni sastanak</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Sve cene su bez PDV-a. Budžet za plaćene oglase nije uključen.</p>
+</section>
+
+<section>
+  <div class="callout">
+    <b>Naš predlog: paket B + „Rast” na 6 meseci</b>
+    <p class="num">Jednokratno 790 €, zatim 150 € mesečno. Ukupno za prvih 6 meseci: <b>1.690 €</b>. Ako ovaj rad donese samo nekoliko poziva više mesečno, ulaganje se isplati.</p>
+  </div>
+  <p class="muted"><b>Šta garantujemo:</b> sve navedene stavke u dogovorenom roku i mesečni izveštaj sa jasnim brojkama, pre i posle. Ne garantujemo da će vas ChatGPT preporučiti, jer to niko pošteno ne može. AI sam bira izvore. Ali radimo upravo na onim stvarima na osnovu kojih ih bira.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Sledeći koraci</div>
+  <ol class="steps">
+    <li>Kratak razgovor (15 minuta) na kome uživo pokazujemo šta ChatGPT danas kaže o vodoinstalaterima u Novom Sadu.</li>
+    <li>Pristup Google profilu i sajtu.</li>
+    <li>Početak rada u roku od 7 dana od potvrde ponude.</li>
+  </ol>
+</section>
+
+<section>
+  <h3>Kako smo računali ocenu</h3>
+  <ul class="checks num">
+    <li><span>Google profil</span><span>10/10</span></li>
+    <li><span>Recenzije (ocena, broj, svežina)</span><span>5/10</span></li>
+    <li><span>Prikaz na mobilnom telefonu</span><span>5/10</span></li>
+    <li><span>Strukturirani podaci (schema)</span><span>0/10</span></li>
+    <li><span>Isti kontakt podaci svuda</span><span>10/10</span></li>
+    <li><span>Tehnička ispravnost sajta</span><span>5/10</span></li>
+    <li><span>Sadržaj koji odgovara na pitanja</span><span>0/10</span></li>
+    <li><span>Merenje poseta (analitika)</span><span>0/10</span></li>
+    <li><span>Poverenje i ažurnost</span><span>5/10</span></li>
+    <li><span>Jasno razlikovanje imena</span><span>0/10</span></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <span>Ponuda važi 30 dana. AI Vidljivost.</span>
+</footer>
+
+</div>
