@@ -1,0 +1,337 @@
+<title>Kruna Granit AI analiza</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm reading column, report-style; score card and price cards are the only "objects". */
+:root{
+  --bg:#f4f6f5; --surface:#ffffff; --ink:#17201d; --muted:#56625e; --line:#dbe1de;
+  --accent:#2c5a4b; --accent-soft:#e3eeea; --brass:#8f7232;
+  --crit:#a83636; --crit-soft:#f7e6e6; --warn:#9a6415; --warn-soft:#f8eedd; --ok:#2e7a4d; --ok-soft:#e2f1e8;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,3.4vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.head{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* score */
+.score{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.score .big{font-family:var(--f-display);font-size:4.4rem;line-height:1;color:var(--crit)}
+.score .big small{font-size:1.4rem;color:var(--muted)}
+.score .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.bar i{height:10px;border-radius:2px;background:var(--line)}
+.bar i.h{background:var(--warn)}
+@media (max-width:560px){.score{grid-template-columns:1fr;gap:16px}}
+
+/* lists */
+.strengths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.strengths li{border-top:2px solid var(--accent);padding-top:10px}
+.strengths b{display:block}
+@media (max-width:620px){.strengths{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+tr.me td{background:var(--accent-soft);font-weight:600}
+td.r{text-align:right;white-space:nowrap}
+
+/* findings */
+.find{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.f{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.f b{font-weight:600}
+.f p{font-size:.94rem;color:var(--muted)}
+.chip{align-self:start;justify-self:start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.c{background:var(--crit-soft);color:var(--crit)} .w{background:var(--warn-soft);color:var(--warn)} .o{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:560px){.f{grid-template-columns:1fr;gap:8px}}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:.93rem}
+.checks li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:6px 0}
+.checks span:last-child{font-family:var(--f-mono);white-space:nowrap}
+@media (max-width:620px){.checks{grid-template-columns:1fr}}
+
+/* questions */
+.qs{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.qs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qs q{font-family:var(--f-display);font-size:1.08rem;quotes:"„" "”"}
+.qs span{font-size:.92rem;color:var(--muted)}
+@media (max-width:620px){.qs li{grid-template-columns:1fr;gap:4px}}
+
+/* pricing */
+.cards{display:grid;gap:16px}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.cards.two,.cards.three{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.rec{border:2px solid var(--accent)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.price{font-family:var(--f-display);font-size:2.3rem;line-height:1}
+.price small{font-family:var(--f-body);font-size:.9rem;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:.92rem;display:flex;flex-direction:column;gap:5px}
+.card .for{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+
+.callout{background:var(--accent-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.callout.brass{background:transparent;border:1px solid var(--brass)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:var(--muted)}
+a{color:var(--accent)}
+.foot{border-top:1px solid var(--line);padding-top:20px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+/* print / PDF */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;color-scheme:light}
+  body{padding:0;font-size:10.5pt}
+  .wrap{gap:30px}
+  .card,.score,.f,.qs li,tr,.callout,.strengths li,h2,h3{break-inside:avoid}
+  h2,h3,.eyebrow{break-after:avoid}
+  .pb{break-before:page}
+}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Analiza AI vidljivosti</div>
+  <h1>Kruna Granit Kruševac: kako vas danas vide ChatGPT i Google AI</h1>
+  <div class="meta">
+    <span>Za: <b>Kruna Granit, Kruševac</b></span>
+    <span>Pripremio: <b>AI Vidljivost</b></span>
+    <span>Datum: <b class="num">21. novembar 2026.</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="score">
+    <div class="big num">15<small>/100</small></div>
+    <div class="txt">
+      <div class="bar" aria-label="15 od 100 poena"><i class="h"></i><i class="h" style="opacity:.5"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p><b>Ocena spremnosti za AI pretragu.</b> Kruna Granit ima ono najvažnije: stotine fotografija urađenih spomenika i zadovoljne mušterije koje vas prate. Ali sve to postoji samo na Facebook-u. Nema sajta, nema Google profila i nema adrese radionice na internetu, pa vas ChatGPT i Google AI praktično ne vide.</p>
+    </div>
+  </div>
+  <p class="src">Ocena je zbir 10 provera navedenih u odeljku „Kako smo računali ocenu” (svaka nosi do 10 poena).</p>
+</section>
+
+<section>
+  <div class="eyebrow">Šta je dobro</div>
+  <h2>Vaše prednosti koje AI još ne koristi</h2>
+  <ul class="strengths">
+    <li><b>Veliki portfolio radova</b><span class="muted">Na Facebook-u je preko 470 fotografija i poseban album od 160 spomenika. Retko koja radionica ima toliko dokaza o svom radu.</span></li>
+    <li><b>604 pratioca</b><span class="muted">Ljudi iz Kruševca vas već prate i komentarišu. To je dobra osnova za prve recenzije.</span></li>
+    <li><b>Spomenici, ali i enterijer</b><span class="muted">Radite i stepenice, šankove i kuhinjske ploče od granita i mermera. To je drugo tržište sa drugim kupcima, koje većina kamenorezaca ne koristi u nastupu.</span></li>
+    <li><b>Kruševac je poznat po kamenu</b><span class="muted">Ljudi iz cele Srbije traže spomenike iz Kruševca. Dobra vidljivost donosi kupce i izvan grada.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Google mape danas</div>
+  <h2>Ko se pojavljuje kad neko traži kamenoresca u Kruševcu</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Kamenorezac</th><th>Lokacija</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr><td>Granit Antić</td><td>Krvavica, Petra Kočića 5</td><td class="r">4,9</td><td class="r">32</td></tr>
+      <tr><td>Mimi Granit</td><td>Jasički put bb</td><td class="r">5,0</td><td class="r">27</td></tr>
+      <tr><td>Gajić Granit</td><td>Krvavica bb</td><td class="r">4,7</td><td class="r">12</td></tr>
+      <tr><td>Mermer – Granit Kruševac</td><td>Kruševac</td><td class="r">4,9</td><td class="r">10</td></tr>
+      <tr><td>Kamenorezac i izrada nadgrobnih spomenika Kruševac</td><td>Kruševac</td><td class="r">5,0</td><td class="r">9</td></tr>
+      <tr><td>Granit Ćula</td><td>Kruševac</td><td class="r">5,0</td><td class="r">7</td></tr>
+      <tr class="me"><td>Kruna Granit</td><td>nema profila</td><td class="r">–</td><td class="r">0</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Snimak Google mapa od 21. 11. 2026, pretrage „nadgrobni spomenici Kruševac” i „Kruna granit Kruševac”. Redosled zavisi i od lokacije osobe koja pretražuje.</p>
+  <div class="callout">
+    <b>Šta ovo znači</b>
+    <p>Kada neko na Google mapama ukuca „Kruna granit Kruševac”, dobija konkurente i firme koje nemaju veze sa kamenom: Kruna market, Kruna Impex i Kruna nekretnine. Kruna Granita nema u rezultatima. Za ChatGPT i Google AI važi isto, jer se velikim delom oslanjaju na te iste podatke. Konkurenti imaju od 7 do 32 recenzije i većina ima svoj sajt, pa je dobra vest da se ova razlika može nadoknaditi za nekoliko meseci.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Nalazi</div>
+  <h2>Šta sprečava AI da vas preporuči</h2>
+  <div class="find">
+    <div class="f"><span class="chip c">Kritično</span><div><b>Nemate Google profil firme</b><p>Ne pojavljujete se na Google mapama, ni kad neko traži vas po imenu. To je prvi izvor koji Google AI i drugi AI alati koriste za lokalne firme: adresa, telefon, radno vreme, fotografije i recenzije.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Nemate sajt</b><p>AI alati odgovaraju na osnovu sadržaja koji mogu da pročitaju. Facebook većinu sadržaja krije iza prijave, pa vaše fotografije i opisi ChatGPT-u i Google AI-u uglavnom nisu dostupni. Konkurenti kao što su Mimi Granit, Gajić Granit, Granit Ćula, Milojević (Master Stone) i Kuzman imaju sajtove, a neki i kataloge modela.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Adresa radionice nije nigde objavljena</b><p>Na Facebook-u piše samo „Kruševac”. Kupac koji želi da vidi kamen i modele uživo ne zna gde da dođe, a AI ne može da vas preporuči za pretrage kao što su „kamenorezac blizu mene” ili „kamenorezac Krvavica”.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Ime „Kruna” se meša sa drugim stvarima</b><p>Pretraga „kruna granit” na internetu prikazuje dijamantske krune za bušenje granita, alat koji se prodaje u Srbiji i Hrvatskoj. U Kruševcu postoje i Kruna market, Kruna Impex i Kruna nekretnine. Zato svuda treba koristiti puno ime sa delatnošću i gradom, na primer „Kruna Granit, kamenorezac Kruševac”.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Facebook nalog je lični profil, a ne stranica firme</b><p>Nalog ima polja „Živi u”, „Išao u školu” i „Porodica”, što znači da je otvoren kao lični profil. Facebook pravila traže da lični profil pripada stvarnoj osobi, pa nalog sa imenom firme može biti ograničen ili ugašen, zajedno sa svih 470 fotografija. Uz to, lični profil ne može da ima recenzije, kategoriju, radno vreme ni plaćene oglase. Facebook nudi prebacivanje profila u stranicu, uz zadržavanje pratilaca i fotografija.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nema nijedne recenzije</b><p>Bez Google profila i Facebook stranice, zadovoljni kupci nemaju gde da ostave ocenu. Konkurenti već imaju 7 do 32 recenzije, a AI alati često biraju firme sa više recenzija.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nema odgovora na pitanja koja kupci postavljaju</b><p>Nigde ne piše koliko košta spomenik, koje vrste granita radite, koliko traje izrada, da li radite postavljanje na drugim grobljima i u drugim gradovima, niti koliko košta kuhinjska ploča po metru. Ovo su tačno ona pitanja koja ljudi danas postavljaju ChatGPT-u.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Nema upisa u imenike</b><p>Konkurenti su upisani na firma.co.rs, Daibau i sličnim imenicima, koje AI alati takođe čitaju. Kruna Granit tamo nije pronađen.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Pitanja koja ljudi postavljaju AI-u</div>
+  <h2>Gde Kruna Granit treba da bude odgovor</h2>
+  <p class="muted">Ovo su pitanja koja kupci postavljaju ChatGPT-u i Google-u. Za svako je potrebna jasna stranica ili podatak koji AI može da citira.</p>
+  <ul class="qs">
+    <li><q>Preporuči kamenoresca u Kruševcu</q><span>Google profil sa adresom, fotografijama i recenzijama</span></li>
+    <li><q>Koliko košta nadgrobni spomenik od granita?</q><span>Stranica sa okvirnim cenama po modelu i vrsti kamena</span></li>
+    <li><q>Koji granit je najbolji za spomenik?</q><span>Vodič o vrstama granita i mermera koje radite, sa fotografijama</span></li>
+    <li><q>Koliko traje izrada i postavljanje spomenika?</q><span>Jasan opis postupka i rokova, od dogovora do postavljanja</span></li>
+    <li><q>Granitna ploča za kuhinju, cena po metru u Kruševcu</q><span>Posebna stranica za kuhinje, stepenice i šankove</span></li>
+    <li><q>Da li kamenorezac iz Kruševca postavlja spomenik u drugom gradu?</q><span>Spisak gradova i groblja na kojima radite</span></li>
+  </ul>
+  <div class="callout brass">
+    <b>Uradite test sami, za dva minuta</b>
+    <p>Otvorite ChatGPT i upišite: <i>„Preporuči mi kamenoresca za nadgrobni spomenik u Kruševcu.”</i> Zatim pitajte: <i>„Šta znaš o firmi Kruna Granit iz Kruševca?”</i> Pogledajte koga AI preporučuje i da li uopšte zna da postojite.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Zašto sada</div>
+  <h2>Šta pokazuju istraživanja</h2>
+  <div class="cards two">
+    <div class="card"><div class="price num">+120%</div><p>više klikova za sajtove koje Google AI navodi kao izvor, u odnosu na one koje ne navodi.</p><p class="src">Seer Interactive, april 2026. 53 brenda, 5,47 miliona upita, 2,43 milijarde prikaza.</p></div>
+    <div class="card"><div class="price num">4,4×</div><p>vredniji je posetilac koji dolazi preko AI pretrage od posetioca iz klasične pretrage, mereno stopom konverzije.</p><p class="src">Semrush, AI Search &amp; SEO Traffic Study, 2025.</p></div>
+  </div>
+  <p class="muted">Spomenik se kupuje jednom i porodica obično pita za preporuku. Danas sve češće pita ChatGPT. Ko se tamo pojavi prvi, dobija poziv.</p>
+</section>
+
+<section class="pb">
+  <div class="eyebrow">Ponuda</div>
+  <h2>Jednokratno postavljanje</h2>
+  <div class="cards two">
+    <div class="card">
+      <div class="tag">Paket A</div>
+      <h3>AI start</h3>
+      <div class="price num">290 €<small> jednokratno</small></div>
+      <ul>
+        <li>Otvaranje i potvrda Google profila firme (kategorija kamenorezac, usluge, radno vreme, adresa, 20 najboljih fotografija)</li>
+        <li>Prebacivanje Facebook profila u stranicu firme, uz zadržavanje pratilaca i fotografija</li>
+        <li>Upis u Bing Places i Apple Maps (ChatGPT pretraga se oslanja i na Bing)</li>
+        <li>Upis u 10 imenika sa istim nazivom, adresom i telefonom</li>
+        <li>Sistem za recenzije: kartica sa QR kodom i poruka za zadovoljne kupce</li>
+        <li>Početni izveštaj: 10 pitanja provereno u ChatGPT-u, Gemini-ju, Perplexity-ju i Google AI-u</li>
+      </ul>
+      <p class="for">Rok: 2 nedelje. Za brz početak, bez sajta.</p>
+    </div>
+    <div class="card rec">
+      <div class="tag">Paket B · preporuka</div>
+      <h3>AI start + sajt</h3>
+      <div class="price num">890 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sve iz paketa A</li>
+        <li>Sajt prilagođen telefonima (oko 8 stranica), sa schema oznakama za AI</li>
+        <li>Katalog spomenika sa fotografijama iz vašeg portfolija i okvirnim cenama („od … dinara”)</li>
+        <li>Posebne stranice za kuhinjske ploče, stepenice i šankove</li>
+        <li>Vodič kroz vrste granita i mermera i postupak izrade</li>
+        <li>10 odgovora na česta pitanja (cene, rokovi, postavljanje u drugim gradovima)</li>
+        <li>Domen i hosting za prvu godinu</li>
+      </ul>
+      <p class="for">Rok: 4 nedelje. Rešava sve kritične probleme iz nalaza.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Mesečno održavanje AI vidljivosti</h2>
+  <p class="muted">AI alati stalno menjaju izvore. Rezultat se gradi nekoliko meseci, zato predlažemo saradnju od najmanje 6 meseci, uz otkaz sa 30 dana obaveštenja posle toga.</p>
+  <div class="cards three">
+    <div class="card">
+      <h3>Održavanje</h3>
+      <div class="price num">90 €<small> / mesec</small></div>
+      <ul>
+        <li>4 objave mesečno na Google profilu (novi radovi)</li>
+        <li>Odgovori na sve recenzije</li>
+        <li>Mesečno merenje AI vidljivosti (10 pitanja, 4 AI alata)</li>
+      </ul>
+    </div>
+    <div class="card rec">
+      <div class="tag">Preporuka</div>
+      <h3>Rast</h3>
+      <div class="price num">160 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Održavanje”</li>
+        <li>2 nova teksta mesečno (modeli, materijali, saveti za kupce)</li>
+        <li>Dodavanje novih radova u katalog na sajtu</li>
+        <li>Praćenje 3 glavna konkurenta</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Lider</h3>
+      <div class="price num">290 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Rast”</li>
+        <li>4 teksta mesečno, uključujući stranice za druge gradove</li>
+        <li>Vođenje Facebook i Instagram stranice (8 objava mesečno)</li>
+        <li>Mesečni sastanak i izveštaj</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Sve cene su bez PDV-a. Budžet za plaćene oglase na Facebook-u i Google-u nije uključen.</p>
+</section>
+
+<section>
+  <div class="callout">
+    <b>Naš predlog za Kruna Granit: paket B + „Rast” na 6 meseci</b>
+    <p class="num">Jednokratno 890 €, zatim 160 € mesečno. Ukupno za prvih 6 meseci: <b>1.850 €</b>. Ako ovaj rad donese samo jedan spomenik ili jednu kuhinjsku ploču više mesečno, ulaganje se isplati.</p>
+  </div>
+  <p class="muted"><b>Šta garantujemo:</b> sve navedene stavke u dogovorenom roku i mesečni izveštaj sa jasnim brojkama, pre i posle. Ne garantujemo da će vas ChatGPT preporučiti, jer to niko pošteno ne može. AI sam bira izvore. Ali radimo upravo na onim stvarima na osnovu kojih ih bira.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Sledeći koraci</div>
+  <ol class="steps">
+    <li>Kratak sastanak (30 minuta) na kome uživo pokazujemo šta ChatGPT danas kaže o kamenorescima u Kruševcu.</li>
+    <li>Potvrda tačne adrese radionice, radnog vremena i glavnog broja telefona.</li>
+    <li>Izbor 20 najboljih fotografija radova za Google profil.</li>
+    <li>Početak rada u roku od 7 dana od potvrde ponude.</li>
+  </ol>
+</section>
+
+<section>
+  <h3>Kako smo računali ocenu</h3>
+  <ul class="checks num">
+    <li><span>Google profil firme</span><span>0/10</span></li>
+    <li><span>Sajt</span><span>0/10</span></li>
+    <li><span>Recenzije (ocena i broj)</span><span>0/10</span></li>
+    <li><span>Javno objavljena adresa</span><span>0/10</span></li>
+    <li><span>Isti kontakt podaci svuda</span><span>5/10</span></li>
+    <li><span>Jasno razlikovanje imena „Kruna”</span><span>0/10</span></li>
+    <li><span>Sadržaj koji odgovara na pitanja</span><span>0/10</span></li>
+    <li><span>Strukturirani podaci (schema)</span><span>0/10</span></li>
+    <li><span>Društvene mreže</span><span>5/10</span></li>
+    <li><span>Dokazi o radu (fotografije)</span><span>5/10</span></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <span>Izvori: Facebook nalog Kruna Granit, Google mape i pretraga na dan 21. 11. 2026; <a href="https://www.seerinteractive.com/insights/aio-impact-on-google-ctr-2026-update">Seer Interactive (2026)</a>; <a href="https://www.semrush.com/blog/ai-search-seo-traffic-study/">Semrush (2025)</a>.</span>
+  <span>Ponuda važi 30 dana. AI Vidljivost.</span>
+</footer>
+
+</div>
