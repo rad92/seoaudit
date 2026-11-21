@@ -87,3 +87,22 @@ Pošto Instagram prikazuje najnoviju objavu prvu, karusel i test će biti na vrh
 > Da li ste na listi? 👇 Napišite u komentaru šta ste dobili. Odgovorićemo svakome šta može da se popravi.
 >
 > #chatgpt #test #veštačkainteligencija #malibiznis #preduzetnik #marketing #srbija
+
+---
+
+## Priča (story) u 3 okvira
+
+Fajlovi su u `story/`, 1080×1920. Objavite ih ovim redom, jedan za drugim:
+
+1. **`story-1-pitanje.png`:** dodajte **anketu** (Poll) u prazan prostor na dnu, ispod strelice.
+   - Pitanje: „Da li ste proverili?”
+   - Odgovori: „Da, tu sam” i „Nemam pojma”.
+   - Ljudi koji glasaju „Nemam pojma” su vaši potencijalni kupci. Pošaljite im poruku.
+2. **`story-2-problem.png`:** bez nalepnica.
+3. **`story-3-poziv.png`:** strelica pokazuje na polje za odgovor. Ako želite, dodajte **link** nalepnicu ka sajtu ili WhatsApp-u, ispod reči PROVERA.
+
+Svaka poruka sa rečju PROVERA je lead. Odgovorite u roku od par sati i tražite: naziv firme, grad i delatnost.
+
+Posle 24 sata sačuvajte priču u istaknute priče (highlight) „Besplatna provera”, da ostane na profilu.
+
+Ako želite da je promovišete: priča radi i kao Instagram/Facebook Stories oglas, sa ciljem „Poruke” (Messages).
