@@ -1,0 +1,347 @@
+<title>Pike Loznica AI analiza</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm reading column, report-style; score card and price cards are the only "objects". */
+:root{
+  --bg:#f4f6f5; --surface:#ffffff; --ink:#17201d; --muted:#56625e; --line:#dbe1de;
+  --accent:#2c5a4b; --accent-soft:#e3eeea; --brass:#8f7232;
+  --crit:#a83636; --crit-soft:#f7e6e6; --warn:#9a6415; --warn-soft:#f8eedd; --ok:#2e7a4d; --ok-soft:#e2f1e8;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,3.4vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.head{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* score */
+.score{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.score .big{font-family:var(--f-display);font-size:4.4rem;line-height:1;color:var(--crit)}
+.score .big small{font-size:1.4rem;color:var(--muted)}
+.score .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.bar i{height:10px;border-radius:2px;background:var(--line)}
+.bar i.h{background:var(--warn)}
+@media (max-width:560px){.score{grid-template-columns:1fr;gap:16px}}
+
+/* lists */
+.strengths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.strengths li{border-top:2px solid var(--accent);padding-top:10px}
+.strengths b{display:block}
+@media (max-width:620px){.strengths{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+tr.me td{background:var(--accent-soft);font-weight:600}
+td.r{text-align:right;white-space:nowrap}
+
+/* findings */
+.find{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.f{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.f b{font-weight:600}
+.f p{font-size:.94rem;color:var(--muted)}
+.chip{align-self:start;justify-self:start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.c{background:var(--crit-soft);color:var(--crit)} .w{background:var(--warn-soft);color:var(--warn)} .o{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:560px){.f{grid-template-columns:1fr;gap:8px}}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:.93rem}
+.checks li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:6px 0}
+.checks span:last-child{font-family:var(--f-mono);white-space:nowrap}
+@media (max-width:620px){.checks{grid-template-columns:1fr}}
+
+/* questions */
+.qs{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.qs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qs q{font-family:var(--f-display);font-size:1.08rem;quotes:"„" "”"}
+.qs span{font-size:.92rem;color:var(--muted)}
+@media (max-width:620px){.qs li{grid-template-columns:1fr;gap:4px}}
+
+/* pricing */
+.cards{display:grid;gap:16px}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.cards.two,.cards.three{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.rec{border:2px solid var(--accent)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.price{font-family:var(--f-display);font-size:2.3rem;line-height:1}
+.price small{font-family:var(--f-body);font-size:.9rem;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:.92rem;display:flex;flex-direction:column;gap:5px}
+.card .for{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+
+.callout{background:var(--accent-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.callout.brass{background:transparent;border:1px solid var(--brass)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:var(--muted)}
+a{color:var(--accent)}
+.foot{border-top:1px solid var(--line);padding-top:20px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+/* print / PDF */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;color-scheme:light}
+  body{padding:0;font-size:10.5pt}
+  .wrap{gap:30px}
+  .card,.score,.f,.qs li,tr,.callout,.strengths li,h2,h3{break-inside:avoid}
+  .checks{break-inside:avoid}
+  h2,h3,.eyebrow{break-after:avoid}
+  .pb{break-before:page}
+}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Analiza AI vidljivosti</div>
+  <h1>Pike Loznica: kako vas danas vide ChatGPT i Google AI</h1>
+  <div class="meta">
+    <span>Za: <b>Pike DOO, Branka Radičevića 5/2, Loznica</b></span>
+    <span>Pripremio: <b>AI Vidljivost</b></span>
+    <span>Datum: <b class="num">22. novembar 2026.</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="score">
+    <div class="big num">10<small>/100</small></div>
+    <div class="txt">
+      <div class="bar" aria-label="10 od 100 poena"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p><b>Ocena spremnosti za AI pretragu.</b> Pike na jednom mestu nudi menjačnicu, Sava osiguranje, registraciju vozila i nekretnine, i aktivno se oglašava u lokalnim Facebook grupama. Ali na internetu podaci o firmi su pogrešni: jedan Google profil je označen kao trajno zatvoren, drugi ima ocenu 1,0, a imenici vas opisuju kao proizvođača tekstila. Kada neko pita ChatGPT za osiguranje ili menjačnicu u Loznici, Pike praktično ne postoji.</p>
+    </div>
+  </div>
+  <p class="src">Ocena je zbir 10 provera navedenih u odeljku „Kako smo računali ocenu” (svaka nosi do 10 poena).</p>
+</section>
+
+<section>
+  <div class="eyebrow">Šta je dobro</div>
+  <h2>Vaše prednosti</h2>
+  <ul class="strengths">
+    <li><b>Sve usluge na jednom mestu</b><span class="muted">Menjačnica, osiguranje vozila, putno, kasko i životno osiguranje, prenos vlasništva vozila i nekretnine. Retko koja firma u Loznici to nudi zajedno.</span></li>
+    <li><b>Partner Sava osiguranja</b><span class="muted">Poznato ime u koje ljudi već imaju poverenje. AI alati vole da povežu lokalnu firmu sa poznatim brendom.</span></li>
+    <li><b>Posluje od 2004. godine</b><span class="muted">22 godine rada u Loznici je dokaz pouzdanosti, koji danas nigde ne piše.</span></li>
+    <li><b>Aktivni ste na Facebook-u</b><span class="muted">Redovno objavljujete u grupama „Oglasna tabla grada Loznica” i „Loznica – Oglasi”. Ljudi vas tamo već viđaju.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Google mape danas</div>
+  <h2>Ko se pojavljuje kad neko traži osiguranje ili menjačnicu u Loznici</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Pretraga „osiguranje vozila Loznica”</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr><td>Auto servis Đorđević</td><td class="r">4,7</td><td class="r">171</td></tr>
+      <tr><td>Auto Moto Savez Loznica</td><td class="r">4,4</td><td class="r">80</td></tr>
+      <tr><td>Auto centar Tomin</td><td class="r">4,4</td><td class="r">57</td></tr>
+      <tr><td>Pneustar DOO</td><td class="r">4,6</td><td class="r">30</td></tr>
+      <tr><td>Generali Osiguranje</td><td class="r">4,4</td><td class="r">16</td></tr>
+      <tr><td>Dunav osiguranje Loznica</td><td class="r">3,8</td><td class="r">10</td></tr>
+      <tr class="me"><td>Pike</td><td class="r">–</td><td class="r">nije na listi</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Pretraga „menjačnica Loznica”</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr><td>Menjačnica Zvonko &amp; Zoka</td><td class="r">5,0</td><td class="r">8</td></tr>
+      <tr><td>Stale</td><td class="r">3,7</td><td class="r">6</td></tr>
+      <tr><td>Menjačnica Maja</td><td class="r">4,4</td><td class="r">5</td></tr>
+      <tr><td>Gold Men Plus</td><td class="r">4,8</td><td class="r">4</td></tr>
+      <tr class="me"><td>Menjačnica Pike</td><td class="r">–</td><td class="r">nije na listi</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Snimak Google mapa od 22. 11. 2026. Redosled zavisi i od lokacije osobe koja pretražuje.</p>
+  <div class="callout">
+    <b>Šta ovo znači</b>
+    <p>Pike se ne pojavljuje ni u jednoj od ove dve pretrage. Dobra vest je da je konkurencija slaba: nijedna menjačnica u Loznici nema više od 8 recenzija, a agencije za osiguranje imaju 10 do 30. Sa sređenim profilom i 20–30 recenzija, Pike može brzo da postane prvi izbor, i na Google mapama i u AI odgovorima.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Nalazi</div>
+  <h2>Šta sprečava AI da vas preporuči</h2>
+  <div class="find">
+    <div class="f"><span class="chip c">Kritično</span><div><b>Jedan Google profil je „trajno zatvoren”</b><p>Na Google mapama postoji profil „PIKE” u Branka Radičevića, označen kao trajno zatvoren, sa starim brojem 015/882-504. Kada AI ili kupac naiđe na njega, zaključuje da Pike više ne radi.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Aktivni Google profil ima ocenu 1,0 i nema kategoriju</b><p>Profil „DOO PIKE” ima jednu recenziju sa jednom zvezdicom, nema kategoriju (menjačnica, agencija za osiguranje), nema opis usluga, sajt ni fotografije. Zato se ne pojavljujete kad neko traži osiguranje ili menjačnicu.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Imenici vas opisuju kao proizvođača tekstila</b><p>Firma je u APR-u registrovana pod šifrom delatnosti 1392 (proizvodnja gotovih tekstilnih proizvoda), pa je tako prepisuju i imenici: pike.ls.rs, kompanije.co.rs, loglasi.rs. AI alati čitaju te imenike i mogu da zaključe da se Pike bavi tekstilom, a ne osiguranjem i menjačnicom. Preporučujemo da sa knjigovođom proverite šifru delatnosti.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Nemate sajt</b><p>Nigde ne postoji stranica koja jasno kaže šta Pike radi, gde je i kako vas dobiti. AI nema odakle da pročita informacije o vašim uslugama.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Pet različitih brojeva telefona</b><p>U oglasima i imenicima se pojavljuju 065/881-6000, 065/881-0300, 063/881-0300, 015/892-901 i 015/882-504. Kada se podaci razlikuju, AI manje veruje svakom od njih. Preporuka je jedan glavni broj za svaku uslugu, isti na svim mestima.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Dve adrese i više naziva</b><p>Firma se pojavljuje kao „DOO PIKE”, „PIKE”, „Menjačnica Pike” i „Pike – Nekretnine Osiguranja – Menjačnica Pike”, na adresama Branka Radičevića 5 i Vojvode Mišića bb. Za AI to mogu biti četiri različite firme.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Ime „Pike” se lako meša</b><p>„Pike” je na engleskom naziv za ribu (štuka), pa pretraga „Pike Loznica” daje i takve rezultate. U Loznici postoji i „Pik 3 tehnički pregled”, koji se pojavljuje u istim pretragama. Zato ime uvek treba pisati uz delatnost: „Pike menjačnica i osiguranje Loznica”.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Dve Facebook stranice</b><p>Postoje stranica „D.O.O PIKE” sa 2 pratioca i stranica „Pike – Nekretnine Osiguranja – Menjačnica Pike”. Bolje je imati jednu jaku stranicu sa recenzijama nego dve slabe.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Pitanja koja ljudi postavljaju AI-u</div>
+  <h2>Gde Pike treba da bude odgovor</h2>
+  <ul class="qs">
+    <li><q>Gde da uplatim osiguranje vozila u Loznici?</q><span>Google profil sa kategorijom „agencija za osiguranje” i radnim vremenom</span></li>
+    <li><q>Koliko košta putno osiguranje za porodicu?</q><span>Stranica o putnom osiguranju sa okvirnim cenama i Sava paketima</span></li>
+    <li><q>Menjačnica u Loznici sa najboljim kursom</q><span>Profil menjačnice sa lokacijom, radnim vremenom i recenzijama</span></li>
+    <li><q>Gde se radi prenos vlasništva vozila u Loznici?</q><span>Jasno opisana usluga i potrebna dokumenta</span></li>
+    <li><q>Šta je sve potrebno za registraciju automobila?</q><span>Spisak dokumenata. AI rado citira ovakve korisne odgovore.</span></li>
+    <li><q>Agencija za nekretnine u Loznici</q><span>Posebna stranica za nekretnine</span></li>
+  </ul>
+  <div class="callout brass">
+    <b>Uradite test sami, za dva minuta</b>
+    <p>Otvorite ChatGPT i upišite: <i>„Gde mogu da uplatim osiguranje vozila u Loznici?”</i> Zatim pitajte: <i>„Šta znaš o firmi Pike iz Loznice?”</i> Pogledajte da li vas AI uopšte pominje i da li vas opisuje tačno.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Zašto sada</div>
+  <h2>Šta pokazuju istraživanja</h2>
+  <div class="cards two">
+    <div class="card"><div class="price num">+120%</div><p>više klikova za sajtove koje Google AI navodi kao izvor, u odnosu na one koje ne navodi.</p><p class="src">Seer Interactive, april 2026. 53 brenda, 5,47 miliona upita, 2,43 milijarde prikaza.</p></div>
+    <div class="card"><div class="price num">4,4×</div><p>vredniji je posetilac koji dolazi preko AI pretrage od posetioca iz klasične pretrage, mereno stopom konverzije.</p><p class="src">Semrush, AI Search &amp; SEO Traffic Study, 2025.</p></div>
+  </div>
+  <p class="muted">Osiguranje se obnavlja svake godine. Klijent koga dobijete danas vraća se godinama, pa svaki novi kupac iz pretrage vredi mnogo više od jedne polise.</p>
+</section>
+
+<section class="pb">
+  <div class="eyebrow">Ponuda</div>
+  <h2>Jednokratno postavljanje</h2>
+  <div class="cards two">
+    <div class="card">
+      <div class="tag">Paket A</div>
+      <h3>AI start</h3>
+      <div class="price num">290 €<small> jednokratno</small></div>
+      <ul>
+        <li>Uklanjanje ili spajanje profila označenog kao „trajno zatvoren”</li>
+        <li>Sređivanje Google profila: kategorije (menjačnica, agencija za osiguranje), usluge, radno vreme, fotografije, opis</li>
+        <li>Obziran odgovor na postojeću recenziju i sistem za nove recenzije (kartica sa QR kodom na pultu)</li>
+        <li>Upis u Bing Places i Apple Maps (ChatGPT pretraga se oslanja i na Bing)</li>
+        <li>Ispravka opisa delatnosti i kontakta u 10 imenika</li>
+        <li>Spajanje Facebook stranica u jednu, sa recenzijama</li>
+        <li>Početni izveštaj: 10 pitanja provereno u ChatGPT-u, Gemini-ju, Perplexity-ju i Google AI-u</li>
+      </ul>
+      <p class="for">Rok: 2 nedelje. Rešava najveće probleme bez sajta.</p>
+    </div>
+    <div class="card rec">
+      <div class="tag">Paket B · preporuka</div>
+      <h3>AI start + sajt</h3>
+      <div class="price num">890 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sve iz paketa A</li>
+        <li>Sajt prilagođen telefonima (oko 8 stranica), sa schema oznakama za AI</li>
+        <li>Posebne stranice: osiguranje vozila, putno, kasko i životno osiguranje, menjačnica, prenos vlasništva, nekretnine</li>
+        <li>Spisak dokumenata za registraciju i prenos vlasništva</li>
+        <li>10 odgovora na česta pitanja</li>
+        <li>Dugme za poziv i Viber na svakoj stranici</li>
+        <li>Domen i hosting za prvu godinu</li>
+      </ul>
+      <p class="for">Rok: 4 nedelje. Rešava sve kritične probleme iz nalaza.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Mesečno održavanje AI vidljivosti</h2>
+  <p class="muted">AI alati stalno menjaju izvore, a recenzije se skupljaju postepeno. Zato predlažemo saradnju od najmanje 6 meseci, uz otkaz sa 30 dana obaveštenja posle toga.</p>
+  <div class="cards three">
+    <div class="card">
+      <h3>Održavanje</h3>
+      <div class="price num">90 €<small> / mesec</small></div>
+      <ul>
+        <li>4 objave mesečno na Google profilu</li>
+        <li>Odgovori na sve recenzije</li>
+        <li>Mesečno merenje AI vidljivosti (10 pitanja, 4 AI alata)</li>
+      </ul>
+    </div>
+    <div class="card rec">
+      <div class="tag">Preporuka</div>
+      <h3>Rast</h3>
+      <div class="price num">160 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Održavanje”</li>
+        <li>2 nova teksta mesečno (saveti o osiguranju, registraciji, putovanjima)</li>
+        <li>Sezonske objave: putno osiguranje pred leto i praznike</li>
+        <li>Praćenje 3 glavna konkurenta</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Lider</h3>
+      <div class="price num">290 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Rast”</li>
+        <li>4 teksta mesečno</li>
+        <li>Vođenje Facebook i Instagram stranice (8 objava mesečno)</li>
+        <li>Mesečni sastanak i izveštaj</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Sve cene su bez PDV-a. Budžet za plaćene oglase nije uključen.</p>
+</section>
+
+<section>
+  <div class="callout">
+    <b>Naš predlog: paket B + „Rast” na 6 meseci</b>
+    <p class="num">Jednokratno 890 €, zatim 160 € mesečno. Ukupno za prvih 6 meseci: <b>1.850 €</b>. Nekoliko novih klijenata za osiguranje, koji se svake godine vraćaju, pokriva ovo ulaganje.</p>
+  </div>
+  <p class="muted"><b>Šta garantujemo:</b> sve navedene stavke u dogovorenom roku i mesečni izveštaj sa jasnim brojkama, pre i posle. Ne garantujemo da će vas ChatGPT preporučiti, jer to niko pošteno ne može. AI sam bira izvore. Ali radimo upravo na onim stvarima na osnovu kojih ih bira.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Sledeći koraci</div>
+  <ol class="steps">
+    <li>Kratak sastanak (30 minuta) na kome uživo pokazujemo šta ChatGPT danas kaže o Pike-u.</li>
+    <li>Dogovor o jednom glavnom broju telefona, adresi i nazivu firme.</li>
+    <li>Pristup Google profilu i Facebook stranicama.</li>
+    <li>Početak rada u roku od 7 dana od potvrde ponude.</li>
+  </ol>
+</section>
+
+<section>
+  <h3>Kako smo računali ocenu</h3>
+  <ul class="checks num">
+    <li><span>Google profil</span><span>0/10</span></li>
+    <li><span>Recenzije (ocena i broj)</span><span>0/10</span></li>
+    <li><span>Sajt</span><span>0/10</span></li>
+    <li><span>Strukturirani podaci (schema)</span><span>0/10</span></li>
+    <li><span>Isti kontakt podaci svuda</span><span>0/10</span></li>
+    <li><span>Tačan opis delatnosti</span><span>0/10</span></li>
+    <li><span>Jasno razlikovanje imena</span><span>0/10</span></li>
+    <li><span>Sadržaj koji odgovara na pitanja</span><span>0/10</span></li>
+    <li><span>Društvene mreže</span><span>5/10</span></li>
+    <li><span>Poverenje (godine rada, partneri)</span><span>5/10</span></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <span>Ponuda važi 30 dana. AI Vidljivost.</span>
+</footer>
+
+</div>
