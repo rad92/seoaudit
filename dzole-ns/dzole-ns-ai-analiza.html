@@ -1,0 +1,335 @@
+<title>Džole NS AI analiza</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one calm reading column, report-style; score card and price cards are the only "objects". */
+:root{
+  --bg:#f4f6f5; --surface:#ffffff; --ink:#17201d; --muted:#56625e; --line:#dbe1de;
+  --accent:#2c5a4b; --accent-soft:#e3eeea; --brass:#8f7232;
+  --crit:#a83636; --crit-soft:#f7e6e6; --warn:#9a6415; --warn-soft:#f8eedd; --ok:#2e7a4d; --ok-soft:#e2f1e8;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1513; --surface:#161e1b; --ink:#e5ebe8; --muted:#9aa8a3; --line:#27332f;
+  --accent:#86bfaa; --accent-soft:#1c2c27; --brass:#cfae66;
+  --crit:#e58585; --crit-soft:#3a2020; --warn:#e2b464; --warn-soft:#352a17; --ok:#74c494; --ok-soft:#18301f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,3.4vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+section{display:flex;flex-direction:column;gap:18px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.head{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* score */
+.score{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.score .big{font-family:var(--f-display);font-size:4.4rem;line-height:1;color:var(--crit)}
+.score .big small{font-size:1.4rem;color:var(--muted)}
+.score .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.bar i{height:10px;border-radius:2px;background:var(--line)}
+.bar i.h{background:var(--warn)}
+@media (max-width:560px){.score{grid-template-columns:1fr;gap:16px}}
+
+/* lists */
+.strengths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin:0;padding:0;list-style:none}
+.strengths li{border-top:2px solid var(--accent);padding-top:10px}
+.strengths b{display:block}
+@media (max-width:620px){.strengths{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+tr.me td{background:var(--accent-soft);font-weight:600}
+td.r{text-align:right;white-space:nowrap}
+
+/* findings */
+.find{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.f{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.f:last-child{border-bottom:0}
+.f > div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.f b{font-weight:600}
+.f p{font-size:.94rem;color:var(--muted)}
+.chip{align-self:start;justify-self:start;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.c{background:var(--crit-soft);color:var(--crit)} .w{background:var(--warn-soft);color:var(--warn)} .o{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:560px){.f{grid-template-columns:1fr;gap:8px}}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:.93rem}
+.checks li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:6px 0}
+.checks span:last-child{font-family:var(--f-mono);white-space:nowrap}
+@media (max-width:620px){.checks{grid-template-columns:1fr}}
+
+/* questions */
+.qs{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.qs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qs q{font-family:var(--f-display);font-size:1.08rem;quotes:"„" "”"}
+.qs span{font-size:.92rem;color:var(--muted)}
+@media (max-width:620px){.qs li{grid-template-columns:1fr;gap:4px}}
+
+/* pricing */
+.cards{display:grid;gap:16px}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.cards.two,.cards.three{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.rec{border:2px solid var(--accent)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.price{font-family:var(--f-display);font-size:2.3rem;line-height:1}
+.price small{font-family:var(--f-body);font-size:.9rem;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:.92rem;display:flex;flex-direction:column;gap:5px}
+.card .for{font-size:.88rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+
+.callout{background:var(--accent-soft);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.callout.brass{background:transparent;border:1px solid var(--brass)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:var(--muted)}
+a{color:var(--accent)}
+.foot{border-top:1px solid var(--line);padding-top:20px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+/* print / PDF */
+@page{size:A4;margin:16mm 15mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;color-scheme:light}
+  body{padding:0;font-size:10.5pt}
+  .wrap{gap:30px}
+  .card,.score,.f,.qs li,tr,.callout,.strengths li,h2,h3{break-inside:avoid}
+  .checks{break-inside:avoid}
+  h2,h3,.eyebrow{break-after:avoid}
+  .pb{break-before:page}
+}
+</style>
+
+<div class="wrap">
+
+<header class="head">
+  <div class="eyebrow">Analiza AI vidljivosti</div>
+  <h1>Džole NS: kako vas danas vide ChatGPT i Google AI</h1>
+  <div class="meta">
+    <span>Za: <b>Servis televizora Džole NS, Bulevar Evrope 4, Novi Sad</b></span>
+    <span>Pripremio: <b>AI Vidljivost</b></span>
+    <span>Datum: <b class="num">23. novembar 2026.</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="score">
+    <div class="big num" style="color:var(--ok)">65<small>/100</small></div>
+    <div class="txt">
+      <div class="bar" aria-label="65 od 100 poena"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h" style="opacity:.5"></i><i></i><i></i><i></i></div>
+      <p><b>Ocena spremnosti za AI pretragu.</b> Vaš sajt je jedan od najbolje urađenih koje smo videli kod lokalnih servisa: brz je, ima stranice za svaku uslugu, česta pitanja i podatke koje AI razume. Ono što vas danas drži iza konkurencije nije sajt, nego Google profil: ocena 4,3 i 87 recenzija, dok TV Spektar ima 4,9 i 817 recenzija.</p>
+    </div>
+  </div>
+  <p class="src">Ocena je zbir 10 provera navedenih u odeljku „Kako smo računali ocenu” (svaka nosi do 10 poena).</p>
+</section>
+
+<section>
+  <div class="eyebrow">Šta je dobro</div>
+  <h2>Vaše prednosti</h2>
+  <ul class="strengths">
+    <li><b>Odličan sajt</b><span class="muted">Posebne stranice za LED, LCD i Smart TV, 8 odgovora na česta pitanja, jasan postupak popravke u 5 koraka i schema podaci za AI.</span></li>
+    <li><b>Ponuda koju drugi nemaju</b><span class="muted">COF Bonding mašina za popravku panela, garancija do 18 meseci, besplatan dolazak po televizor i zamenski TV dok traje popravka.</span></li>
+    <li><b>Treći na Google mapama</b><span class="muted">Na pretragu „servis televizora Novi Sad” vaš profil je treći, sa 11 fotografija i jasnim radnim vremenom.</span></li>
+    <li><b>Već vas preporučuju drugi</b><span class="muted">Nalazite se na spisku „10 najboljih TV servisa u Novom Sadu” i na portalu FixUp. AI alati rado citiraju ovakve spiskove.</span></li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Google mape danas</div>
+  <h2>Ko se pojavljuje kad neko traži „servis televizora Novi Sad”</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Servis</th><th>Adresa</th><th class="r">Ocena</th><th class="r">Recenzija</th></tr></thead>
+    <tbody class="num">
+      <tr><td>1</td><td>TV Spektar</td><td>Branimira Ćosića 23</td><td class="r">4,9</td><td class="r">817</td></tr>
+      <tr><td>2</td><td>Nina Led</td><td>Vase Pušibrka 4</td><td class="r">4,9</td><td class="r">46</td></tr>
+      <tr class="me"><td>3</td><td>TV Servis Džole NS</td><td>Bulevar Evrope 4</td><td class="r">4,3</td><td class="r">87</td></tr>
+      <tr><td>4</td><td>Impuls TV servis</td><td>Kraljevića Marka 17</td><td class="r">4,8</td><td class="r">45</td></tr>
+      <tr><td>5</td><td>Eltim 021</td><td>Heroja Pinkija 28</td><td class="r">4,9</td><td class="r">75</td></tr>
+      <tr><td>7</td><td>Pro Electronic</td><td>Vladike Maksima 4</td><td class="r">4,9</td><td class="r">73</td></tr>
+      <tr><td>8</td><td>Optimus</td><td>Pavla Vujisića 24</td><td class="r">4,9</td><td class="r">77</td></tr>
+      <tr><td>13</td><td>PL Servis</td><td>Trg majke Jevrosime 13</td><td class="r">4,8</td><td class="r">107</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Snimak Google mapa od 23. 11. 2026. Redosled zavisi i od lokacije osobe koja pretražuje.</p>
+  <div class="callout">
+    <b>Šta ovo znači</b>
+    <p>Od osam glavnih servisa u Novom Sadu, Džole ima najnižu ocenu. Svi ostali imaju 4,8 ili 4,9. Kada kupac pita ChatGPT „koji je najbolji servis televizora u Novom Sadu”, AI gleda upravo ocene i broj recenzija, pa će vrlo verovatno preporučiti TV Spektar i servise sa 4,9. Dobar sajt vam tada malo pomaže.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Nalazi</div>
+  <h2>Šta vas sprečava da budete prvi izbor AI-a</h2>
+  <div class="find">
+    <div class="f"><span class="chip c">Kritično</span><div><b>Ocena 4,3 i deset puta manje recenzija od lidera</b><p>TV Spektar ima 817 recenzija, a vi 87. Najnovije recenzije koje Google prikazuje su od pre godinu dana, a odgovori servisa se ne vide. Jedna od recenzija kaže „Skupo, ali su brzo rešili problem”. To je poruka na koju treba odgovoriti, jer je i pohvala.</p></div></div>
+    <div class="f"><span class="chip c">Kritično</span><div><b>Ocena u kodu sajta se ne poklapa sa Google-om</b><p>U podacima na sajtu (schema) piše ocena 4,9 od 87 recenzija, a na Google-u je 4,3. Google ne dozvoljava firmama da same sebi upisuju ocene na sajtu, a AI alati koji uporede ova dva broja mogu da zaključe da podaci nisu pouzdani. Ovaj deo koda treba ukloniti.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Različito radno vreme na sajtu i na Google-u</b><p>Na sajtu piše ponedeljak–petak 08–18 i subota 09–15, a na Google profilu 09–17 i subota 09–14. Kupac koji dođe u 17:30 po sajtu može naći zatvoreno, a AI ne zna kome da veruje.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Nema okvirnih cena</b><p>Na sajtu piše da se cena određuje posle dijagnostike, što je fer. Ali jedno od najčešćih pitanja AI-u je „koliko košta popravka pozadinskog osvetljenja” ili „isplati li se popravka TV-a”. Bez okvirnih cena („od … dinara”) AI na ta pitanja citira konkurente. Okvirne cene bi odgovorile i na utisak „skupo” iz recenzija.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Blog nije ažuriran dve godine</b><p>Na blogu su 3 teksta, poslednji od 15. novembra 2024. AI alati više veruju izvorima koji redovno objavljuju, a pitanja tipa „Samsung TV ima zvuk ali nema sliku” su idealna za kratke tekstove koje AI citira.</p></div></div>
+    <div class="f"><span class="chip w">Važno</span><div><b>Najveća prednost je skoro nevidljiva</b><p>COF Bonding mašina, „usluga jedinstvena u regionu”, pominje se u jednoj rečenici na početnoj strani. Nema posebnu stranicu, fotografije ni video. To je upravo podatak zbog kog bi AI izdvojio Džole od ostalih servisa.</p></div></div>
+    <div class="f"><span class="chip o">Sitnije</span><div><b>Više naziva firme</b><p>Na internetu se pojavljujete kao „TV Servis Džole NS”, „Servis televizora Novi Sad – Džole NS”, „Džole NS – Servis Televizora Novi Sad” i „Szr Dzole NS”. Bolje je svuda koristiti isti naziv. Na sajtu se više puta pojavljuje „zamjenski” umesto „zamenski”.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Pitanja koja ljudi postavljaju AI-u</div>
+  <h2>Gde Džole treba da bude odgovor</h2>
+  <ul class="qs">
+    <li><q>Koji je najbolji servis televizora u Novom Sadu?</q><span>Ocena i broj recenzija na Google-u, pominjanja na spiskovima i portalima</span></li>
+    <li><q>Koliko košta popravka pozadinskog osvetljenja na LED TV?</q><span>Stranica sa okvirnim cenama najčešćih kvarova</span></li>
+    <li><q>Samsung TV ima zvuk ali nema sliku, šta da radim?</q><span>Kratki tekstovi po brendu i kvaru, sa pozivom na besplatnu dijagnostiku</span></li>
+    <li><q>Da li se isplati popravka starog televizora?</q><span>Tekst sa jasnim primerima kada se isplati, a kada ne</span></li>
+    <li><q>Popravka TV panela bez zamene ekrana</q><span>Posebna stranica o COF Bonding popravci, sa videom</span></li>
+    <li><q>Servis Samsung (LG, Vivax…) televizora u Novom Sadu</q><span>Stranice za najčešće brendove</span></li>
+  </ul>
+  <div class="callout brass">
+    <b>Uradite test sami, za dva minuta</b>
+    <p>Otvorite ChatGPT i upišite: <i>„Koji je najbolji servis televizora u Novom Sadu?”</i> Pogledajte koga preporučuje i da li je Džole na listi.</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Zašto sada</div>
+  <h2>Šta pokazuju istraživanja</h2>
+  <div class="cards two">
+    <div class="card"><div class="price num">+120%</div><p>više klikova za sajtove koje Google AI navodi kao izvor, u odnosu na one koje ne navodi.</p><p class="src">Seer Interactive, april 2026. 53 brenda, 5,47 miliona upita, 2,43 milijarde prikaza.</p></div>
+    <div class="card"><div class="price num">4,4×</div><p>vredniji je posetilac koji dolazi preko AI pretrage od posetioca iz klasične pretrage, mereno stopom konverzije.</p><p class="src">Semrush, AI Search &amp; SEO Traffic Study, 2025.</p></div>
+  </div>
+  <p class="muted">Sajt ste već napravili kako treba. Uz sređene recenzije i malo novog sadržaja, ulaganje u sajt može da počne da donosi pozive i preko AI-a.</p>
+</section>
+
+<section class="pb">
+  <div class="eyebrow">Ponuda</div>
+  <h2>Jednokratno postavljanje</h2>
+  <div class="cards two">
+    <div class="card">
+      <div class="tag">Paket A</div>
+      <h3>AI dorada</h3>
+      <div class="price num">390 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sređivanje Google profila: radno vreme, usluge, brendovi, pitanja i odgovori, nove fotografije</li>
+        <li>Odgovori na sve postojeće recenzije, uključujući one sa primedbama</li>
+        <li>Sistem za nove recenzije: kartica sa QR kodom uz svaki popravljen TV i poruka na Viber</li>
+        <li>Ispravka ocene u kodu sajta i usklađivanje radnog vremena</li>
+        <li>Upis u Bing Places i Apple Maps (ChatGPT pretraga se oslanja i na Bing)</li>
+        <li>Isti naziv i podaci u 10 imenika i na portalima</li>
+        <li>Početni izveštaj: 10 pitanja provereno u ChatGPT-u, Gemini-ju, Perplexity-ju i Google AI-u</li>
+      </ul>
+      <p class="for">Rok: 2 nedelje. Rešava recenzije i neusklađene podatke.</p>
+    </div>
+    <div class="card rec">
+      <div class="tag">Paket B · preporuka</div>
+      <h3>AI dorada + sadržaj</h3>
+      <div class="price num">790 €<small> jednokratno</small></div>
+      <ul>
+        <li>Sve iz paketa A</li>
+        <li>Stranica sa okvirnim cenama najčešćih popravki</li>
+        <li>Posebna stranica o COF Bonding popravci panela, sa fotografijama i kratkim videom</li>
+        <li>Stranice za 5 najčešćih brendova (Samsung, LG, Vivax, Tesla, Philips)</li>
+        <li>6 novih tekstova o najčešćim kvarovima</li>
+        <li>Tekst „Da li se isplati popravka televizora?”</li>
+      </ul>
+      <p class="for">Rok: 4 nedelje. Postojeći sajt ostaje, dodajemo ono što AI traži.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Mesečno održavanje AI vidljivosti</h2>
+  <p class="muted">Recenzije se skupljaju postepeno, a AI alati stalno menjaju izvore. Zato predlažemo saradnju od najmanje 6 meseci, uz otkaz sa 30 dana obaveštenja posle toga.</p>
+  <div class="cards three">
+    <div class="card">
+      <h3>Održavanje</h3>
+      <div class="price num">90 €<small> / mesec</small></div>
+      <ul>
+        <li>4 objave mesečno na Google profilu (popravljeni uređaji)</li>
+        <li>Odgovori na sve nove recenzije</li>
+        <li>Mesečno merenje AI vidljivosti (10 pitanja, 4 AI alata)</li>
+      </ul>
+    </div>
+    <div class="card rec">
+      <div class="tag">Preporuka</div>
+      <h3>Rast</h3>
+      <div class="price num">160 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Održavanje”</li>
+        <li>2 nova teksta mesečno o kvarovima i brendovima</li>
+        <li>Praćenje TV Spektra i još 2 konkurenta: recenzije i pozicije</li>
+        <li>Mesečni izveštaj o rastu recenzija</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Lider</h3>
+      <div class="price num">290 €<small> / mesec</small></div>
+      <ul>
+        <li>Sve iz paketa „Rast”</li>
+        <li>4 teksta mesečno</li>
+        <li>Kratki video snimci popravki za YouTube i Facebook (2 mesečno)</li>
+        <li>Mesečni sastanak</li>
+      </ul>
+    </div>
+  </div>
+  <p class="src">Sve cene su bez PDV-a. Budžet za plaćene oglase nije uključen.</p>
+</section>
+
+<section>
+  <div class="callout">
+    <b>Naš predlog: paket B + „Rast” na 6 meseci</b>
+    <p class="num">Jednokratno 790 €, zatim 160 € mesečno. Ukupno za prvih 6 meseci: <b>1.750 €</b>. Nekoliko popravki više mesečno pokriva ulaganje.</p>
+  </div>
+  <p class="muted"><b>Šta garantujemo:</b> sve navedene stavke u dogovorenom roku i mesečni izveštaj sa jasnim brojkama, pre i posle. Ne garantujemo da će vas ChatGPT preporučiti, jer to niko pošteno ne može. AI sam bira izvore. Ali radimo upravo na onim stvarima na osnovu kojih ih bira.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Sledeći koraci</div>
+  <ol class="steps">
+    <li>Kratak razgovor (15 minuta) na kome uživo pokazujemo šta ChatGPT danas kaže o servisima televizora u Novom Sadu.</li>
+    <li>Pristup Google profilu i potvrda tačnog radnog vremena.</li>
+    <li>Početak rada u roku od 7 dana od potvrde ponude.</li>
+  </ol>
+</section>
+
+<section>
+  <h3>Kako smo računali ocenu</h3>
+  <ul class="checks num">
+    <li><span>Google profil</span><span>5/10</span></li>
+    <li><span>Recenzije (ocena i broj)</span><span>5/10</span></li>
+    <li><span>Prikaz na mobilnom telefonu</span><span>10/10</span></li>
+    <li><span>Strukturirani podaci (schema)</span><span>5/10</span></li>
+    <li><span>Isti podaci svuda</span><span>5/10</span></li>
+    <li><span>Tehnička ispravnost sajta</span><span>10/10</span></li>
+    <li><span>Sadržaj koji odgovara na pitanja</span><span>5/10</span></li>
+    <li><span>Merenje poseta (analitika)</span><span>10/10</span></li>
+    <li><span>Ažurnost sadržaja</span><span>5/10</span></li>
+    <li><span>Istaknute posebne prednosti</span><span>5/10</span></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <span>Ponuda važi 30 dana. AI Vidljivost.</span>
+</footer>
+
+</div>
