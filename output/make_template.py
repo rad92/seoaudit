@@ -39,7 +39,7 @@ for r in h.runs:
 
 # The list goes in a continuous two-column section below the title
 sec = doc.add_section(WD_SECTION.CONTINUOUS)
-cols = OxmlElement('w:cols'); cols.set(qn('w:num'), '2'); cols.set(qn('w:space'), '1440')
+cols = OxmlElement('w:cols'); cols.set(qn('w:num'), '2'); cols.set(qn('w:space'), str(int(Cm(7).twips)))  # gap between columns
 sec._sectPr.append(cols)
 
 for i in range(1, N + 1):
