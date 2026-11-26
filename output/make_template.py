@@ -5,6 +5,7 @@ from docx.enum.section import WD_SECTION
 from docx.shared import RGBColor
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from entries import ENTRIES
 
 FONT_SIZE = 10
 # Entry number -> break inserted before it.
@@ -46,14 +47,20 @@ cols = OxmlElement('w:cols'); cols.set(qn('w:num'), '2'); cols.set(qn('w:space')
 sec._sectPr.append(cols)
 
 for i in range(1, N + 1):
-    lines = [f"{i}.\tЈанко Марић - 1.разред", "\tВиолина", "\tКласа:", "\tКорепетитор:"]
+    if i <= len(ENTRIES):
+        name, piece, teacher, accomp = ENTRIES[i - 1]
+        lines = [f"{i}.\t{name}", f"\t{piece}", f"\tКласа: {teacher}"]
+        if accomp:
+            lines.append(f"\tКл. сарадња: {accomp}")
+    else:                                 # empty slot to fill in later
+        lines = [f"{i}.\t", "\t", "\tКласа:", "\tКл. сарадња:"]
     for j, text in enumerate(lines):
         p = doc.add_paragraph()
         f = p.paragraph_format
         f.left_indent = Cm(SHIFT + 1); f.first_line_indent = Cm(-1)
         f.tab_stops.add_tab_stop(Cm(SHIFT + 1))
-        f.keep_with_next = j < 3          # never split an entry
-        if j == 3: f.space_after = Pt(3)
+        f.keep_with_next = j < len(lines) - 1          # never split an entry
+        if j == len(lines) - 1: f.space_after = Pt(3)
         if j == 0 and i in BREAKS:
             p.add_run().add_break(BREAKS[i])
         p.add_run(text)
